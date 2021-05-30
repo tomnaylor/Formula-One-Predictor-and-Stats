@@ -8,7 +8,7 @@
 
     <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCrxniDYzXlLNFSfs0JDnvaJTvfhIG5CaE&libraries=&v=weekly" async></script>
-
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 </head>
 <body>
 
@@ -18,6 +18,23 @@
         <img src="https://chrisdermody.com/content/images/2017/12/engine8.svg" id="track" width="300">
         <img src="https://chrisdermody.com/content/images/2017/12/engine8.svg" id="track-sectors" width="300">
     </div>
+
+<div id="curve_chart" style="width: 100%; height: 700px; border:1px solid #ccc;"></div>
+
+    <table id="race-standings">
+        <thead>
+            <tr>
+                <th>Pos</th>
+                <th>Driver</th>
+                <th>Nationality</th>
+                <th>Team</th>
+                <th>Points</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    
     <div id="map" style="height:600px; width:600px;"></div>
 
 
