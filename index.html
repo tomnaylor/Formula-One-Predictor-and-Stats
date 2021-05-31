@@ -5,34 +5,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-
+    <script src="https://kit.fontawesome.com/444581f9cb.js" crossorigin="anonymous"></script>   
     <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCrxniDYzXlLNFSfs0JDnvaJTvfhIG5CaE&libraries=&v=weekly" async></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 </head>
 <body>
+<style>
+    #errors {
+        display:none;
+        background-color: red;
+        position:absolute;
+        top:0;
+        left:0;
+        right:0;
+        padding:20px;
+    }
+</style>
+    <div id="errors"></div>
 
-    <div id="error"></div>
+    <form action="GET">
+    <select id="season"></select>
+    <select id="round"></select>
+    </form>
+
+
     <div id="body">
         <h1>Track name</h1>
         <img src="https://chrisdermody.com/content/images/2017/12/engine8.svg" id="track" width="300">
         <img src="https://chrisdermody.com/content/images/2017/12/engine8.svg" id="track-sectors" width="300">
     </div>
 
-<div id="curve_chart" style="width: 100%; height: 700px; border:1px solid #ccc;"></div>
 
     <table id="race-standings">
         <thead>
             <tr>
                 <th>Pos</th>
+                <th>No</th>
+                <th>Nat</th>
                 <th>Driver</th>
-                <th>Nationality</th>
-                <th>Team</th>
+                <th>Car</th>
+                <th></th>
                 <th>Points</th>
+                <th>Lap times</th>
+                <th>Grid</th>
+                <th>Gain</th>
+                <th></th>
+                <th>Time</th>
+                <th>Status</th>
             </tr>
         </thead>
         <tbody></tbody>
     </table>
+
+<div id="curve_chart" style="width: 100%; height: 700px; border:1px solid #ccc;"></div>
 
     
     <div id="map" style="height:600px; width:600px;"></div>

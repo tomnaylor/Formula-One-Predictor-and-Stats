@@ -176,33 +176,36 @@ function drawDriversLapTimes(driverId) {
 
 
 
-function drawRaceStandings(r) {
-console.log(r);
-    r.forEach(e => {
+    function drawRaceStandings(r) {
+        r.forEach(e => {
 
-        let flag = countryFlags.find(i => i['nationality'] === e['Driver']['nationality']);
-        let flagImg = (flag) ? `<img src="https://www.countryflags.io/${flag['code']}/flat/24.png" alt="${e['Driver']['nationality']}">` : '';
-        let gain = parseInt(e['grid'])-parseInt(e['position']);
-        
-
-        $('#race-standings tbody').append(`<tr>
-            <td>${e['position']}</td>
-            <td>${e['number']}</td>
-            <td><img src="assets/img/constructors/${e['Constructor']['constructorId']}.png" width="50"></td>
-            <td>${e['Constructor']['name']}</td>
-            <td>${e['points']}</td>
-            <td>${flagImg}</td>
-            <td>${e['Driver']['givenName']} ${e['Driver']['familyName']}</td>
-            <td><a href="#" onCLick="drawDriversLapTimes('${e['Driver']['driverId']}')">Show lap times</a></td>
-            <td>${e['grid']}</td>
-            <td>${gain}</td>
-            <td>${(gain >= 1) ? '>>' : (gain == 0) ? '=' : '<<'}</td>
-            <td>${('Time' in e) ? e['Time']['time'] : e['status']}</td>
+            let flag = countryFlags.find(i => i['nationality'] === e['Driver']['nationality']);
+            let flagImg = (flag) ? `<img src="https://www.countryflags.io/${flag['code']}/flat/24.png" alt="${e['Driver']['nationality']}">` : '';
+            let gain = parseInt(e['grid'])-parseInt(e['position']);
+            
+            $('#race-standings tbody').append(`<tr>
+                <td>${e['position']}</td>
+                <td>${e['number']}</td>
+                <td>${flagImg}</td>
+                <td>${e['Driver']['givenName']} ${e['Driver']['familyName']}</td>
+                <td><img src="assets/img/constructors/${e['Constructor']['constructorId']}.png" width="50"></td>
+                <td>${e['Constructor']['name']}</td>
+                <td>${e['points']}</td>
+                <td><a href="#" onCLick="drawDriversLapTimes('${e['Driver']['driverId']}')">Show lap times</a></td>
+                <td>${e['grid']}</td>
+                <td>${gain}</td>
+                <td>${(gain >= 1) ? '<i class="fas fa-angle-double-up"></i>' : (gain < 0) ? '<i class="fas fa-angle-double-down"></i>' : '' }</td>
+                <td>${('Time' in e) ? e['Time']['time'] : ''}</td>
+                <td>${(e['status'] === 'Finished') ? '<i class="fas fa-flag-checkered"></i>' : e['status'] }</td>
             </tr>`);
-    });
-}
+        });
+    }
 
 
+    function showErrors(e) {
+        $('#errors').html(e);
+        $('#errors').slideDown('slow');
+    }
 
 
     let urlParams = new URLSearchParams(window.location.search);
@@ -211,62 +214,55 @@ console.log(r);
     const F1_ROUND = (urlParams.has('round')) ? urlParams.get('round') : 'last';
 
 
-$(document).ready(function() {
+    $(document).ready(function() {
+
+        $.when($.getJSON(`https://ergast.com/api/f1/${F1_SEASON}/${F1_ROUND}/results.json`)).then(
+            function(response) {
+                console.log('SUCCESS',response);
+
+                let race = response['MRData']['RaceTable']['Races'][0];
+
+                if (!race) {
+                    showErrors('Array Empty');
+                    return;
+                }
+
+                drawCircuit(race['Circuit']);
+                drawRaceStandings(race['Results']);
+                drawDriversLapTimes(race['Results'][0]['Driver']['driverId']);// DO THIS AS A MODAL POPUP FOR EACH DRIVER
+            },
+            function(e) {
+                console.log('ERROR',e);
+                showErrors(e['statusText']);
+                // if (errorResponse.status === 404) {
+                //     $("#error").html(
+                //         `<h2>No info found for user ${username}</h2>`);
+                // } else if (errorResponse.status === 403) {
+                //     var resetTime = new Date(errorResponse.getResponseHeader('X-RateLimit-Reset') * 1000);
+                //     $("#error").html(`<h4>Too many requests, please wait until ${resetTime.toLocaleTimeString()}</h4>`);
+                // } else {
+                //     console.log(errorResponse);
+                //     $("#error").html(
+                //         `<h2>Error: ${errorResponse.responseJSON.message}</h2>`);
+                // }
+            }
+        );
 
 
+        // HELP WITH DATE
+        $.when($.getJSON(`https://ergast.com/api/f1/seasons.json?limit=9999`)).then(
+            function(response) {
+                console.log('SUCCESS',response);
+                response['MRData']['SeasonTable']['Seasons'].forEach(e => {                
+                    $('#season').append(`<option value="${e['season']}" ${(e['season'] === parseInt(F1_SEASON)) ? 'selected' : '' }>${e['season']}</option>`);
+                });
+            },
+            function(e) {
+                console.log('ERROR',e);
+                showErrors(e['statusText']);
+            }
+        );        
 
-    $.ajax({
-        "url": `https://ergast.com/api/f1/${F1_SEASON}/${F1_ROUND}/results.json`,
-        "method": "GET",
-        "timeout": 0 }).done(function (response) {
 
-        let race = response['MRData']['RaceTable']['Races'][0];
-
-        drawCircuit(race['Circuit']);
-        drawRaceStandings(race['Results']);
-        drawDriversLapTimes(race['Results'][0]['Driver']['driverId']);// DO THIS AS A MODAL POPUP FOR EACH DRIVER
-
+        // $('#season').append(`<option value="current" ${('current' === F1_SEASON) ? 'selected' : '' }>current</option>`);
     });
-
-
-    // $.ajax({
-    //     "url": `https://ergast.com/api/f1/${F1_SEASON}/next/circuits.json`,         // turn back to next
-    //     "method": "GET",
-    //     "timeout": 0 }).done(function (response) {
-
-    //     let race = response['MRData']['CircuitTable']['Circuits'][0];
-    // });
-
-
-
-
-
-
-    // $.when(
-    //     $.getJSON(`https://ergast.com/api/f1/drivers?=123`),
-    //     $.getJSON(`https://ergast.com/api/f1/drivers?=123`)
-    // ).then(
-    //     function(firstResponse, secondResponse) {
-    //         console.log(firstResponse[0]);
-    //         console.log(secondResponse[0]);
-    //         var userData = firstResponse[0];
-    //         var repoData = secondResponse[0];
-    //         $("#body").html(userData[0]);
-    //         $("#body2").html(repoData);
-    //     },
-    //     function(errorResponse) {
-    //         if (errorResponse.status === 404) {
-    //             $("#error").html(
-    //                 `<h2>No info found for user ${username}</h2>`);
-    //         } else if (errorResponse.status === 403) {
-    //             var resetTime = new Date(errorResponse.getResponseHeader('X-RateLimit-Reset') * 1000);
-    //             $("#error").html(`<h4>Too many requests, please wait until ${resetTime.toLocaleTimeString()}</h4>`);
-    //         } else {
-    //             console.log(errorResponse);
-    //             $("#error").html(
-    //                 `<h2>Error: ${errorResponse.responseJSON.message}</h2>`);
-    //         }
-    //     }
-    // );
-
-});
