@@ -21,13 +21,31 @@
         right:0;
         padding:20px;
     }
+    #nav-season, #nav-round {
+        list-style: none;
+    }
+
+    #nav-season li, #nav-round li {
+        display: inline-block;
+        padding: 5px;
+        margin: 10px;
+    }
+    nav a {
+        text-decoration: none;
+    }
+    nav li.nav-selected {
+        color: red;
+        border:1px solid red;
+    }
+
 </style>
     <div id="errors"></div>
 
-    <form action="GET">
-    <select id="season"></select>
-    <select id="round"></select>
-    </form>
+    <nav>
+        <div id="nav-season"><h2>Season ></h2><ul></ul></div>
+        
+        <div id="nav-round"><ul></ul></div>
+    </nav>
 
 
     <div id="body">

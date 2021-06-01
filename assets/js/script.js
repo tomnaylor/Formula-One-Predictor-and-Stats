@@ -115,8 +115,10 @@ const countryFlags = [
 function drawCircuit(c) {
 
     $('#body h1').html(c['circuitName']);
-    $('#track').attr("src",`assets/img/${circuits[c['circuitId']]['track-outline']}`);
-    $('#track-sectors').attr("src",`assets/img/${circuits[c['circuitId']]['track-sectors']}`);
+    $('#track').attr("src",`assets/img/${c['circuitId']}.png`);
+    $('#track-sectors').attr("src",`assets/img/${c['circuitId']}-sectors.png`);
+    // $('#track').attr("src",`assets/img/${circuits[c['circuitId']]['track-outline']}`);
+    // $('#track-sectors').attr("src",`assets/img/${circuits[c['circuitId']]['track-sectors']}`);
 
 
     // GOOGLE MAP API CALL
@@ -207,7 +209,7 @@ function drawDriversLapTimes(driverId) {
         $('#errors').slideDown('slow');
     }
 
-
+// CHANGE SO THERE IS NO PAGE RELOAD AND PARMS GET CHANGED (USE VAR) AND ROUNDS LIST GETS UPDATED ON NEW SEASON
     let urlParams = new URLSearchParams(window.location.search);
 
     const F1_SEASON = (urlParams.has('season')) ? urlParams.get('season') : 'current';
@@ -215,6 +217,7 @@ function drawDriversLapTimes(driverId) {
 
 
     $(document).ready(function() {
+
 
         $.when($.getJSON(`https://ergast.com/api/f1/${F1_SEASON}/${F1_ROUND}/results.json`)).then(
             function(response) {
@@ -249,12 +252,32 @@ function drawDriversLapTimes(driverId) {
         );
 
 
+        // $('#nav-season ul').slideUp('show');
+        
+        $('#nav-season').click(function(){
+            $('#nav-season ul').slideToggle('show');
+        });
+
+
         // HELP WITH DATE
         $.when($.getJSON(`https://ergast.com/api/f1/seasons.json?limit=9999`)).then(
             function(response) {
-                console.log('SUCCESS',response);
+                console.log('SUCCESS SEASONS',response);
                 response['MRData']['SeasonTable']['Seasons'].forEach(e => {                
-                    $('#season').append(`<option value="${e['season']}" ${(e['season'] === parseInt(F1_SEASON)) ? 'selected' : '' }>${e['season']}</option>`);
+                    $('#nav-season ul').prepend(`<li class="${(e['season'] == F1_SEASON) ? 'nav-selected' : '' }"><a href="?season=${e['season']}&round=${F1_ROUND}">${e['season']}</a></li>`);
+                });
+            },
+            function(e) {
+                console.log('ERROR',e);
+                showErrors(e['statusText']);
+            }
+        );        
+
+        $.when($.getJSON(`https://ergast.com/api/f1/${F1_SEASON}.json`)).then(
+            function(response) {
+                console.log('SUCCESS ROUNDS',response);
+                response['MRData']['RaceTable']['Races'].forEach(e => {                
+                    $('#nav-round ul').append(`<li class="${(e['round'] == F1_ROUND) ? 'nav-selected' : '' }"><a href="?season=${F1_SEASON}&round=${e['round']}">${e['round']} - ${e['raceName']}</a></li>`);
                 });
             },
             function(e) {
