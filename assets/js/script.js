@@ -209,7 +209,23 @@ function drawDriversLapTimes(driverId) {
         $('#errors').slideDown('slow');
     }
 
-// CHANGE SO THERE IS NO PAGE RELOAD AND PARMS GET CHANGED (USE VAR) AND ROUNDS LIST GETS UPDATED ON NEW SEASON
+
+    function getWikiJSON(url) {
+        $.when($.getJSON(url)).then(
+            function(response) {
+                console.log('WIKI GET SUCCESS',response);
+                return response;
+            },
+            function(e) {
+                console.log('WIKI GET ERROR',e);
+                showErrors(e['statusText']);
+            }
+        );
+    }
+
+
+
+        // CHANGE SO THERE IS NO PAGE RELOAD AND PARMS GET CHANGED (USE VAR) AND ROUNDS LIST GETS UPDATED ON NEW SEASON
     let urlParams = new URLSearchParams(window.location.search);
 
     const F1_SEASON = (urlParams.has('season')) ? urlParams.get('season') : 'current';
@@ -233,6 +249,45 @@ function drawDriversLapTimes(driverId) {
                 drawCircuit(race['Circuit']);
                 drawRaceStandings(race['Results']);
                 drawDriversLapTimes(race['Results'][0]['Driver']['driverId']);// DO THIS AS A MODAL POPUP FOR EACH DRIVER
+                
+//  https://en.wikipedia.org/w/api.php?action=parse&page=1950_Formula_One_season&format=json&origin=*
+//  NinoFarina.jpg
+//  action=query&titles=Image:INSERT_EXAMPLE_FILE_NAME_HERE.jpg&prop=imageinfo&iiprop=url
+
+                // GET RACE WIKI 
+                $.when($.getJSON(`https://en.wikipedia.org/w/api.php?action=parse&page=1950_Formula_One_season&format=json&origin=*`)).then(
+                    function(wiki) {
+                        wiki = wiki['parse'];
+                        console.log('SUCCESS WIKI',wiki);
+                        $('#wiki').html(wiki['externallinks'][0]);
+                        
+                        // wiki['images'].forEach(img => {
+                        //     $('#wiki').append(`<img src="https://en.wikipedia.org/wiki/File:${img}">`);
+                        // });
+
+                        $.when($.getJSON(`https://en.wikipedia.org/w/api.php?action=query&format=json&prop=imageinfo&iiprop=url&titles=File:NinoFarina.jpg|File:Alfa_Romeo_158_fr.jpg&origin=*`)).then(
+                            function(wiki) {
+                                wiki = wiki['query']['pages'];
+                                console.log('SUCCESS WIKI IMG',wiki);
+                                console.log('SUCCESS WIKI IMG',wiki[-1]);
+                               for (i=0; i < length.wiki; i++) {               
+                                    console.log(wiki[i]);
+                                };
+
+                            },
+                            function(e) {
+                                console.log('ERROR IMG WIKI',e);
+                                showErrors('Error getting WIKI images');
+                            }
+                        );        
+
+                    },
+                    function(e) {
+                        console.log('ERROR WIKI',e);
+                        showErrors(e['statusText']);
+                    }
+                );        
+                
             },
             function(e) {
                 console.log('ERROR',e);
@@ -262,6 +317,7 @@ function drawDriversLapTimes(driverId) {
         // HELP WITH DATE
         $.when($.getJSON(`https://ergast.com/api/f1/seasons.json?limit=9999`)).then(
             function(response) {
+                response['MRData']['SeasonTable']['Seasons'].push({season: 'current'});
                 console.log('SUCCESS SEASONS',response);
                 response['MRData']['SeasonTable']['Seasons'].forEach(e => {                
                     $('#nav-season ul').prepend(`<li class="${(e['season'] == F1_SEASON) ? 'nav-selected' : '' }"><a href="?season=${e['season']}&round=${F1_ROUND}">${e['season']}</a></li>`);
@@ -275,6 +331,7 @@ function drawDriversLapTimes(driverId) {
 
         $.when($.getJSON(`https://ergast.com/api/f1/${F1_SEASON}.json`)).then(
             function(response) {
+                response['MRData']['RaceTable']['Races'].unshift({raceName: '', round: 'last'});
                 console.log('SUCCESS ROUNDS',response);
                 response['MRData']['RaceTable']['Races'].forEach(e => {                
                     $('#nav-round ul').append(`<li class="${(e['round'] == F1_ROUND) ? 'nav-selected' : '' }"><a href="?season=${F1_SEASON}&round=${e['round']}">${e['round']} - ${e['raceName']}</a></li>`);
