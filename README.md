@@ -1,3 +1,10 @@
+Bugs
+Round number is highlighted in different years
+lap timings - splitting up the numbers - see research
+google chart not scaling with page size - see Research
+
+Research
+
 ![CI logo](https://codeinstitute.s3.amazonaws.com/fullstack/ci_logo_small.png)
 
 Welcome tomnaylor,

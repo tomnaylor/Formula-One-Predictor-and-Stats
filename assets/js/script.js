@@ -169,46 +169,92 @@ function drawCircuit(c) {
 // ERROR WHEN THERE ARE NO LAPS DRIVEN
 function drawDriversLapTimes(driverId) {
     $.ajax({
-        "url": `https://ergast.com/api/f1/${F1_SEASON}/${F1_ROUND}/drivers/${driverId}/laps.json?limit=200`,
+        "url": `https://ergast.com/api/f1/${F1_SEASON}/${F1_ROUND}/drivers/${driverId}|norris/laps.json?limit=200`,
         "method": "GET",
         "timeout": 0 }).done(function (response) {
 
-            google.charts.load('current', {'packages':['corechart']});
-            google.charts.setOnLoadCallback(drawChart);
-            $(window).resize(drawChart);            // REDRAW WHEN WINDOW CHANGES - SEE BOKMARKS
-            function drawChart() {
+        google.charts.load('current', {'packages':['bar']});
+        google.charts.setOnLoadCallback(drawChart);
+        $(window).resize(drawChart);            // REDRAW WHEN WINDOW CHANGES - SEE BOKMARKS
 
+        function drawChart() {
             var data = new google.visualization.DataTable();
+
             data.addColumn('string', 'Lap');
-            data.addColumn('number', 'Seconds');
 
-            response['MRData']['RaceTable']['Races'][0]['Laps'].forEach(lap => {
-                let tempTimeSplit = lap['Timings'][0]['time'].split(":"); // FIX IN THE MS2 BOOKMARKS
-                let tempTime = (parseFloat(tempTimeSplit[0])*60)+parseFloat(tempTimeSplit[1]);
-
-                data.addRows([[
-                    lap['number'],
-                    tempTime
-                ]]);
+            response['MRData']['RaceTable']['Races'][0]['Laps'][0]['Timings'].forEach(lap => {
+                    data.addColumn('number', lap['driverId']);
+                    console.log(lap);
             });
 
+
+
+
+
+            response['MRData']['RaceTable']['Races'][0]['Laps'].forEach(lap => {
+                tempRow = [lap['number']];
+
+                lap['Timings'].forEach(driver => {
+                    let tempTimeSplit = lap['Timings'][0]['time'].split(":"); // FIX IN THE MS2 BOOKMARKS
+                    let tempTime = (parseFloat(tempTimeSplit[0])*60)+parseFloat(tempTimeSplit[1]);
+
+                    tempRow.push(tempTime);
+                });
+
+                data.addRows([tempRow]);
+            });
+
+
             var options = {
-                title: `Lap times (${driverId})`,
-                curveType: 'function',
-                legend: { position: 'bottom' },
-                chartArea: {
-                    // leave room for y-axis labels
-                    width: '94%',
-                    height: '94%'
-                },
-                width: '100%',
-                height: '100%'
+            chart: {
+                title: 'Company Performance',
+                subtitle: 'Sales, Expenses, and Profit: 2014-2017',
+            },
+            bars: 'vertical' // Required for Material Bar Charts.
             };
 
-            var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+            var chart = new google.charts.Bar(document.getElementById('curve_chart'));
 
-            chart.draw(data, options);
+            chart.draw(data, google.charts.Bar.convertOptions(options));
         }
+
+
+        //     google.charts.load('current', {'packages':['bar']});
+        //     google.charts.setOnLoadCallback(drawChart);
+        //     $(window).resize(drawChart);            // REDRAW WHEN WINDOW CHANGES - SEE BOKMARKS
+        //     function drawChart() {
+
+        //     var data = new google.visualization.DataTable();
+        //     data.addColumn('string', 'Lap');
+        //     data.addColumn('number', 'Seconds');
+
+        //     response['MRData']['RaceTable']['Races'][0]['Laps'].forEach(lap => {
+        //         let tempTimeSplit = lap['Timings'][0]['time'].split(":"); // FIX IN THE MS2 BOOKMARKS
+        //         let tempTime = (parseFloat(tempTimeSplit[0])*60)+parseFloat(tempTimeSplit[1]);
+
+        //         data.addRows([[
+        //             lap['number'],
+        //             tempTime
+        //         ]]);
+        //     });
+
+        //     var options = {
+        //         title: `Lap times (${driverId})`,
+        //         curveType: 'function',
+        //         legend: { position: 'bottom' },
+        //         chartArea: {
+        //             // leave room for y-axis labels
+        //             width: '94%',
+        //             height: '94%'
+        //         },
+        //         width: '100%',
+        //         height: '100%'
+        //     };
+
+        //     var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+
+        //     chart.draw(data, options);
+        // }
     });    
 }
 
