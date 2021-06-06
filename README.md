@@ -2,6 +2,7 @@ Bugs
 Round number is highlighted in different years
 lap timings - splitting up the numbers - see research
 google chart not scaling with page size - see Research
+charts array is pain!
 
 Research
 

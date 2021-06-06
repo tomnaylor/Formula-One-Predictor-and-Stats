@@ -167,56 +167,71 @@ function drawCircuit(c) {
 }
 
 // ERROR WHEN THERE ARE NO LAPS DRIVEN
+        //"url": `https://ergast.com/api/f1/${F1_SEASON}/${F1_ROUND}/drivers/${driverId}|verstapan/laps.json?limit=200`,
 function drawDriversLapTimes(driverId) {
-    $.ajax({
-        "url": `https://ergast.com/api/f1/${F1_SEASON}/${F1_ROUND}/drivers/${driverId}|norris/laps.json?limit=200`,
-        "method": "GET",
-        "timeout": 0 }).done(function (response) {
+    
+    jsonCall(`https://ergast.com/api/f1/${F1_SEASON}/${F1_ROUND}/laps.json?limit=2000`, function(response) {
 
-        google.charts.load('current', {'packages':['bar']});
-        google.charts.setOnLoadCallback(drawChart);
-        $(window).resize(drawChart);            // REDRAW WHEN WINDOW CHANGES - SEE BOKMARKS
-
-        function drawChart() {
-            var data = new google.visualization.DataTable();
-
-            data.addColumn('string', 'Lap');
+            let driverIds = {};
+            let driverLaps = [];
 
             response['MRData']['RaceTable']['Races'][0]['Laps'][0]['Timings'].forEach(lap => {
-                    data.addColumn('number', lap['driverId']);
-                    console.log(lap);
+                driverIds[lap['driverId']] = lap['position'];
             });
 
-
-
-
-
+            console.log('driverIds',driverIds);
+            
             response['MRData']['RaceTable']['Races'][0]['Laps'].forEach(lap => {
-                tempRow = [lap['number']];
-
-                lap['Timings'].forEach(driver => {
+                lap['Timings'].forEach(lap => {
                     let tempTimeSplit = lap['Timings'][0]['time'].split(":"); // FIX IN THE MS2 BOOKMARKS
                     let tempTime = (parseFloat(tempTimeSplit[0])*60)+parseFloat(tempTimeSplit[1]);
 
                     tempRow.push(tempTime);
                 });
-
-                data.addRows([tempRow]);
             });
 
 
-            var options = {
-            chart: {
-                title: 'Company Performance',
-                subtitle: 'Sales, Expenses, and Profit: 2014-2017',
-            },
-            bars: 'vertical' // Required for Material Bar Charts.
-            };
+        // google.charts.load('current', {'packages':['bar']});
+        // google.charts.setOnLoadCallback(drawChart);
+        // $(window).resize(drawChart);            // REDRAW WHEN WINDOW CHANGES - SEE BOKMARKS
 
-            var chart = new google.charts.Bar(document.getElementById('curve_chart'));
+        // function drawChart() {
+        //     var data = new google.visualization.DataTable();
 
-            chart.draw(data, google.charts.Bar.convertOptions(options));
-        }
+        //     data.addColumn('string', 'Lap');
+
+        //     response['MRData']['RaceTable']['Races'][0]['Laps'][0]['Timings'].forEach(lap => {
+        //             data.addColumn('number', lap['driverId']);
+        //     });
+
+        //     response['MRData']['RaceTable']['Races'][0]['Laps'].forEach(lap => {
+        //         tempRow = [lap['number']];
+
+        //         lap['Timings'].forEach(driver => {
+        //             let tempTimeSplit = lap['Timings'][0]['time'].split(":"); // FIX IN THE MS2 BOOKMARKS
+        //             let tempTime = (parseFloat(tempTimeSplit[0])*60)+parseFloat(tempTimeSplit[1]);
+
+        //             tempRow.push(tempTime);
+        //         });
+        //         data.addRows([tempRow]);
+        //     });
+
+
+        //     var options = {
+        //     chart: {
+        //         title: 'Company Performance',
+        //         subtitle: 'Sales, Expenses, and Profit: 2014-2017',
+        //     },
+        //     bars: 'vertical' // Required for Material Bar Charts.
+        //     };
+
+        //     var chart = new google.charts.Bar(document.getElementById('curve_chart'));
+
+        //     chart.draw(data, google.charts.Bar.convertOptions(options));
+        // }
+
+
+
 
 
         //     google.charts.load('current', {'packages':['bar']});
