@@ -167,109 +167,45 @@ function drawCircuit(c) {
 }
 
 // ERROR WHEN THERE ARE NO LAPS DRIVEN
-        //"url": `https://ergast.com/api/f1/${F1_SEASON}/${F1_ROUND}/drivers/${driverId}|verstapan/laps.json?limit=200`,
-function drawDriversLapTimes(driverId) {
+function drawDriversLapTimes(driverId, containerId) {
     
-    jsonCall(`https://ergast.com/api/f1/${F1_SEASON}/${F1_ROUND}/laps.json?limit=2000`, function(response) {
+    jsonCall(`https://ergast.com/api/f1/${F1_SEASON}/${F1_ROUND}/drivers/${driverId}/laps.json?limit=200`, function(response) {
 
-            let driverIds = {};
-            let driverLaps = [];
+        let ctx = document.getElementById(containerId).getContext('2d'); // HAS ERROR ON CONSOLE
+        let labelsArray = [];
+        let dataArray = [];
 
-            response['MRData']['RaceTable']['Races'][0]['Laps'][0]['Timings'].forEach(lap => {
-                driverIds[lap['driverId']] = lap['position'];
-            });
+        response['MRData']['RaceTable']['Races'][0]['Laps'].forEach(lap => {
+            labelsArray.push(lap['number']);
 
-            console.log('driverIds',driverIds);
-            
-            response['MRData']['RaceTable']['Races'][0]['Laps'].forEach(lap => {
-                lap['Timings'].forEach(lap => {
-                    let tempTimeSplit = lap['Timings'][0]['time'].split(":"); // FIX IN THE MS2 BOOKMARKS
-                    let tempTime = (parseFloat(tempTimeSplit[0])*60)+parseFloat(tempTimeSplit[1]);
+            let tempTimeSplit = lap['Timings'][0]['time'].split(":"); // FIX IN THE MS2 BOOKMARKS
+            let tempTime = (parseFloat(tempTimeSplit[0])*60)+parseFloat(tempTimeSplit[1]);
 
-                    tempRow.push(tempTime);
-                });
-            });
+            dataArray.push(tempTime);
+        });
 
 
-        // google.charts.load('current', {'packages':['bar']});
-        // google.charts.setOnLoadCallback(drawChart);
-        // $(window).resize(drawChart);            // REDRAW WHEN WINDOW CHANGES - SEE BOKMARKS
-
-        // function drawChart() {
-        //     var data = new google.visualization.DataTable();
-
-        //     data.addColumn('string', 'Lap');
-
-        //     response['MRData']['RaceTable']['Races'][0]['Laps'][0]['Timings'].forEach(lap => {
-        //             data.addColumn('number', lap['driverId']);
-        //     });
-
-        //     response['MRData']['RaceTable']['Races'][0]['Laps'].forEach(lap => {
-        //         tempRow = [lap['number']];
-
-        //         lap['Timings'].forEach(driver => {
-        //             let tempTimeSplit = lap['Timings'][0]['time'].split(":"); // FIX IN THE MS2 BOOKMARKS
-        //             let tempTime = (parseFloat(tempTimeSplit[0])*60)+parseFloat(tempTimeSplit[1]);
-
-        //             tempRow.push(tempTime);
-        //         });
-        //         data.addRows([tempRow]);
-        //     });
-
-
-        //     var options = {
-        //     chart: {
-        //         title: 'Company Performance',
-        //         subtitle: 'Sales, Expenses, and Profit: 2014-2017',
-        //     },
-        //     bars: 'vertical' // Required for Material Bar Charts.
-        //     };
-
-        //     var chart = new google.charts.Bar(document.getElementById('curve_chart'));
-
-        //     chart.draw(data, google.charts.Bar.convertOptions(options));
-        // }
-
-
-
-
-
-        //     google.charts.load('current', {'packages':['bar']});
-        //     google.charts.setOnLoadCallback(drawChart);
-        //     $(window).resize(drawChart);            // REDRAW WHEN WINDOW CHANGES - SEE BOKMARKS
-        //     function drawChart() {
-
-        //     var data = new google.visualization.DataTable();
-        //     data.addColumn('string', 'Lap');
-        //     data.addColumn('number', 'Seconds');
-
-        //     response['MRData']['RaceTable']['Races'][0]['Laps'].forEach(lap => {
-        //         let tempTimeSplit = lap['Timings'][0]['time'].split(":"); // FIX IN THE MS2 BOOKMARKS
-        //         let tempTime = (parseFloat(tempTimeSplit[0])*60)+parseFloat(tempTimeSplit[1]);
-
-        //         data.addRows([[
-        //             lap['number'],
-        //             tempTime
-        //         ]]);
-        //     });
-
-        //     var options = {
-        //         title: `Lap times (${driverId})`,
-        //         curveType: 'function',
-        //         legend: { position: 'bottom' },
-        //         chartArea: {
-        //             // leave room for y-axis labels
-        //             width: '94%',
-        //             height: '94%'
-        //         },
-        //         width: '100%',
-        //         height: '100%'
-        //     };
-
-        //     var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
-
-        //     chart.draw(data, options);
-        // }
+        let myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labelsArray,
+                datasets: [{
+                    label: 'Lap time (s)',
+                    data: dataArray,
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                pointRadius: 1,
+                scales: {
+                    y: {
+                        beginAtZero: false
+                    }
+                }
+            }
+        });
     });    
 }
 
@@ -301,6 +237,35 @@ function drawDriversLapTimes(driverId) {
             </tr>`);
         });
     }
+
+
+    function headToHead(one,two) {
+
+        let loop = one;
+
+        for (i=1; i<=2; i++) {
+            let flag = countryFlags.find(i => i['nationality'] === loop['Driver']['nationality']);
+            let gain = parseInt(loop['grid'])-parseInt(loop['position']);
+
+            $(`#head2head-${i}`).html(`
+                <img class="head2head-car" src="assets/img/constructors/${loop['Constructor']['constructorId']}.png">
+                <h3>${loop['Driver']['familyName']} [${loop['Driver']['permanentNumber']}]</h3>
+                <img class="head2head-flag" src="https://www.countryflags.io/${flag['code']}/flat/64.png" alt="${loop['Driver']['nationality']}">
+
+                <div class="head2head-position">#${loop['position']}</div>
+                <div class="head2head-points">${loop['points']} pts</div>
+                <div class="head2head-grid">${gain} ${(gain >= 1) ? '<i class="fas fa-angle-double-up"></i>' : (gain < 0) ? '<i class="fas fa-angle-double-down"></i>' : '' }</div>
+                <div class="head2head-fastestLap">Fastest Lap ${loop['FastestLap']['Time']['time']} (#${loop['FastestLap']['rank']})</div>
+                <div class="head2head-averageSpeek">${loop['FastestLap']['AverageSpeed']['speed']}${loop['FastestLap']['AverageSpeed']['units']}</div>
+                <canvas id="head2head-laptimes-${i}" width="400" height="400"></canvas>
+                `);
+
+            drawDriversLapTimes(loop['Driver']['driverId'],`head2head-laptimes-${i}`);
+            loop = two;
+        }
+    }
+
+
 
 
     function showErrors(e) {
@@ -431,6 +396,7 @@ function raceResults(season, round) {
         $('h1').html(`${season} Season | Round ${round} | ${ race['raceName'] }`);
 
         drawCircuit(race['Circuit']);
+        headToHead(race['Results'][0],race['Results'][1]);
         drawRaceStandings(race['Results']);
         drawDriversLapTimes(race['Results'][0]['Driver']['driverId']);// DO THIS AS A MODAL POPUP FOR EACH DRIVER
     

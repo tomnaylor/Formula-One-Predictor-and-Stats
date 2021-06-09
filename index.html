@@ -8,7 +8,9 @@
     <script src="https://kit.fontawesome.com/444581f9cb.js" crossorigin="anonymous"></script>   
     <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCrxniDYzXlLNFSfs0JDnvaJTvfhIG5CaE&libraries=&v=weekly" async></script>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.3.2/dist/chart.min.js" integrity="sha256-qoN08nWXsFH+S9CtIq99e5yzYHioRHtNB9t2qy1MSmc=" crossorigin="anonymous"></script>
+    <!-- <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> -->
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
 <style>
@@ -50,6 +52,37 @@
         border:1px solid red;
     }
 
+    #head2head > div { 
+        display: inline-block;
+        text-align: center;
+    }
+
+    #head2head-vs {
+        height:100%;
+        margin:auto 0;
+    }
+    .head2head-car {
+        width:400px;
+        display:block;
+    }
+
+    .head2head-flag {
+        width:64px;
+        display:block;
+        margin:0 auto;
+    }
+    .head2head-position {
+        font-size:35px;
+        font-weight:700;
+    }
+
+    #head2head h3 { 
+        font-size:30px;
+    }
+    #head2head-vs {
+        font-size:50px;
+    }
+
 </style>
 
     <div id="errors"></div>
@@ -67,6 +100,13 @@
         <h1>Track name</h1>
         <img src="https://chrisdermody.com/content/images/2017/12/engine8.svg" id="track" width="300">
         <img src="https://chrisdermody.com/content/images/2017/12/engine8.svg" id="track-sectors" width="300">
+    </div>
+
+    <div id="head2head">
+        <h2>Head to Head</h2>
+        <div id="head2head-1"></div>
+        <div id="head2head-vs">Vs</div>
+        <div id="head2head-2"></div>
     </div>
 
 
