@@ -134,8 +134,6 @@ const countryFlags = [
         'nationality' : 'Monegasque',
         'code' : 'MC'
     }
-
-    //  	
 ]
 
 
@@ -156,7 +154,6 @@ function drawCircuit(c) {
         $('#track-sectors').attr("src",``);
     }
 
-
     // GOOGLE MAP API CALL
     let map;
     map = new google.maps.Map(document.getElementById("map"), {     // removed callback function as only gets written when circuit api is done.
@@ -166,6 +163,7 @@ function drawCircuit(c) {
     });
 }
 
+
 // ERROR WHEN THERE ARE NO LAPS DRIVEN
 function drawDriversLapTimes(driverId, containerId) {
     
@@ -173,15 +171,18 @@ function drawDriversLapTimes(driverId, containerId) {
 
         let ctx = document.getElementById(containerId).getContext('2d'); // HAS ERROR ON CONSOLE
         let labelsArray = [];
-        let dataArray = [];
+        let dataArrayTimes = [];
+        let dataArrayPosition = [];
 
         response['MRData']['RaceTable']['Races'][0]['Laps'].forEach(lap => {
             labelsArray.push(lap['number']);
 
             let tempTimeSplit = lap['Timings'][0]['time'].split(":"); // FIX IN THE MS2 BOOKMARKS
             let tempTime = (parseFloat(tempTimeSplit[0])*60)+parseFloat(tempTimeSplit[1]);
+            if (tempTime > 300) tempTime = 300;
 
-            dataArray.push(tempTime);
+            dataArrayTimes.push(tempTime);
+            dataArrayPosition.push(lap['Timings'][0]['position']);
         });
 
 
@@ -189,20 +190,40 @@ function drawDriversLapTimes(driverId, containerId) {
             type: 'line',
             data: {
                 labels: labelsArray,
-                datasets: [{
-                    label: 'Lap time (s)',
-                    data: dataArray,
-                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                    borderColor: 'rgba(255, 99, 132, 1)',
-                    borderWidth: 1
-                }]
+                datasets: [
+                    {
+                        label: 'Lap time (s)',
+                        data: dataArrayTimes,
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1,
+                        yAxisID: 'y',
+                    },
+                    {
+                        label: 'Track position',
+                        data: dataArrayPosition,
+                        borderColor: 'rgba(0, 0, 132, 0.3)',
+                        borderWidth: 1,
+                        yAxisID: 'y1',
+                    }            
+                ]
             },
             options: {
-                pointRadius: 1,
+                pointRadius: 0,
                 scales: {
                     y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
                         beginAtZero: false
-                    }
+                    },
+                    y1: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        grid: {
+                            drawOnChartArea: false,
+                        },
+                    },
                 }
             }
         });
@@ -213,7 +234,7 @@ function drawDriversLapTimes(driverId, containerId) {
 
     function drawRaceStandings(r) {
         $('#race-standings tbody').empty();
-        r.forEach(e => {
+        r.forEach((e, key) => {
 
             let flag = countryFlags.find(i => i['nationality'] === e['Driver']['nationality']);
             let flagImg = (flag) ? `<img src="https://www.countryflags.io/${flag['code']}/flat/24.png" alt="${e['Driver']['nationality']}">` : '';
@@ -228,7 +249,10 @@ function drawDriversLapTimes(driverId, containerId) {
                 <td><img src="assets/img/constructors/${e['Constructor']['constructorId']}.png" width="50"></td>
                 <td>${e['Constructor']['name']}</td>
                 <td>${e['points']}</td>
-                <td><a href="#" onCLick="drawDriversLapTimes('${e['Driver']['driverId']}')">Show lap times</a></td>
+                <td>
+                    <button class="button head2head-select1" data-key="${key}">a</button>
+                    <button class="button head2head-select2" data-key="${key}">b</button>
+                </td>
                 <td>${e['grid']}</td>
                 <td>${gain}</td>
                 <td>${(gain >= 1) ? '<i class="fas fa-angle-double-up"></i>' : (gain < 0) ? '<i class="fas fa-angle-double-down"></i>' : '' }</td>
@@ -236,6 +260,15 @@ function drawDriversLapTimes(driverId, containerId) {
                 <td>${(e['status'] === 'Finished') ? '<i class="fas fa-flag-checkered"></i>' : e['status'] }</td>
             </tr>`);
         });
+    
+        $(".head2head-select1").click(function() {
+            headToHead(r[this.dataset.key],F1_HEAD2HEAD_2);
+        })
+    
+        $(".head2head-select2").click(function() {
+            headToHead(F1_HEAD2HEAD_1,r[this.dataset.key]);
+        })
+
     }
 
 
@@ -255,8 +288,12 @@ function drawDriversLapTimes(driverId, containerId) {
                 <div class="head2head-position">#${loop['position']}</div>
                 <div class="head2head-points">${loop['points']} pts</div>
                 <div class="head2head-grid">${gain} ${(gain >= 1) ? '<i class="fas fa-angle-double-up"></i>' : (gain < 0) ? '<i class="fas fa-angle-double-down"></i>' : '' }</div>
-                <div class="head2head-fastestLap">Fastest Lap ${loop['FastestLap']['Time']['time']} (#${loop['FastestLap']['rank']})</div>
-                <div class="head2head-averageSpeek">${loop['FastestLap']['AverageSpeed']['speed']}${loop['FastestLap']['AverageSpeed']['units']}</div>
+
+                ${ (loop['FastestLap']) ? `
+                    <div class="head2head-fastestLap">Fastest Lap ${loop['FastestLap']['Time']['time']} (#${loop['FastestLap']['rank']})</div>
+                    <div class="head2head-averageSpeek">${loop['FastestLap']['AverageSpeed']['speed']}${loop['FastestLap']['AverageSpeed']['units']}</div>` : `` }
+                    
+                <h4>Lap Times</h4>
                 <canvas id="head2head-laptimes-${i}" width="400" height="400"></canvas>
                 `);
 
@@ -266,35 +303,15 @@ function drawDriversLapTimes(driverId, containerId) {
     }
 
 
+// SHOW ERRORS
+function showErrors(e) {
+    $('#errors').html(e);
+    $('#errors').slideDown('slow');
+}
 
 
-    function showErrors(e) {
-        $('#errors').html(e);
-        $('#errors').slideDown('slow');
-    }
-
-
-    // function getWikiJSON(url) {
-    //     $.when($.getJSON(url)).then(
-    //         function(response) {
-    //             console.log('WIKI GET SUCCESS',response);
-    //             return response;
-    //         },
-    //         function(e) {
-    //             console.log('WIKI GET ERROR',e);
-    //             showErrors(e['statusText']);
-    //         }
-    //     );
-    // }
-
-
+// GET RACE WIKI 
 function getWikiInfo(url) {
-    //  https://en.wikipedia.org/w/api.php?action=parse&page=1950_Formula_One_season&format=json&origin=*
-    //  NinoFarina.jpg
-    //  action=query&titles=Image:INSERT_EXAMPLE_FILE_NAME_HERE.jpg&prop=imageinfo&iiprop=url
-    //  "https://en.wikipedia.org/wiki/2020_Formula_One_World_Championship"
-
-    // GET RACE WIKI 
     $.when($.getJSON(`https://en.wikipedia.org/w/api.php?action=parse&page=2021_Monaco_Grand_Prix&format=json&origin=*`)).then(
         function(wiki) {
             wiki = wiki['parse'];
@@ -310,8 +327,8 @@ function getWikiInfo(url) {
                 function(wiki) {
                     wiki = wiki['query']['pages'];
                     console.log('SUCCESS WIKI IMG',wiki);
-                    for (let key in wiki) {        
-                        $('#wiki').append(`<img src="${wiki[key]['imageinfo'][0]['url']}" width="100">`);       
+                    for (let key in wiki) {
+                        $('#wiki').append(`<img src="${wiki[key]['imageinfo'][0]['url']}" width="100">`);
                         // console.log(wiki[i]);
                     };
 
@@ -320,24 +337,18 @@ function getWikiInfo(url) {
                     console.log('ERROR IMG WIKI',e);
                     showErrors('Error getting WIKI images');
                 }
-            );        
+            );
 
         },
         function(e) {
             console.log('ERROR WIKI',e);
             showErrors(e['statusText']);
         }
-    );        
-                
+    );
 }
 
 
-    // CHANGE SO THERE IS NO PAGE RELOAD AND PARMS GET CHANGED (USE VAR) AND ROUNDS LIST GETS UPDATED ON NEW SEASON
-    // let urlParams = new URLSearchParams(window.location.search);
-
-    // const F1_SEASON = (urlParams.has('season')) ? urlParams.get('season') : 'current';
-    // const F1_ROUND = (urlParams.has('round')) ? urlParams.get('round') : 'last';
-
+// JSON CALL FUNCTION. RETURN ERROR IF NEEDED
 function jsonCall(url,callback, error = 'Default error'){
     $.when($.getJSON(url)).then(
         function(response) {
@@ -345,7 +356,7 @@ function jsonCall(url,callback, error = 'Default error'){
             callback(response);
        },
         function(e) {
-            console.log(error,e);
+            console.log(`JSON ERROR:`,error,e);
             showErrors(`${error} (${e['statusText']})`);
         }
     );
@@ -385,7 +396,6 @@ function raceResults(season, round) {
 
     jsonCall(`https://ergast.com/api/f1/${season}/${round}/results.json`, function(response) {
 
-
         let race = response['MRData']['RaceTable']['Races'][0];
 
         if (!race) {
@@ -393,17 +403,22 @@ function raceResults(season, round) {
             return;
         }
 
+        F1_HEAD2HEAD_1 = race['Results'][0];
+        F1_HEAD2HEAD_2 = race['Results'][1];
+
         $('h1').html(`${season} Season | Round ${round} | ${ race['raceName'] }`);
 
         drawCircuit(race['Circuit']);
-        headToHead(race['Results'][0],race['Results'][1]);
+
+
         drawRaceStandings(race['Results']);
         drawDriversLapTimes(race['Results'][0]['Driver']['driverId']);// DO THIS AS A MODAL POPUP FOR EACH DRIVER
-    
-
+        headToHead(F1_HEAD2HEAD_1, F1_HEAD2HEAD_2);
     });    
 }
 
+
+// CHANGE ROUND LIST TO THE SEASON YEAR CLICKED ON
 function changeSeason(season) {
     F1_SEASON = season;
     $(`#nav-season ul li`).removeClass('nav-selected');
@@ -413,7 +428,6 @@ function changeSeason(season) {
 
 
 // PROBLEM - SELECTED ROUND DOES NOT WORK
-
 function changeRound(round) {
     F1_ROUND = round;
     $(`#nav-round ul li`).removeClass('nav-selected');
@@ -421,8 +435,9 @@ function changeRound(round) {
     raceResults(F1_SEASON, F1_ROUND);
 }
 
+
 // SETUP GLOBAL VARS
-var F1_ROUND, F1_SEASON;
+var F1_ROUND, F1_SEASON, F1_HEAD2HEAD_1, F1_HEAD2HEAD_2;
 
 
     $(document).ready(function() {
@@ -452,18 +467,12 @@ var F1_ROUND, F1_SEASON;
 
         });
 
+    
 
 
 
-
-        // $('nav').slideUp(0);
-        
         $('h1').click(function(){
             $('nav ul').slideToggle('slow');
         });
 
-
-
-
-        // $('#season').append(`<option value="current" ${('current' === F1_SEASON) ? 'selected' : '' }>current</option>`);
     });
