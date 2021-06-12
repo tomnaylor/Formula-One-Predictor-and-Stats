@@ -17,41 +17,8 @@ const circuits = {
     'azerbaijan' : { 
         'track-outline' : 'azerbaijan.png',
         'track-sectors' : 'azerbaijan-sectors.png' },
-        
 };
 
-// const CONSTRUCTORS = {
-//     'alfa' : {
-//         'car-image' : 'alra_romeo.png'
-//     },
-//     'alphatauri' : {
-//         'car-image' : 'alphatauri.png'
-//     },
-//     'alpine' : {
-//         'car-image' : 'alpine.png'
-//     },
-//     'aston_martin' : {
-//         'car-image' : 'aston_martin.png'
-//     },
-//     'ferrari' : {
-//         'car-image' : 'ferrari.png'
-//     },
-//     'haas' : {
-//         'car-image' : 'haas.png'
-//     },
-//     'mclaren' : {
-//         'car-image' : 'mclaren.png'
-//     },
-//     'mercedes' : {
-//         'car-image' : 'mercedes.png'
-//     },
-//     'red_bull' : {
-//         'car-image' : 'red_bull.png'
-//     },
-//     'williams' : {
-//         'car-image' : 'williams.png'
-//     },
-// }
 
 const countryFlags = [
     {
@@ -134,10 +101,31 @@ const countryFlags = [
         'nationality' : 'Monegasque',
         'code' : 'MC'
     }
-]
+];
 
 
+// SHOW NON-FATAL ERRORS
+function showErrors(e) {
+    $('#errors').html(e);
+    $('#errors').slideDown('slow');
+    // console.log(`ERROR`, e)
+}
 
+
+// JSON CALL FUNCTION. RETURN ERROR IF NEEDED
+function jsonCall(url,callback, error = 'Default error', errorCallBack){
+    $.when($.getJSON(url)).then(
+        function(response) {
+            console.log(`JSON SUCCESS: ${url}`,response);
+            callback(response);
+       },
+        function(e) {
+            console.log(`JSON ERROR:`,error,e);
+            showErrors(`${error} (${e['statusText']})`);
+            errorCallBack(`${error}`);
+        }
+    );
+}
 
 
 function drawCircuit(c) {
@@ -220,6 +208,8 @@ function drawDriversLapTimes(driverId, containerId) {
                         type: 'linear',
                         display: true,
                         position: 'right',
+                        min:1,
+                        max:20,
                         grid: {
                             drawOnChartArea: false,
                         },
@@ -227,7 +217,7 @@ function drawDriversLapTimes(driverId, containerId) {
                 }
             }
         });
-    });    
+    }, 'Sorry there was a problem getting the driver lap times. Please try again', (e) => $(`#${containerId}`).replaceWith(`<span class="color-accent-bg color-light text-upper text-bold text-pad">${e}</span>`));    
 }
 
 
@@ -303,11 +293,6 @@ function drawDriversLapTimes(driverId, containerId) {
     }
 
 
-// SHOW ERRORS
-function showErrors(e) {
-    $('#errors').html(e);
-    $('#errors').slideDown('slow');
-}
 
 
 // GET RACE WIKI 
@@ -348,42 +333,11 @@ function getWikiInfo(url) {
 }
 
 
-// JSON CALL FUNCTION. RETURN ERROR IF NEEDED
-function jsonCall(url,callback, error = 'Default error'){
-    $.when($.getJSON(url)).then(
-        function(response) {
-            console.log(`JSON SUCCESS: ${url}`,response);
-            callback(response);
-       },
-        function(e) {
-            console.log(`JSON ERROR:`,error,e);
-            showErrors(`${error} (${e['statusText']})`);
-        }
-    );
-}
-
-
 
 
     // GAME WHERE YOU GUESS WHERE CARS FINISH BEFORE THE TABLE IS MATCHED UP. POINTS FOR EACH ONE RIGHT.
 
 
-function navRounds(season) {
-    // SHOW ALL ROUNDS FOR THIS SEASON
-    jsonCall(`https://ergast.com/api/f1/${season}.json`, function(response) {
-        $('#nav-round ul').html('');
-        response['MRData']['RaceTable']['Races'].forEach(e => {                
-            $('#nav-round ul').append(`
-                <li id="nav-round-${season}-${e['round']}" onClick="changeRound(${e['round']})">
-                    <div class="nav-round-num">${e['round']}</div>
-                    <div class="nav-round-date">${e['date']} ${e['time']}</div>
-                    <div class="nav-round-name">${e['raceName']}</div>
-                </li>`);
-        });
-        $(`#nav-round-${F1_SEASON}-${F1_ROUND}`).addClass('nav-selected');
-
-    });   
-}
 
 
 
@@ -412,9 +366,11 @@ function raceResults(season, round) {
 
 
         drawRaceStandings(race['Results']);
-        drawDriversLapTimes(race['Results'][0]['Driver']['driverId']);// DO THIS AS A MODAL POPUP FOR EACH DRIVER
+        // drawDriversLapTimes(race['Results'][0]['Driver']['driverId']);// DO THIS AS A MODAL POPUP FOR EACH DRIVER
         headToHead(F1_HEAD2HEAD_1, F1_HEAD2HEAD_2);
-    });    
+    }, 
+    'Error getting race results', 
+    (e) => $(`#race-standings tbody`).html(`<tr><td colspan="14" class="color-accent text-upper text-bold">${e}</td></tr>`));    
 }
 
 
@@ -436,43 +392,67 @@ function changeRound(round) {
 }
 
 
+function navRounds(season) {
+    // SHOW ALL ROUNDS FOR THIS SEASON
+    jsonCall(`https://ergast.com/api/f1/${season}.json`, function(response) {
+        $('#nav-round ul').html('');
+        response['MRData']['RaceTable']['Races'].forEach(e => {                
+            $('#nav-round ul').append(`
+                <li id="nav-round-${season}-${e['round']}" onClick="changeRound(${e['round']})">
+                    <div class="nav-round-num">${e['round']}</div>
+                    <div class="nav-round-date">${e['date']} ${e['time']}</div>
+                    <div class="nav-round-name">${e['raceName']}</div>
+                </li>`);
+        });
+        $(`#nav-round-${F1_SEASON}-${F1_ROUND}`).addClass('nav-selected');
+
+    }, 
+    'Error getting list of rounds', 
+    (e) => $(`#nav-round ul`).addClass('color-accent text-center text-upper text-bold').html(`<li>${e}</li>`));   
+}
+
+
+
 // SETUP GLOBAL VARS
 var F1_ROUND, F1_SEASON, F1_HEAD2HEAD_1, F1_HEAD2HEAD_2;
 
 
-    $(document).ready(function() {
+$(document).ready(function() {
 
 
-        // GET FIRST JSON CALL FOR SEASON AND ROUND NUMBERS
-        jsonCall('https://ergast.com/api/f1/current/last/results.json', function(response) {
+    // GET FIRST JSON CALL FOR SEASON AND ROUND NUMBERS
+    jsonCall('https://ergast.com/api/f1/current/last/results.json', function(response) {
+        
+        F1_SEASON = response['MRData']['RaceTable']['season'];
+        F1_ROUND = response['MRData']['RaceTable']['round'];
+
+
+        // SHOW ALL SEASONS
+        jsonCall(`https://ergast.com/api/f1/seasons.json?limit=999`, function(response) {
+
+
+            response['MRData']['SeasonTable']['Seasons'].forEach(e => {
+                $('#nav-season ul').prepend(`<li id="nav-season-${e['season']}" onClick="changeSeason(${e['season']})">${e['season']}</li>`);
+            });
             
-            F1_SEASON = response['MRData']['RaceTable']['season'];
-            F1_ROUND = response['MRData']['RaceTable']['round'];
+            $(`#nav-season-${F1_SEASON}`).addClass('nav-selected');
+        }, 
+        'Error getting list of seasons', 
+        (e) => $(`#nav-season ul`).addClass('color-accent text-center text-upper text-bold').html(`<li>${e}</li>`));        
 
 
-            // SHOW ALL SEAONS
-            jsonCall(`https://ergast.com/api/f1/seasons.json?limit=9999`, function(response) {
+        navRounds(F1_SEASON);
+        raceResults(F1_SEASON,F1_ROUND);
+        // $('nav ul').slideDown('slow'); 
 
-
-                response['MRData']['SeasonTable']['Seasons'].forEach(e => {
-                    $('#nav-season ul').prepend(`<li id="nav-season-${e['season']}" onClick="changeSeason(${e['season']})">${e['season']}</li>`);
-                });
-                
-                $(`#nav-season-${F1_SEASON}`).addClass('nav-selected');
-            });        
-
-
-            navRounds(F1_SEASON);
-            raceResults(F1_SEASON,F1_ROUND);
-
-        });
-
-    
+    }, 
+    'Error getting current season and round', 
+    (e) => $(`body`).addClass('color-accent-bg text-center').html(`<span class="color-light text-upper text-bold">${e}</span>`));
 
 
 
-        $('h1').click(function(){
-            $('nav ul').slideToggle('slow');
-        });
-
+    $('h1').click(function(){
+        $('nav ul').slideToggle('slow');
     });
+
+});

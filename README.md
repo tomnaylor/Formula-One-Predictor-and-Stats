@@ -4,6 +4,9 @@ lap timings - splitting up the numbers - see research
 google chart not scaling with page size - see Research
 charts array is pain!
 
+additions
+adding cache = https://blog.logrocket.com/javascript-cache-api/
+
 Research
 
 ![CI logo](https://codeinstitute.s3.amazonaws.com/fullstack/ci_logo_small.png)
