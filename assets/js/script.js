@@ -242,6 +242,7 @@ function drawDriversLapTimes(driverId, containerId) {
                 <td>
                     <button class="button head2head-select1" data-key="${key}">a</button>
                     <button class="button head2head-select2" data-key="${key}">b</button>
+                    <button class="button head2head-select3" data-key="${key}">c</button>
                 </td>
                 <td>${e['grid']}</td>
                 <td>${gain}</td>
@@ -252,21 +253,25 @@ function drawDriversLapTimes(driverId, containerId) {
         });
     
         $(".head2head-select1").click(function() {
-            headToHead(r[this.dataset.key],F1_HEAD2HEAD_2);
-        })
+            headToHead(r[this.dataset.key],F1_HEAD2HEAD_2,F1_HEAD2HEAD_3);
+        });
     
         $(".head2head-select2").click(function() {
-            headToHead(F1_HEAD2HEAD_1,r[this.dataset.key]);
-        })
+            headToHead(F1_HEAD2HEAD_1,r[this.dataset.key],F1_HEAD2HEAD_3);
+        });
+
+        $(".head2head-select3").click(function() {
+            headToHead(F1_HEAD2HEAD_1,F1_HEAD2HEAD_2,r[this.dataset.key]);
+        });
 
     }
 
 
-    function headToHead(one,two) {
+    function headToHead(one,two,three) {
 
         let loop = one;
 
-        for (i=1; i<=2; i++) {
+        for (i=1; i<=3; i++) {
             let flag = countryFlags.find(i => i['nationality'] === loop['Driver']['nationality']);
             let gain = parseInt(loop['grid'])-parseInt(loop['position']);
 
@@ -286,10 +291,11 @@ function drawDriversLapTimes(driverId, containerId) {
                 <h4>Lap Times</h4>
                 <canvas id="head2head-laptimes-${i}" width="400" height="400"></canvas>
                 `);
-
+            $(`#head2head-${i}`).slideDown('slow');
             drawDriversLapTimes(loop['Driver']['driverId'],`head2head-laptimes-${i}`);
-            loop = two;
+            loop = (loop === one) ? two : three;
         }
+        
     }
 
 
@@ -359,6 +365,7 @@ function raceResults(season, round) {
 
         F1_HEAD2HEAD_1 = race['Results'][0];
         F1_HEAD2HEAD_2 = race['Results'][1];
+        F1_HEAD2HEAD_3 = race['Results'][2];
 
         $('h1').html(`${season} Season | Round ${round} | ${ race['raceName'] }`);
 
@@ -367,7 +374,7 @@ function raceResults(season, round) {
 
         drawRaceStandings(race['Results']);
         // drawDriversLapTimes(race['Results'][0]['Driver']['driverId']);// DO THIS AS A MODAL POPUP FOR EACH DRIVER
-        headToHead(F1_HEAD2HEAD_1, F1_HEAD2HEAD_2);
+        headToHead(F1_HEAD2HEAD_1, F1_HEAD2HEAD_2, F1_HEAD2HEAD_3);
     }, 
     'Error getting race results', 
     (e) => $(`#race-standings tbody`).html(`<tr><td colspan="14" class="color-accent text-upper text-bold">${e}</td></tr>`));    
@@ -414,8 +421,9 @@ function navRounds(season) {
 
 
 // SETUP GLOBAL VARS
-var F1_ROUND, F1_SEASON, F1_HEAD2HEAD_1, F1_HEAD2HEAD_2;
+var F1_ROUND, F1_SEASON, F1_HEAD2HEAD_1, F1_HEAD2HEAD_2, F1_HEAD2HEAD_3;
 
+    $(`#head2head-1,#head2head-2,#head2head-3`).slideUp(0);
 
 $(document).ready(function() {
 
