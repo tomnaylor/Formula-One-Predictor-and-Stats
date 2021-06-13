@@ -3,6 +3,9 @@ Round number is highlighted in different years
 lap timings - splitting up the numbers - see research
 google chart not scaling with page size - see Research
 charts array is pain!
+flags could only find api for 2 digit code so had to store nationality in an array
+head to head original was for i=1;i<=2;i++ loop - silly.
+h2h - ++ was the wrong side of key
 
 additions
 adding cache = https://blog.logrocket.com/javascript-cache-api/

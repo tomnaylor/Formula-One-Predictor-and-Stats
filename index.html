@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-    <script src="https://kit.fontawesome.com/444581f9cb.js" crossorigin="anonymous"></script>   
+    <script src="https://kit.fontawesome.com/444581f9cb.js" crossorigin="anonymous"></script>
     <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCrxniDYzXlLNFSfs0JDnvaJTvfhIG5CaE&libraries=&v=weekly" async></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.3.2/dist/chart.min.js" integrity="sha256-qoN08nWXsFH+S9CtIq99e5yzYHioRHtNB9t2qy1MSmc=" crossorigin="anonymous"></script>
@@ -36,8 +36,9 @@
     #nav-round li {
         text-align: center;
         width:240px;
+        background-size:120% 100%;
     }
-    .nav-round-num { 
+    .nav-round-num {
         font-size: 1.3em;
         font-weight: 700;
     }
@@ -81,7 +82,7 @@
         font-weight:700;
     }
 
-    #head2head h3 { 
+    #head2head h3 {
         font-size:30px;
     }
 
@@ -89,26 +90,24 @@
 
     <div id="errors"></div>
 
-    <h1><i class="far fa-caret-square-down"></i></h1>
+
+  <header>
+
+    <h1 class="color-light text-upper"><span></span> <i class="far fa-caret-square-down"></i></h1>
 
     <nav>
-        <div id="nav-season"><ul></ul></div>
-        <div id="nav-round"><ul></ul></div>
+      <div id="nav-season"><ul></ul></div>
+      <div id="nav-round"><ul></ul></div>
     </nav>
+  </header>
 
 <div id="wiki"></div>
 
-    <div id="body">
-        <h1>Track name</h1>
-        <img src="https://chrisdermody.com/content/images/2017/12/engine8.svg" id="track" width="300">
-        <img src="https://chrisdermody.com/content/images/2017/12/engine8.svg" id="track-sectors" width="300">
-    </div>
 
         <h2>Head to Head</h2>
     <div id="head2head">
         <div id="head2head-1"><canvas id="head2head-laptimes-1" width="400" height="400"></canvas></div>
         <div id="head2head-2"><canvas id="head2head-laptimes-2" width="400" height="400"></canvas></div>
-        <div id="head2head-3"><canvas id="head2head-laptimes-3" width="400" height="400"></canvas></div>
     </div>
 
 
@@ -136,8 +135,14 @@
 
 <div id="curve_chart" style="width: 100%; height: 700px; border:1px solid #ccc;"></div>
 
-    
+
+<div id="track-details">
+    <h2>Track name</h2>
+    <img src="https://chrisdermody.com/content/images/2017/12/engine8.svg" id="track" width="300">
+    <img src="https://chrisdermody.com/content/images/2017/12/engine8.svg" id="track-sectors" width="300">
     <div id="map" style="height:600px; width:600px;"></div>
+</div>
+
 
 
 <script src="assets/js/script.js"></script>

@@ -224,46 +224,19 @@ body {
 }
 
 
+.display-block-mobile {
+    display:none;
+}
+
 /* ---------------------------------------- HEADER */
 
 header {
     position: relative;
     width:100%;
-    height:90px;
-    overflow:hidden;
-    z-index: 2;
+    background: rgba(225,6,0,1);
 }
 
-header:before {
-    content:'';
-    height:100%;
-    width:140%;
-    background: rgba(0,0,0,0.6);
-    position: absolute;
-    top:0;
-    left:-20%;
-    border-bottom-left-radius: 50%;
-    border-bottom-right-radius: 50%;
-    z-index: 2;
-}
 
-.display-block-mobile {
-    display:none;
-}
-
-header nav ul {
-    list-style: none;
-    position: relative;
-    top:20px;
-    text-align: center;
-    z-index: 5;
-}
-
-header nav ul li {
-    vertical-align: top;
-    display: inline-block;
-    width:15%;
-}
 
 header nav ul li a {
     font-family: 'Lato', sans-serif;
@@ -338,12 +311,12 @@ header nav ul li a {
             animation-fill-mode: forwards;
 }
 
-#hero-text > h1 {
-    font-size:55px;
+header > h1 {
+    font-size:20px;
     font-weight:700;
-    text-shadow: 0px 0px 20px #000,0px 0px 20px #000;
-    letter-spacing: -2px;
-    word-spacing: 0px;
+    letter-spacing: 0px;
+    word-spacing: 10px;
+    padding:5px 10px;
 
 }
 
@@ -785,7 +758,7 @@ form.main-section-form .input-full {
         font-size:45px;
     }
 
-    #hero-text p { 
+    #hero-text p {
         font-size:21px;
     }
 
@@ -908,7 +881,7 @@ form.main-section-form .input-full {
 
     form.main-section-form .input-block {
         width:100%;
-        
+
     }
     input[type=text], input[type=email], input[type=tel],input[type=date],textarea {
         outline: 0;
@@ -920,13 +893,13 @@ form.main-section-form .input-full {
         border:1px solid #aaa;
     }
 
-    #form-signup-name, 
-    #form-signup-phone, 
-    #form-signup-email, 
-    #form-signup-company, 
-    #form-signup-date, 
-    #form-signup-address, 
-    #form-signup-city, 
+    #form-signup-name,
+    #form-signup-phone,
+    #form-signup-email,
+    #form-signup-company,
+    #form-signup-date,
+    #form-signup-address,
+    #form-signup-city,
     #form-signup-zip { width:100%; }
 
     /* ---------------------------------------- MOBILE FOOTER */
