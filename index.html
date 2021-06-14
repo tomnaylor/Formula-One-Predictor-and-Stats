@@ -59,7 +59,7 @@
         width:360px;
         border:3px solid #333;
         border-radius: 5px;
-        background-color: #EEE;
+        background-color: #15151E;
         margin:5px;
         padding: 5px;
         position:relative;
@@ -86,29 +86,52 @@
         font-size:30px;
     }
 
+    #nav-arrows i {
+      position:absolute;
+    }
+    #nav-arrows i:first-child {
+      bottom:-25px;
+      left:30px;
+      font-size:70px;
+    }
+    #nav-arrows i:last-child {
+      bottom:-16px;
+      left:46px;
+      font-size:19px;
+    }
+
 </style>
 
     <div id="errors"></div>
 
 
   <header>
-
-    <h1 class="color-light text-upper"><span></span> <i class="far fa-caret-square-down"></i></h1>
-
+    <h1 class="color-light text-upper"><span></span></h1>
     <nav>
       <div id="nav-season"><ul></ul></div>
       <div id="nav-round"><ul></ul></div>
+      <div id="nav-arrows"><i class="fas fa-sort-down color-red"></i><i class="fas fa-sort-down color-white"></i></div>
     </nav>
   </header>
 
-<div id="wiki"></div>
+
+      <h2>Season standings</h2>
+      <table id="season-standings">
+          <thead>
+              <tr>
+              </tr>
+          </thead>
+          <tbody></tbody>
+      </table>
+
+  <div id="wiki"></div>
 
 
-        <h2>Head to Head</h2>
-    <div id="head2head">
-        <div id="head2head-1"><canvas id="head2head-laptimes-1" width="400" height="400"></canvas></div>
-        <div id="head2head-2"><canvas id="head2head-laptimes-2" width="400" height="400"></canvas></div>
-    </div>
+  <h2>Head to Head</h2>
+  <div id="head2head">
+    <div id="head2head-1"><canvas id="head2head-laptimes-1" width="400" height="400"></canvas></div>
+    <div id="head2head-2"><canvas id="head2head-laptimes-2" width="400" height="400"></canvas></div>
+  </div>
 
 
     <h2>Race standings</h2>

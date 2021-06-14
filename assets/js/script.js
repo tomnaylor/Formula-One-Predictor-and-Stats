@@ -422,8 +422,41 @@ function getWikiInfo(url) {
     // GAME WHERE YOU GUESS WHERE CARS FINISH BEFORE THE TABLE IS MATCHED UP. POINTS FOR EACH ONE RIGHT.
 
 
+// ----------------------------------------- WIP SHOW ALL SEASON AND THEN PREDICT BASED ON FINISHES AT PREVIOUS RACES --------------
+function seasonResults(season) {
+  jsonCall(`https://ergast.com/api/f1/${season}/results.json?limit=5000`, function(response) {
+
+      let races = response['MRData']['RaceTable']['Races'];
+      races.forEach((e, key) => {
+
+          $('#season-standings tbody').append(`<tr id="season-standings-tr-${key}">
+              <td>${e['position']}</td>
+              <td>${e['number']}</td>
+              <td>${e['Driver']['nationality']}</td>
+              <td>${flagImg}</td>
+              <td>${e['Driver']['givenName']} ${e['Driver']['familyName']}</td>
+              <td><img src="assets/img/constructors/${e['Constructor']['constructorId']}.png" width="50"></td>
+              <td>${e['Constructor']['name']}</td>
+              <td>${e['points']}</td>
+              <td>
+                  <button class="button head2head-select1" data-key="${key}">a</button>
+                  <button class="button head2head-select2" data-key="${key}">b</button>
+              </td>
+              <td>${e['grid']}</td>
+              <td>${gain}</td>
+              <td>${(gain >= 1) ? '<i class="fas fa-angle-double-up"></i>' : (gain < 0) ? '<i class="fas fa-angle-double-down"></i>' : '' }</td>
+              <td>${('Time' in e) ? e['Time']['time'] : ''}</td>
+              <td>${(e['status'] === 'Finished') ? '<i class="fas fa-flag-checkered"></i>' : e['status'] }</td>
+          </tr>`);
+      });
+
+  },
+  'Error getting season results',
+  (e) => $(`#race-standings tbody`).html(`<tr><td colspan="14" class="color-accent text-upper text-bold">${e}</td></tr>`));
 
 
+}
+// seasonResults(2021);
 
 function raceResults(season, round) {
 
