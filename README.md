@@ -6,6 +6,9 @@ charts array is pain!
 flags could only find api for 2 digit code so had to store nationality in an array
 head to head original was for i=1;i<=2;i++ loop - silly.
 h2h - ++ was the wrong side of key
+driver current standings rank = how...
+driver current points rank sort without copying array: https://stackoverflow.com/questions/9592740/how-can-you-sort-an-array-without-mutating-the-original-array
+array map for objects : https://stackoverflow.com/questions/14810506/map-function-for-objects-instead-of-arrays
 
 additions
 adding cache = https://blog.logrocket.com/javascript-cache-api/

@@ -100,6 +100,15 @@
       font-size:19px;
     }
 
+    #season-standings thead tr th {
+      max-width:50px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    #season-standings thead tr th div {
+      /* transform: rotate(-90deg); */
+    }
 </style>
 
     <div id="errors"></div>
@@ -119,6 +128,7 @@
       <table id="season-standings">
           <thead>
             <tr>
+              <th></th>
             </tr>
           </thead>
           <tbody></tbody>

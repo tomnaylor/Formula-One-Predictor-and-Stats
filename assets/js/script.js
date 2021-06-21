@@ -423,6 +423,8 @@ function getWikiInfo(url) {
 
 
 // ----------------------------------------- WIP SHOW ALL SEASON AND THEN PREDICT BASED ON FINISHES AT PREVIOUS RACES --------------
+// TIDY THIS UP SO IT USES AND ARRAY WITH OBJECTS INSIDE TO INCLUDE DRIVERID
+// USE let flag = countryFlags.find(i => i['nationality'] === e['Driver']['nationality']); FIND
 function seasonResults(season) {
   jsonCall(`https://ergast.com/api/f1/${season}/results.json?limit=5000`, function(response) {
       let resultArray = [];
@@ -434,24 +436,157 @@ function seasonResults(season) {
         });
       });
 
-      console.log('#######################',resultArray);
+      let driverPoints = [];
 
-      resultArray.forEach((round,key) => {
-        console.log(round,key);
-        $('#season-standings thead tr').append(`<th id="season-standings-tr-${races[key]['round']}">${races[key]['raceName']}</th>`);
-        for (let driver in round) {
-          $(`#season-standings-tr`).append(`<td></td>`);
-          // $(`#season-standings-tr-${races[key]['round']}`).append(`<td>${driver['Driver']['givenName']} ${driver['Driver']['familyName']}</td>`);
+      for (driverId in resultArray[0]) {
+        $('#season-standings tbody').append(`<tr id="season-standings-driver-tr-${driverId}"><th>${resultArray[0][driverId]['Driver']['familyName']}</th></tr>`);
+        driverPoints[driverId] = 0;
+      };
+
+
+
+      resultArray.forEach((race,raceId) => {
+
+      //  console.log('results',race,raceId,races[raceId]['raceName']);
+
+        // ADD CIRCUIT NAME FOR THEAD
+        $('#season-standings thead tr').append(`<th id="season-standings-tr-${races[raceId]['round']}">${races[raceId]['raceName']}</th>`);
+
+        // ADD DRIVER POINTS AND FINISH POSITION
+        for (driverId in race) {
+
+        //  let driverCurrentPointsRank = [...driverPoints].sort(); // see readme for help
+        //  console.log(driverPoints,driverCurrentPointsRank);
+
+          driverPoints[driverId] += parseInt(race[driverId]['points']);
+
+// for (point in driverPoints) {
+//   let currentPosition = 0;
+//   if driverPoints[driverId]
+// }
+          $(`#season-standings-driver-tr-${driverId}`).append(`<td>${race[driverId]['points']} <hr> ${driverPoints[driverId]} <hr> </td>`);//position
         };
+
       });
+
+      var driverPointsFuture = driverPoints.map(x => Math.round(x / races.length)); // see array map + math round
+
+
+      // GET FUTURE RACES
+      jsonCall(`https://ergast.com/api/f1/${season}.json?limit=100&offset=${races.length}`, function(response) {
+          response['MRData']['RaceTable']['Races'].forEach(futureRace => {
+
+            // ADD CIRCUIT NAME FOR THEAD
+            $('#season-standings thead tr').append(`<th id="season-standings-tr-${futureRace['round']}">${futureRace['raceName']}</th>`);
+
+            for (driverId in resultArray[0]) {
+              driverPoints[driverId] += driverPointsFuture[driverId];
+              $(`#season-standings-driver-tr-${driverId}`).append(`<td>${driverPointsFuture[driverId]}<hr> ${driverPoints[driverId]} <hr> </td>`);//position
+            };
+          });
+      },
+      'Error getting list of future rounds',
+      (e) => $(`#race-standings tbody`).html(`<tr><td colspan="14" class="color-accent text-upper text-bold">${e}</td></tr>`));
+
+
+// turn driverPoints into array with ID so it can be sorted. see readme.
+for (driverId in driverPoints) {
+  console.log(resultArray[0][driverId]['Driver']['familyName']);
+}
+
 
   },
   'Error getting season results',
   (e) => $(`#race-standings tbody`).html(`<tr><td colspan="14" class="color-accent text-upper text-bold">${e}</td></tr>`));
 
 
+
+
+
 }
-seasonResults(2021);
+//seasonResults(2021);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// races[0]['Results'].forEach((driver,driverId) => {
+//   console.log('xxxx',race['Results'].find(i => i['number'] == driverId));
+// });
+function newseasonResults(season) {
+  jsonCall(`https://ergast.com/api/f1/${season}/results.json?limit=5000`, function(response) {
+      let races = response['MRData']['RaceTable']['Races'];
+      let cumulativeResult = {};
+
+      // DRIVER NAMES BASED ON WHO WON FIRST RACE
+      races[0]['Results'].forEach((driver,driverId) => {
+        $('#season-standings tbody').append(`<tr id="season-standings-driver-tr-${driver['number']}"><th>${driver['Driver']['familyName']}</th></tr>`);
+      });
+
+
+      // PAST RACES WITH ACTUAL RESULTS
+      races.forEach((race,raceId) => {
+
+        // RACE HEADERS
+        $('#season-standings thead tr').append(`<th id="season-standings-tr-${race['round']}">${race['raceName']}</th>`);
+
+        // RACE RESULTS
+        race['Results'].forEach((result,resultId) => {
+
+          cumulativeResult[result['number']] = (raceId == 0) ? parseInt(result['points']) : cumulativeResult[result['number']] + parseInt(result['points']);
+
+          $(`#season-standings-driver-tr-${result['number']}`).append(`<td>${result['points']} <hr> ${cumulativeResult[result['number']]} <hr> </td>`);//position
+        });
+
+      });
+
+
+      // GET FUTURE RACES
+      let driverPointsFuture = {};
+      // BELOW IS FROM https://stackoverflow.com/questions/14810506/map-function-for-objects-instead-of-arrays
+      Object.keys(cumulativeResult).map(function(key, index) {
+        driverPointsFuture[key] = Math.round(cumulativeResult[key] / races.length);;
+      });
+
+      jsonCall(`https://ergast.com/api/f1/${season}.json?limit=100&offset=${races.length}`, function(response) {
+          response['MRData']['RaceTable']['Races'].forEach(futureRace => {
+
+            // ADD CIRCUIT NAME FOR THEAD
+            $('#season-standings thead tr').append(`<th id="season-standings-tr-${futureRace['round']}">${futureRace['raceName']}</th>`);
+
+            races[0]['Results'].forEach((result) => {
+              cumulativeResult[result['number']] += driverPointsFuture[result['number']];
+              $(`#season-standings-driver-tr-${result['number']}`).append(`<td>${driverPointsFuture[result['number']]}<hr> ${cumulativeResult[result['number']]} <hr> </td>`);//position
+            });
+          });
+      },
+      'Error getting list of future rounds',
+      (e) => $(`#race-standings tbody`).html(`<tr><td colspan="14" class="color-accent text-upper text-bold">${e}</td></tr>`));
+
+
+
+  },
+  'Error getting season results',
+  (e) => $(`#race-standings tbody`).html(`<tr><td colspan="14" class="color-accent text-upper text-bold">${e}</td></tr>`));
+}
+newseasonResults(2020);
+
+
+
+
+
+
+
 
 function raceResults(season, round) {
 
