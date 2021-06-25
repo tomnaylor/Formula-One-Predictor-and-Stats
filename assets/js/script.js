@@ -422,115 +422,16 @@ function getWikiInfo(url) {
     // GAME WHERE YOU GUESS WHERE CARS FINISH BEFORE THE TABLE IS MATCHED UP. POINTS FOR EACH ONE RIGHT.
 
 
-// ----------------------------------------- WIP SHOW ALL SEASON AND THEN PREDICT BASED ON FINISHES AT PREVIOUS RACES --------------
-// TIDY THIS UP SO IT USES AND ARRAY WITH OBJECTS INSIDE TO INCLUDE DRIVERID
-// USE let flag = countryFlags.find(i => i['nationality'] === e['Driver']['nationality']); FIND
-function seasonResults(season) {
-  jsonCall(`https://ergast.com/api/f1/${season}/results.json?limit=5000`, function(response) {
-      let resultArray = [];
-      let races = response['MRData']['RaceTable']['Races'];
-      races.forEach((round,key) => {
-          resultArray[key] = {};
-          round['Results'].forEach(driver => {
-            resultArray[key][driver['number']] = driver;
-        });
-      });
-
-      let driverPoints = [];
-
-      for (driverId in resultArray[0]) {
-        $('#season-standings tbody').append(`<tr id="season-standings-driver-tr-${driverId}"><th>${resultArray[0][driverId]['Driver']['familyName']}</th></tr>`);
-        driverPoints[driverId] = 0;
-      };
-
-
-
-      resultArray.forEach((race,raceId) => {
-
-      //  console.log('results',race,raceId,races[raceId]['raceName']);
-
-        // ADD CIRCUIT NAME FOR THEAD
-        $('#season-standings thead tr').append(`<th id="season-standings-tr-${races[raceId]['round']}">${races[raceId]['raceName']}</th>`);
-
-        // ADD DRIVER POINTS AND FINISH POSITION
-        for (driverId in race) {
-
-        //  let driverCurrentPointsRank = [...driverPoints].sort(); // see readme for help
-        //  console.log(driverPoints,driverCurrentPointsRank);
-
-          driverPoints[driverId] += parseInt(race[driverId]['points']);
-
-// for (point in driverPoints) {
-//   let currentPosition = 0;
-//   if driverPoints[driverId]
-// }
-          $(`#season-standings-driver-tr-${driverId}`).append(`<td>${race[driverId]['points']} <hr> ${driverPoints[driverId]} <hr> </td>`);//position
-        };
-
-      });
-
-      var driverPointsFuture = driverPoints.map(x => Math.round(x / races.length)); // see array map + math round
-
-
-      // GET FUTURE RACES
-      jsonCall(`https://ergast.com/api/f1/${season}.json?limit=100&offset=${races.length}`, function(response) {
-          response['MRData']['RaceTable']['Races'].forEach(futureRace => {
-
-            // ADD CIRCUIT NAME FOR THEAD
-            $('#season-standings thead tr').append(`<th id="season-standings-tr-${futureRace['round']}">${futureRace['raceName']}</th>`);
-
-            for (driverId in resultArray[0]) {
-              driverPoints[driverId] += driverPointsFuture[driverId];
-              $(`#season-standings-driver-tr-${driverId}`).append(`<td>${driverPointsFuture[driverId]}<hr> ${driverPoints[driverId]} <hr> </td>`);//position
-            };
-          });
-      },
-      'Error getting list of future rounds',
-      (e) => $(`#race-standings tbody`).html(`<tr><td colspan="14" class="color-accent text-upper text-bold">${e}</td></tr>`));
-
-
-// turn driverPoints into array with ID so it can be sorted. see readme.
-for (driverId in driverPoints) {
-  console.log(resultArray[0][driverId]['Driver']['familyName']);
-}
-
-
-  },
-  'Error getting season results',
-  (e) => $(`#race-standings tbody`).html(`<tr><td colspan="14" class="color-accent text-upper text-bold">${e}</td></tr>`));
-
-
-
-
-
-}
-//seasonResults(2021);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // races[0]['Results'].forEach((driver,driverId) => {
 //   console.log('xxxx',race['Results'].find(i => i['number'] == driverId));
 // });
 function newseasonResults(season) {
+
+
   jsonCall(`https://ergast.com/api/f1/${season}/results.json?limit=5000`, function(response) {
       let races = response['MRData']['RaceTable']['Races'];
-      let cumulativeResult = {};
-      let averageGrid = {};
-      let driverPointsFuture = {};
-      let fastestLapRank = {};
-      let averageSpeed = {};
+      let driverResult = {};
 
       // DRIVER NAMES BASED ON WHO WON FIRST RACE
       races[0]['Results'].forEach((driver,driverId) => {
@@ -548,30 +449,40 @@ function newseasonResults(season) {
 
         race['Results'].forEach((result,resultId) => {
 
-          cumulativeResult[result['number']] = (raceId == 0) ? parseInt(result['points']) : cumulativeResult[result['number']] + parseInt(result['points']);
-          averageGrid[result['number']] = (raceId == 0) ? parseInt(result['grid']) : averageGrid[result['number']] + parseInt(result['grid']);
-
 
           if (result['laps'] > 1) {
 
-            fastestLapRank[result['number']] = (raceId == 0) ? parseInt(result['FastestLap']['rank']) : fastestLapRank[result['number']] + parseInt(result['FastestLap']['rank']);
-            averageSpeed[result['number']] = (raceId == 0) ? parseInt(result['FastestLap']['AverageSpeed']['speed']) : averageSpeed[result['number']] + parseInt(result['FastestLap']['AverageSpeed']['speed']);
+            if (result['number'] in driverResult)
+              driverResult[result['number']] = {
+                'multiply' : driverResult[result['number']]['multiply'] + 1,
+                'curPoints' : driverResult[result['number']]['curPoints'] + parseInt(result['points']),
+                'avGrid' : driverResult[result['number']]['avGrid'] + parseInt(result['grid']),
+                'avFastest' : driverResult[result['number']]['avFastest'] + parseInt(result['FastestLap']['rank']),
+                'avSpeed' : driverResult[result['number']]['avSpeed'] + parseInt(result['FastestLap']['AverageSpeed']['speed'])
+              };
+            else
+              driverResult[result['number']] = {
+                'multiply' : 1,
+                'curPoints' : parseInt(result['points']),
+                'avGrid' : parseInt(result['grid']),
+                'avFastest' : parseInt(result['FastestLap']['rank']),
+                'avSpeed' : parseInt(result['FastestLap']['AverageSpeed']['speed'])
+              };
+
 
             $(`#season-standings-driver-tr-${result['number']}`).append(`
               <td class="color-light-bg">
-                Points: ${result['points']}<br>
-                Grid: ${result['grid']}<br>
+                #${result['position']}<br>
+                ${result['points']}pts<br>
+                Q3: ${result['grid']}<br>
                 Average Speed: ${result['FastestLap']['AverageSpeed']['speed'] + result['FastestLap']['AverageSpeed']['units']}<br>
                 Fastest Lap: ${result['FastestLap']['Time']['time']}<br>
                 Fastest rank: ${result['FastestLap']['rank']}<br>
                 <hr>
-                Cumulative points: ${cumulativeResult[result['number']]}
-              </td>`);//position
+                Cumulative points: ${driverResult[result['number']]['curPoints']}
+              </td>`);
           }
           else {
-            fastestLapRank[result['number']] = (raceId == 0) ? 20 : fastestLapRank[result['number']] + 20;
-            averageSpeed[result['number']] = (raceId == 0) ? 160 : averageSpeed[result['number']] + 160;
-
             $(`#season-standings-driver-tr-${result['number']}`).append(`<td class="color-accent-bg">Points: ${result['points']} <br>Grid: ${result['grid']}</td>`);//position
           }
         });
@@ -582,41 +493,105 @@ function newseasonResults(season) {
       // GET FUTURE RACES AVERAGES
       // BELOW IS FROM https://stackoverflow.com/questions/14810506/map-function-for-objects-instead-of-arrays
       // https://stackoverflow.com/questions/11832914/how-to-round-to-at-most-2-decimal-places-if-necessary
-      Object.keys(cumulativeResult).map(function(key, index) {
-        driverPointsFuture[key] = (Math.round(((cumulativeResult[key] / races.length) + Number.EPSILON) * 10) / 10);
-        averageGrid[key] = (Math.round(((averageGrid[key] / races.length) + Number.EPSILON) * 10) / 10);
-        fastestLapRank[key] = (Math.round(((fastestLapRank[key] / races.length) + Number.EPSILON) * 10) / 10);
-        averageSpeed[key] = (Math.round(((averageSpeed[key] / races.length) + Number.EPSILON) * 10) / 10);
+      Object.keys(driverResult).map(function(key, index) {
+
+        driverResult[key] = {
+          'multiply' : driverResult[key]['multiply'],
+          'curPoints' : driverResult[key]['curPoints'],
+          'avPoints' : (Math.round(((driverResult[key]['curPoints'] / driverResult[key]['multiply']) + Number.EPSILON) * 1000) / 1000),
+          'avGrid' : (Math.round(((driverResult[key]['avGrid'] / driverResult[key]['multiply']) + Number.EPSILON) * 1000) / 1000),
+          'avFastest' : (Math.round(((driverResult[key]['avFastest'] / driverResult[key]['multiply']) + Number.EPSILON) * 1000) / 1000),
+          'avSpeed' : (Math.round(((driverResult[key]['avSpeed'] / driverResult[key]['multiply']) + Number.EPSILON) * 1000) / 1000),
+          'rankPoints' : 10,
+          'rankGrid' : 11, // THIS WAS A PAIN TO DO INCLUDING THE +0.5 BELOW.
+          'rankFastest' : 11,
+          'rankSpeed' : 10
+        };
+
+        // for (element of ['avPoints','avGrid','avFastest','avSpeed']) {
+        //   driverResult[key][element] = (Math.round(((driverResult[key][element] / driverResult[key]['multiply']) + Number.EPSILON) * 10) / 10);
+        // };
+        // driverResult[key]['rankPoints'] = 10;
       });
 
-      jsonCall(`https://ergast.com/api/f1/${season}.json?limit=100&offset=${races.length}`, function(response) {
-          response['MRData']['RaceTable']['Races'].forEach(futureRace => {
 
-            // ADD CIRCUIT NAME FOR THEAD
-            $('#season-standings thead tr').append(`<th id="season-standings-tr-${futureRace['round']}">${futureRace['raceName']}</th>`);
+      // FIND HIGHEST FOR EACH VALUE
 
-            races[0]['Results'].forEach((result) => {
+      Object.keys(driverResult).map(driverId => {
+        for (driverIdCompare in driverResult) {
+          driverResult[driverId]['rankPoints'] = (driverResult[driverId]['avPoints'] > driverResult[driverIdCompare]['avPoints']) ? driverResult[driverId]['rankPoints']-0.5 : driverResult[driverId]['rankPoints']+0.5;
+          driverResult[driverId]['rankGrid'] = (driverResult[driverId]['avGrid'] > driverResult[driverIdCompare]['avGrid']) ? driverResult[driverId]['rankGrid']+0.5 : driverResult[driverId]['rankGrid']-0.5;
+          driverResult[driverId]['rankFastest'] = (driverResult[driverId]['avFastest'] > driverResult[driverIdCompare]['avFastest']) ? driverResult[driverId]['rankFastest']+0.5 : driverResult[driverId]['rankFastest']-0.5;
+          driverResult[driverId]['rankSpeed'] = (driverResult[driverId]['avSpeed'] > driverResult[driverIdCompare]['avSpeed']) ? driverResult[driverId]['rankSpeed']-0.5 : driverResult[driverId]['rankSpeed']+0.5;
+        };
+      });
 
-              // MATHS FOR PREDICTADED SCORE
-              let tempTotalScore = (driverPointsFuture[result['number']] / averageGrid[result['number']]) * 2;
 
-              cumulativeResult[result['number']] = Math.round(cumulativeResult[result['number']] + tempTotalScore);
+console.log(driverResult);
 
-              $(`#season-standings-driver-tr-${result['number']}`).append(`
-                <td class="color-accent">
-                  Average points: ${driverPointsFuture[result['number']]}<br>
-                  Average grid: ${averageGrid[result['number']]}<br>
-                  Average fastest lap rank: ${fastestLapRank[result['number']]}<br>
-                  Average speed: ${averageSpeed[result['number']]}<br>
-                  <hr>
-                  Total score: ${tempTotalScore}<br>
-                  Cumulative: ${cumulativeResult[result['number']]}
-                </td>`);
-            });
-          });
-      },
-      'Error getting list of future rounds',
-      (e) => $(`#race-standings tbody`).html(`<tr><td colspan="14" class="color-accent text-upper text-bold">${e}</td></tr>`));
+
+$.when(
+  $.getJSON(`https://ergast.com/api/f1/${season}.json?limit=100&offset=${races.length}`),
+  $.getJSON(`https://ergast.com/api/f1/${season-1}/results.json?limit=2000`)
+).then(
+    function(thisSeason,lastSeason) {
+      thisSeason = thisSeason[0]['MRData']['RaceTable']['Races'];
+      lastSeason = lastSeason[0]['MRData']['RaceTable']['Races'];
+
+      console.log(`THIS SEASON`,thisSeason);
+      console.log(`LAST SEASON`,lastSeason);
+
+
+      thisSeason.forEach(thisSeason_round => {
+
+        // ADD CIRCUIT NAME FOR THEAD
+        let found = lastSeason.find(key => key['Circuit']['circuitId'] === thisSeason_round['Circuit']['circuitId']);
+        found = (found) ? found['date'] : '';
+        // USE THIS TO FIND DRIVER RESULT FOR LAST YEAR AT THAT TRACK..
+        
+        $('#season-standings thead tr').append(`<th id="season-standings-tr-${thisSeason_round['round']}">${thisSeason_round['raceName']}<hr>${thisSeason_round['Circuit']['circuitId']}<hr>${found}</th>`);
+
+
+        races[0]['Results'].forEach((result) => {
+
+          // MATHS FOR PREDICTADED SCORE - CALCULATE WEIGHTED RESULT
+          let weightedPoints = (driverResult[result['number']]['avPoints'] * 0.77);
+          let weightedGrid = (21-driverResult[result['number']]['rankGrid']) * 0.15;
+          let weightedFastest = (21-driverResult[result['number']]['rankFastest']) * 0.04;
+          let weightedSpeed = (21-driverResult[result['number']]['rankSpeed']) * 0.04;
+
+          let weightedTotal = (weightedPoints + weightedGrid + weightedFastest + weightedSpeed);
+
+
+          driverResult[result['number']]['curPoints'] = (driverResult[result['number']]['curPoints'] + weightedTotal);
+
+          $(`#season-standings-driver-tr-${result['number']}`).append(`
+            <td class="color-accent">
+              Av. points: ${driverResult[result['number']]['avPoints']}<br>
+              Av. grid: ${driverResult[result['number']]['avGrid']}<br>
+              Av. fastest lap rank: ${driverResult[result['number']]['avFastest']}<br>
+              Av. speed: ${driverResult[result['number']]['avSpeed']}<br>
+              <hr>
+              Cumulative: ${driverResult[result['number']]['curPoints']}
+              <hr>
+              Points: ${weightedPoints}<br>
+              Grid: ${weightedGrid}<br>
+              Fast: ${weightedFastest}<br>
+              Speed: ${weightedSpeed}<br>
+              TOTAL ${weightedTotal}
+            </td>`);
+        });
+      });
+   },
+    function(e) {
+        console.log(`JSON ERROR:`,e);
+        showErrors(`Error getting list of future rounds for current season (${e['statusText']})`);
+    }
+);
+
+
+
+
 
 
 

@@ -10,7 +10,7 @@ driver current standings rank = how...
 driver current points rank sort without copying array: https://stackoverflow.com/questions/9592740/how-can-you-sort-an-array-without-mutating-the-original-array
 array map for objects : https://stackoverflow.com/questions/14810506/map-function-for-objects-instead-of-arrays
 number rounding to 2 places: https://stackoverflow.com/questions/11832914/how-to-round-to-at-most-2-decimal-places-if-necessary
-
+too ages to work out the weighting - trial and error
 additions
 adding cache = https://blog.logrocket.com/javascript-cache-api/
 
