@@ -457,16 +457,14 @@ function newseasonResults(season) {
                 'multiply' : driverResult[result['number']]['multiply'] + 1,
                 'curPoints' : driverResult[result['number']]['curPoints'] + parseInt(result['points']),
                 'avGrid' : driverResult[result['number']]['avGrid'] + parseInt(result['grid']),
-                'avFastest' : driverResult[result['number']]['avFastest'] + parseInt(result['FastestLap']['rank']),
-                'avSpeed' : driverResult[result['number']]['avSpeed'] + parseInt(result['FastestLap']['AverageSpeed']['speed'])
+                'avPosition' : driverResult[result['number']]['avPosition'] + parseInt(result['position']),
               };
             else
               driverResult[result['number']] = {
                 'multiply' : 1,
                 'curPoints' : parseInt(result['points']),
                 'avGrid' : parseInt(result['grid']),
-                'avFastest' : parseInt(result['FastestLap']['rank']),
-                'avSpeed' : parseInt(result['FastestLap']['AverageSpeed']['speed'])
+                'avPosition' : parseInt(result['position']),
               };
 
 
@@ -475,9 +473,6 @@ function newseasonResults(season) {
                 #${result['position']}<br>
                 ${result['points']}pts<br>
                 Q3: ${result['grid']}<br>
-                Average Speed: ${result['FastestLap']['AverageSpeed']['speed'] + result['FastestLap']['AverageSpeed']['units']}<br>
-                Fastest Lap: ${result['FastestLap']['Time']['time']}<br>
-                Fastest rank: ${result['FastestLap']['rank']}<br>
                 <hr>
                 Cumulative points: ${driverResult[result['number']]['curPoints']}
               </td>`);
@@ -500,12 +495,11 @@ function newseasonResults(season) {
           'curPoints' : driverResult[key]['curPoints'],
           'avPoints' : (Math.round(((driverResult[key]['curPoints'] / driverResult[key]['multiply']) + Number.EPSILON) * 1000) / 1000),
           'avGrid' : (Math.round(((driverResult[key]['avGrid'] / driverResult[key]['multiply']) + Number.EPSILON) * 1000) / 1000),
-          'avFastest' : (Math.round(((driverResult[key]['avFastest'] / driverResult[key]['multiply']) + Number.EPSILON) * 1000) / 1000),
-          'avSpeed' : (Math.round(((driverResult[key]['avSpeed'] / driverResult[key]['multiply']) + Number.EPSILON) * 1000) / 1000),
-          'rankPoints' : 10,
-          'rankGrid' : 11, // THIS WAS A PAIN TO DO INCLUDING THE +0.5 BELOW.
-          'rankFastest' : 11,
-          'rankSpeed' : 10
+          'avPosition' : (Math.round(((driverResult[key]['avPosition'] / driverResult[key]['multiply']) + Number.EPSILON) * 1000) / 1000),
+          'predictedRaces' : [],
+          //'rankPosition' : 10,
+          //'rankPoints' : 10,
+          //'rankGrid' : 11, // THIS WAS A PAIN TO DO INCLUDING THE +0.5 BELOW.
         };
 
         // for (element of ['avPoints','avGrid','avFastest','avSpeed']) {
@@ -517,14 +511,13 @@ function newseasonResults(season) {
 
       // FIND HIGHEST FOR EACH VALUE
 
-      Object.keys(driverResult).map(driverId => {
-        for (driverIdCompare in driverResult) {
-          driverResult[driverId]['rankPoints'] = (driverResult[driverId]['avPoints'] > driverResult[driverIdCompare]['avPoints']) ? driverResult[driverId]['rankPoints']-0.5 : driverResult[driverId]['rankPoints']+0.5;
-          driverResult[driverId]['rankGrid'] = (driverResult[driverId]['avGrid'] > driverResult[driverIdCompare]['avGrid']) ? driverResult[driverId]['rankGrid']+0.5 : driverResult[driverId]['rankGrid']-0.5;
-          driverResult[driverId]['rankFastest'] = (driverResult[driverId]['avFastest'] > driverResult[driverIdCompare]['avFastest']) ? driverResult[driverId]['rankFastest']+0.5 : driverResult[driverId]['rankFastest']-0.5;
-          driverResult[driverId]['rankSpeed'] = (driverResult[driverId]['avSpeed'] > driverResult[driverIdCompare]['avSpeed']) ? driverResult[driverId]['rankSpeed']-0.5 : driverResult[driverId]['rankSpeed']+0.5;
-        };
-      });
+      // Object.keys(driverResult).map(driverId => {
+      //   for (driverIdCompare in driverResult) {
+      //     driverResult[driverId]['rankPoints'] = (driverResult[driverId]['avPoints'] > driverResult[driverIdCompare]['avPoints']) ? driverResult[driverId]['rankPoints']-0.5 : driverResult[driverId]['rankPoints']+0.5;
+      //     driverResult[driverId]['rankGrid'] = (driverResult[driverId]['avGrid'] > driverResult[driverIdCompare]['avGrid']) ? driverResult[driverId]['rankGrid']+0.5 : driverResult[driverId]['rankGrid']-0.5;
+      //     driverResult[driverId]['rankPosition'] = (driverResult[driverId]['avPosition'] > driverResult[driverIdCompare]['avPosition']) ? driverResult[driverId]['rankPosition']+0.5 : driverResult[driverId]['rankPosition']-0.5;
+      //   };
+      // });
 
 
 console.log(driverResult);
@@ -545,43 +538,77 @@ $.when(
       thisSeason.forEach(thisSeason_round => {
 
         // ADD CIRCUIT NAME FOR THEAD
-        let found = lastSeason.find(key => key['Circuit']['circuitId'] === thisSeason_round['Circuit']['circuitId']);
-        found = (found) ? found['date'] : '';
+        let lastSeasonsTrackResult = lastSeason.find(key => key['Circuit']['circuitId'] === thisSeason_round['Circuit']['circuitId']);
+
         // USE THIS TO FIND DRIVER RESULT FOR LAST YEAR AT THAT TRACK..
-        
-        $('#season-standings thead tr').append(`<th id="season-standings-tr-${thisSeason_round['round']}">${thisSeason_round['raceName']}<hr>${thisSeason_round['Circuit']['circuitId']}<hr>${found}</th>`);
+
+        $('#season-standings thead tr').append(`<th id="season-standings-tr-${thisSeason_round['round']}">${thisSeason_round['raceName']}<hr>${thisSeason_round['Circuit']['circuitId']}<hr>${(lastSeasonsTrackResult) ? lastSeasonsTrackResult['date'] : ''}</th>`);
 
 
+        // LOOP FOR EACH OF THE DRIVERS RESULTS FOR THIS RACE (DRIVERS TAKEN FROM RACE 1 RESULTS)
         races[0]['Results'].forEach((result) => {
 
+
+          // SEE IF DRIVER TOOK PART IN LAST YEARS RACE
+          // WORK OUT AVERAGE FINISH THIS YEAR IF NO VALUE
+          let lastSeasonDriverResult = driverResult[result['number']]['avPosition']; // MAKE MIDDLE OF THE ROAD IF NO PREVIOUS RACE
+
+          if (lastSeasonsTrackResult) {
+            for (i=0; i < lastSeasonsTrackResult['Results'].length; i++) {
+              if (lastSeasonsTrackResult['Results'][i]['number'] === result['number']) {
+                  lastSeasonDriverResult = lastSeasonsTrackResult['Results'][i]['position'];
+                  break;
+                }
+            }
+          }
+
+
           // MATHS FOR PREDICTADED SCORE - CALCULATE WEIGHTED RESULT
-          let weightedPoints = (driverResult[result['number']]['avPoints'] * 0.77);
-          let weightedGrid = (21-driverResult[result['number']]['rankGrid']) * 0.15;
-          let weightedFastest = (21-driverResult[result['number']]['rankFastest']) * 0.04;
-          let weightedSpeed = (21-driverResult[result['number']]['rankSpeed']) * 0.04;
+          //let weightedPoints = (driverResult[result['number']]['avPoints'] * 0.77);
+          let weightedPosition = (driverResult[result['number']]['avPosition']) * 0.7;
+          let weightedGrid = (driverResult[result['number']]['avGrid']) * 0.1;
+          let weightedPrevious = (lastSeasonDriverResult) * 0.2;
 
-          let weightedTotal = (weightedPoints + weightedGrid + weightedFastest + weightedSpeed);
+          let weightedTotal = 25/((weightedPosition + weightedGrid + weightedPrevious) /3);
 
 
+          // ADD UP CUMULATIVE POINTS
           driverResult[result['number']]['curPoints'] = (driverResult[result['number']]['curPoints'] + weightedTotal);
 
-          $(`#season-standings-driver-tr-${result['number']}`).append(`
-            <td class="color-accent">
-              Av. points: ${driverResult[result['number']]['avPoints']}<br>
-              Av. grid: ${driverResult[result['number']]['avGrid']}<br>
-              Av. fastest lap rank: ${driverResult[result['number']]['avFastest']}<br>
-              Av. speed: ${driverResult[result['number']]['avSpeed']}<br>
-              <hr>
-              Cumulative: ${driverResult[result['number']]['curPoints']}
-              <hr>
-              Points: ${weightedPoints}<br>
-              Grid: ${weightedGrid}<br>
-              Fast: ${weightedFastest}<br>
-              Speed: ${weightedSpeed}<br>
-              TOTAL ${weightedTotal}
-            </td>`);
+          driverResult[result['number']]['predictedRaces'].push({
+            'position' : weightedPosition,
+            'grid' : weightedGrid,
+            'previous' : weightedPrevious,
+            'total' : weightedTotal,
+          })
+
         });
       });
+
+
+
+      console.log(driverResult);
+
+      for (driverId in driverResult) {
+        driverResult[driverId]['predictedRaces'].forEach(thisResult => {
+          $(`#season-standings-driver-tr-${driverId}`).append(`
+            <td class="color-accent">
+              # ${driverResult[driverId]['avPosition']} (#PREV ${(thisResult['previous'])})<br>
+              ${driverResult[driverId]['avPoints']}pts<br>
+              Q3: ${driverResult[driverId]['avGrid']}<br>
+              <hr>
+              Cumulative points: ${Math.round(driverResult[driverId]['curPoints'])}
+              <hr>
+              Weighted:<br>
+              # ${Math.round(thisResult['position'])}<br>
+              Q3: ${Math.round(thisResult['grid'])}<br>
+              #PREV. ${Math.round(thisResult['previous'])}<br>
+              TOTAL ${Math.round(thisResult['total'])}
+
+            </td>`);
+        });
+      };
+
    },
     function(e) {
         console.log(`JSON ERROR:`,e);
