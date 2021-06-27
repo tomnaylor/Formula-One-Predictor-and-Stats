@@ -91,7 +91,6 @@ const circuits = {
 
 };
 
-
 const countryFlags = [
     {
         'nationality' : 'Dutch',
@@ -175,14 +174,12 @@ const countryFlags = [
     }
 ];
 
-
 // SHOW NON-FATAL ERRORS
 function showErrors(e) {
     $('#errors').html(e);
     $('#errors').slideDown('slow');
     // console.log(`ERROR`, e)
 }
-
 
 // JSON CALL FUNCTION. RETURN ERROR IF NEEDED
 function jsonCall(url,callback, error = 'Default error', errorCallBack){
@@ -209,7 +206,7 @@ function googleMap(lat,long,container) {
   });
 }
 
-
+// SHOW CIRCUIT INFO`
 function drawCircuit(c) {
 
     $('#body h1').html(c['circuitName']);
@@ -225,7 +222,6 @@ function drawCircuit(c) {
     }
     googleMap(c['Location']['lat'],c['Location']['long'],'map');
 }
-
 
 // ERROR WHEN THERE ARE NO LAPS DRIVEN
 function drawDriversLapTimes(driverId, containerId) {
@@ -297,9 +293,8 @@ function drawDriversLapTimes(driverId, containerId) {
     (e) => $(`#${containerId}`).replaceWith(`<span class="color-accent-bg color-light text-upper text-bold text-pad">${e}</span>`));
 }
 
-
-
-    function drawRaceStandings(r) {
+// DRAW RACE RESULT TABLE
+function drawRaceStandings(r) {
         $('#race-standings tbody').empty();
         r.forEach((e, key) => {
 
@@ -337,8 +332,8 @@ function drawDriversLapTimes(driverId, containerId) {
         });
     }
 
-
-    function headToHead(one,two) {
+// DRAW HEAD TO HEAD BOXES
+function headToHead(one,two) {
 
 
         F1_HEAD2HEAD_1 = one;
@@ -375,9 +370,6 @@ function drawDriversLapTimes(driverId, containerId) {
         });
 
     }
-
-
-
 
 // GET RACE WIKI
 function getWikiInfo(url) {
@@ -419,9 +411,6 @@ function getWikiInfo(url) {
 
 
 
-    // GAME WHERE YOU GUESS WHERE CARS FINISH BEFORE THE TABLE IS MATCHED UP. POINTS FOR EACH ONE RIGHT.
-
-
 
 // races[0]['Results'].forEach((driver,driverId) => {
 //   console.log('xxxx',race['Results'].find(i => i['number'] == driverId));
@@ -430,6 +419,7 @@ function newseasonResults(season) {
 
 
   jsonCall(`https://ergast.com/api/f1/${season}/results.json?limit=5000`, function(response) {
+
       let races = response['MRData']['RaceTable']['Races'];
       let driverResult = {};
 
@@ -439,89 +429,60 @@ function newseasonResults(season) {
       });
 
 
+
       // PAST RACES WITH ACTUAL RESULTS
-      races.forEach((race,raceId) => {
+      races.forEach(race => {
 
         // RACE HEADERS
-        $('#season-standings thead tr').append(`<th id="season-standings-tr-${race['round']}">${race['raceName']}</th>`);
+        $('#season-standings thead tr').append(`<th id="season-standings-tr-${race['round']}">${race['raceName']}<hr>${race['Circuit']['circuitId']}</th>`);
 
-        // RACE RESULTS
-
-        race['Results'].forEach((result,resultId) => {
-
-// ????????? DELETE lowest result?
-
-          if (result['laps'] > 1) {
-
-            if (result['number'] in driverResult) {
-                driverResult[result['number']]['multiply'] = driverResult[result['number']]['multiply'] + 1;
-                driverResult[result['number']]['finalPoints'] = driverResult[result['number']]['finalPoints'] + parseInt(result['points']);
-                driverResult[result['number']]['avGrid'] = driverResult[result['number']]['avGrid'] + parseInt(result['grid']);
-                driverResult[result['number']]['avPosition'] = driverResult[result['number']]['avPosition'] + parseInt(result['position']);
-            }
-            else
-              driverResult[result['number']] = {
-                'multiply' : 1,
-                'finalPoints' : parseInt(result['points']),
-                'finalPosition' : 10,
-                'avGrid' : parseInt(result['grid']),
-                'avPosition' : parseInt(result['position']),
-              };
-
-
-            $(`#season-standings-driver-tr-${result['number']}`).append(`
-              <td class="color-light-bg">
-                #${result['position']}<br>
-                ${result['points']}pts<br>
-                Q3: ${result['grid']}<br>
-                <hr>
-                Cumulative points: ${driverResult[result['number']]['finalPoints']}
-              </td>`);
-          }
-          else {
-            $(`#season-standings-driver-tr-${result['number']}`).append(`<td class="color-accent-bg">Points: ${result['points']} <br>Grid: ${result['grid']}</td>`);//position
-          }
+        // DRAW INDIVIDUAL RACE RESULTS TD - FIX FOR WHEN THERE WERE MISSING RACES
+        races[0]['Results'].forEach(driver => {
+          $(`#season-standings-driver-tr-${driver['number']}`).append(`<td id="season-standings-driver-tr-${driver['number']}-round-${race['round']}"></td>`);
         });
 
-      });
 
-// ??????????????????? SHOUD WE DELETE THE LOWEST RESULT
 
-      // GET FUTURE RACES AVERAGES
-      // BELOW IS FROM https://stackoverflow.com/questions/14810506/map-function-for-objects-instead-of-arrays
-      // https://stackoverflow.com/questions/11832914/how-to-round-to-at-most-2-decimal-places-if-necessary
+        // RACE RESULTS
+        race['Results'].forEach(result => {
+
+          let x = result['number'];
+
+          if (x in driverResult) {
+              driverResult[x]['multiply'] = driverResult[x]['multiply'] + 1;
+              driverResult[x]['finalPoints'] = driverResult[x]['finalPoints'] + parseInt(result['points']);
+              driverResult[x]['avGrid'] = driverResult[x]['avGrid'] + parseInt(result['grid']);
+              driverResult[x]['avPosition'] = driverResult[x]['avPosition'] + parseInt(result['position']);
+          }
+          else
+            driverResult[x] = {
+              'multiply' : 1,
+              'finalPoints' : parseInt(result['points']),
+              'finalPosition' : 10,
+              'avGrid' : parseInt(result['grid']),
+              'avPosition' : parseInt(result['position']),
+            };
+
+          $(`#season-standings-driver-tr-${x}-round-${race['round']}`).append(`
+              #${result['position']}<br>
+              ${result['points']}pts<br>
+              Q3: ${result['grid']}<br>
+              <hr>
+              Cumulative points: ${driverResult[x]['finalPoints']}`);
+        });
+
+      });  // END OF COMPLETED RACES THIS SEASON
+
+
+
+      // GET FUTURE RACES AVERAGES (MAP FUNCTION FROM https://stackoverflow.com/questions/14810506/map-function-for-objects-instead-of-arrays)
       Object.keys(driverResult).map(function(key, index) {
-
-        // driverResult[key] = {
-        //   'multiply' : driverResult[key]['multiply'],
-        //   'avGrid' : (Math.round(((driverResult[key]['avGrid'] / driverResult[key]['multiply']) + Number.EPSILON) * 1000) / 1000),
-        //   'avPosition' : (Math.round(((driverResult[key]['avPosition'] / driverResult[key]['multiply']) + Number.EPSILON) * 1000) / 1000),
-        //   'predictedRaces' : [],
-        //   //'rankPosition' : 10,
-        //   //'rankPoints' : 10,
-        //   //'rankGrid' : 11, // THIS WAS A PAIN TO DO INCLUDING THE +0.5 BELOW.
-        // };
         driverResult[key]['avGrid'] = (Math.round(((driverResult[key]['avGrid'] / driverResult[key]['multiply']) + Number.EPSILON) * 1000) / 1000);
         driverResult[key]['avPosition'] = (Math.round(((driverResult[key]['avPosition'] / driverResult[key]['multiply']) + Number.EPSILON) * 1000) / 1000);
         driverResult[key]['predictedRaces'] = [];
-
-
-        // for (element of ['avPoints','avGrid','avFastest','avSpeed']) {
-        //   driverResult[key][element] = (Math.round(((driverResult[key][element] / driverResult[key]['multiply']) + Number.EPSILON) * 10) / 10);
-        // };
-        // driverResult[key]['rankPoints'] = 10;
       });
 
 
-      // FIND HIGHEST FOR EACH VALUE
-
-      // Object.keys(driverResult).map(driverId => {
-      //   for (driverIdCompare in driverResult) {
-      //     driverResult[driverId]['rankPoints'] = (driverResult[driverId]['avPoints'] > driverResult[driverIdCompare]['avPoints']) ? driverResult[driverId]['rankPoints']-0.5 : driverResult[driverId]['rankPoints']+0.5;
-      //     driverResult[driverId]['rankGrid'] = (driverResult[driverId]['avGrid'] > driverResult[driverIdCompare]['avGrid']) ? driverResult[driverId]['rankGrid']+0.5 : driverResult[driverId]['rankGrid']-0.5;
-      //     driverResult[driverId]['rankPosition'] = (driverResult[driverId]['avPosition'] > driverResult[driverIdCompare]['avPosition']) ? driverResult[driverId]['rankPosition']+0.5 : driverResult[driverId]['rankPosition']-0.5;
-      //   };
-      // });
 
 
 console.log(driverResult);
@@ -709,7 +670,6 @@ function raceResults(season, round) {
     (e) => $(`#race-standings tbody`).html(`<tr><td colspan="14" class="color-accent text-upper text-bold">${e}</td></tr>`));
 }
 
-
 // CHANGE ROUND LIST TO THE SEASON YEAR CLICKED ON
 function changeSeason(season) {
     F1_SEASON = season;
@@ -717,7 +677,6 @@ function changeSeason(season) {
     $(`#nav-season-${season}`).addClass('nav-selected');
     navRounds(season);
 }
-
 
 // PROBLEM - SELECTED ROUND DOES NOT WORK
 function changeRound(round) {
@@ -727,7 +686,7 @@ function changeRound(round) {
     raceResults(F1_SEASON, F1_ROUND);
 }
 
-
+// SHOW ALL ROUNDS FOR A GIVEN SEASON ON NAV BAR
 function navRounds(season) {
     // SHOW ALL ROUNDS FOR THIS SEASON
     jsonCall(`https://ergast.com/api/f1/${season}.json`, function(response) {
@@ -762,7 +721,7 @@ function navRounds(season) {
 // SETUP GLOBAL VARS
 var F1_ROUND, F1_SEASON, F1_HEAD2HEAD_1, F1_HEAD2HEAD_2, F1_HEAD2HEAD_3;
 
-    $(`#head2head-1,#head2head-2`).slideUp(0);
+$(`#head2head-1,#head2head-2`).slideUp(0);
 
 $(document).ready(function() {
 
