@@ -59,7 +59,7 @@
         width:360px;
         border:3px solid #333;
         border-radius: 5px;
-        background-color: #15151E;
+        background-color: #EEE;
         margin:5px;
         padding: 5px;
         position:relative;
@@ -101,9 +101,6 @@
     }
 
     #season-standings thead tr th {
-      max-width:50px;
-      overflow: hidden;
-      text-overflow: ellipsis;
       white-space: nowrap;
     }
     #season-standings thead tr th div {
@@ -113,6 +110,18 @@
       border:1px solid #999;
       padding:10px;
       margin:10px;
+      position:relative;
+    }
+    .season-standings-cumulative {
+
+    }
+    .season-standings-moreinfo {
+      position:absolute;
+      top:0;
+      left:0;
+      right:0;
+      bottom:0;
+      display:none;
     }
 </style>
 
@@ -183,6 +192,7 @@
 
 
 
+<script src="assets/js/date-format.js"></script>
 <script src="assets/js/script.js"></script>
 
 </body>

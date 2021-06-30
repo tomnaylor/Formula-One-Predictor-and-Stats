@@ -425,7 +425,13 @@ function newseasonResults(season) {
 
       // DRIVER NAMES BASED ON WHO WON FIRST RACE
       races[0]['Results'].forEach((driver,driverId) => {
-        $('#season-standings tbody').append(`<tr id="season-standings-driver-tr-${driver['number']}"><th>${driver['Driver']['familyName']}</th></tr>`);
+        $('#season-standings tbody').append(`
+          <tr id="season-standings-driver-tr-${driver['number']}">
+            <th>
+              ${driver['Driver']['familyName']}<br>
+              <img src="assets/img/constructors/${driver['Constructor']['constructorId']}.png" width="70">
+            </th>
+          </tr>`);
       });
 
 
@@ -434,7 +440,13 @@ function newseasonResults(season) {
       races.forEach(race => {
 
         // RACE HEADERS
-        $('#season-standings thead tr').append(`<th id="season-standings-tr-${race['round']}">${race['raceName']}<hr>${race['Circuit']['circuitId']}</th>`);
+        $('#season-standings thead tr').append(`
+          <th id="season-standings-tr-${race['round']}">
+            -${race['round']}-<br>
+            <img src="https://www.countryflags.io/${circuits[race['Circuit']['circuitId']]['countryCode']}/flat/48.png" alt="${race['raceName']}"><br>
+            ${dateFormat(race['date'], "dS mmm")}
+
+          </th>`);
 
         // DRAW INDIVIDUAL RACE RESULTS TD - FIX FOR WHEN THERE WERE MISSING RACES
         races[0]['Results'].forEach(driver => {
@@ -464,11 +476,14 @@ function newseasonResults(season) {
             };
 
           $(`#season-standings-driver-tr-${x}-round-${race['round']}`).append(`
-              #${result['position']}<br>
-              ${result['points']}pts<br>
+            <div class="season-standings-moreinfo">
               Q3: ${result['grid']}<br>
-              <hr>
-              Cumulative points: ${driverResult[x]['finalPoints']}`);
+              <div class="season-standings-cumulative">${driverResult[x]['finalPoints']}pts</div>
+            </div>
+            #${result['position']}<br>
+            ${result['points']}pts<br>
+
+            `);
         });
 
       });  // END OF COMPLETED RACES THIS SEASON
@@ -490,25 +505,36 @@ console.log(driverResult);
 
 $.when(
   $.getJSON(`https://ergast.com/api/f1/${season}.json?limit=100&offset=${races.length}`),
-  $.getJSON(`https://ergast.com/api/f1/${season-1}/results.json?limit=2000`)
+  $.getJSON(`https://ergast.com/api/f1/${season-1}/results.json?limit=2000`),
+  $.getJSON(`https://ergast.com/api/f1/${season-2}/results.json?limit=2000`)
 ).then(
-    function(thisSeason,lastSeason) {
+    function(thisSeason,lastSeason,twoSeason) {
       thisSeason = thisSeason[0]['MRData']['RaceTable']['Races'];
       lastSeason = lastSeason[0]['MRData']['RaceTable']['Races'];
+      twoSeason = twoSeason[0]['MRData']['RaceTable']['Races'];
 
       console.log(`THIS SEASON`,thisSeason);
       console.log(`LAST SEASON`,lastSeason);
+      console.log(`TWO SEASONS AGO`,twoSeason);
 
 
       thisSeason.forEach((thisSeason_round, thisSeason_roundId) => {
 
         // ADD CIRCUIT NAME FOR THEAD
         let lastSeasonsTrackResult = lastSeason.find(key => key['Circuit']['circuitId'] === thisSeason_round['Circuit']['circuitId']);
+        let twoSeasonsTrackResult = twoSeason.find(key => key['Circuit']['circuitId'] === thisSeason_round['Circuit']['circuitId']);
 
         // USE THIS TO FIND DRIVER RESULT FOR LAST YEAR AT THAT TRACK..
 
-        $('#season-standings thead tr').append(`<th id="season-standings-tr-${thisSeason_round['round']}">${thisSeason_round['raceName']}<hr>${thisSeason_round['Circuit']['circuitId']}<hr>${(lastSeasonsTrackResult) ? lastSeasonsTrackResult['date'] : ''}</th>`);
+        $('#season-standings thead tr').append(`
+          <th id="season-standings-tr-${thisSeason_round['round']}">
+            -${thisSeason_round['round']}-<br>
+            <img src="https://www.countryflags.io/${circuits[thisSeason_round['Circuit']['circuitId']]['countryCode']}/flat/48.png" alt="${thisSeason_round['raceName']}"><br>
+            ${dateFormat(thisSeason_round['date'], "dS mmm")}
+          </th>`);
 
+          // ${(lastSeasonsTrackResult) ? '<br>Last year: ' + lastSeasonsTrackResult['date'] : ''}
+          // ${(twoSeasonsTrackResult) ? '<br>2 Yrs ago: ' + twoSeasonsTrackResult['date'] : ''}
 
         // LOOP FOR EACH OF THE DRIVERS RESULTS FOR THIS RACE (DRIVERS TAKEN FROM RACE 1 RESULTS)
         races[0]['Results'].forEach((result) => {
@@ -518,7 +544,10 @@ $.when(
           // WORK OUT AVERAGE FINISH THIS YEAR IF NO VALUE
           let lastSeasonDriverResult = driverResult[result['number']]['avPosition']; // MAKE MIDDLE OF THE ROAD IF NO PREVIOUS RACE
           let lastSeasonDriverGrid = driverResult[result['number']]['avGrid']; // MAKE MIDDLE OF THE ROAD IF NO PREVIOUS RACE
-          // ADD LAST YEAR GRID
+
+          let twoSeasonDriverResult = driverResult[result['number']]['avPosition']; // MAKE MIDDLE OF THE ROAD IF NO PREVIOUS RACE
+          let twoSeasonDriverGrid = driverResult[result['number']]['avGrid']; // MAKE MIDDLE OF THE ROAD IF NO PREVIOUS RACE
+
 
           if (lastSeasonsTrackResult) {
             for (i=0; i < lastSeasonsTrackResult['Results'].length; i++) {
@@ -530,13 +559,25 @@ $.when(
             }
           }
 
+          if (twoSeasonsTrackResult) {
+            for (i=0; i < twoSeasonsTrackResult['Results'].length; i++) {
+              if (twoSeasonsTrackResult['Results'][i]['number'] === result['number']) {
+                  twoSeasonDriverResult = twoSeasonsTrackResult['Results'][i]['position'];
+                  twoSeasonDriverGrid = twoSeasonsTrackResult['Results'][i]['grid'];
+                  break;
+                }
+            }
+          }
+
 
           // MATHS FOR PREDICTADED SCORE - CALCULATE WEIGHTED RESULT
-          // let weightedPosition = (driverResult[result['number']]['avPosition']);
-          // let weightedGrid = (driverResult[result['number']]['avGrid']) * 0.5;
-          // let weightedPrevious = (lastSeasonDriverResult) * 0.3;
-
-          let weightedTotal = (driverResult[result['number']]['avPosition']) + (driverResult[result['number']]['avGrid']*0.5) + (lastSeasonDriverResult*0.3) + (lastSeasonDriverGrid*0.3);
+          let weightedTotal =
+            (driverResult[result['number']]['avPosition']*1) +
+            (driverResult[result['number']]['avGrid']*0.6) +
+            (lastSeasonDriverResult*0.3) +
+            (lastSeasonDriverGrid*0.1) +
+            (twoSeasonDriverResult*0.3) +
+            (twoSeasonDriverGrid*0.1);
 
 
           driverResult[result['number']]['predictedRaces'][thisSeason_roundId] = {
@@ -544,11 +585,14 @@ $.when(
             'grid' : driverResult[result['number']]['avGrid'],
             'previous' : lastSeasonDriverResult,
             'previousGrid' : lastSeasonDriverGrid,
+            'twoPrevious' : twoSeasonDriverResult,
+            'twoPreviousGrid' : twoSeasonDriverGrid,
             'total' : weightedTotal,
             'rankPosition' : 10,
           };
 
         });
+
 
         // AFTER ALL DRIVERS FOR THIS ROUND ARE COMPLETE WORK OUT THE RANK FOR EACH ONE
         Object.keys(driverResult).map(driverId => {
@@ -599,20 +643,33 @@ $.when(
         driverResult[driverId]['predictedRaces'].forEach(thisResult => {
           $(`#season-standings-driver-tr-${driverId}`).append(`
             <td class="color-accent">
-              Average # ${driverResult[driverId]['avPosition']}<br>
-              Average Q3: ${driverResult[driverId]['avGrid']}<br>
-              Previous # ${(thisResult['previous'])}<br>
-              Previous Q3: ${(thisResult['previousGrid'])}<br>
-              = ${(thisResult['total'])}
-              <hr>
-              Prediction<br>
+              <div class="season-standings-moreinfo">
+                Average # ${driverResult[driverId]['avPosition']}<br>
+                Average Q3: ${driverResult[driverId]['avGrid']}<br>
+                Previous # ${(thisResult['previous'])}<br>
+                Previous Q3: ${(thisResult['previousGrid'])}<br>
+                Two Previous # ${(thisResult['twoPrevious'])}<br>
+                Two Previous Q3: ${(thisResult['twoPreviousGrid'])}<br>
+                = ${(thisResult['total'])}
+                <div class="season-standings-cumulative">${thisResult['curPoints']}pts</div>
+              </div>
               # ${(thisResult['rankPosition'])}<br>
               ${(thisResult['points'])}pts
-              <hr>
-              Cumulative points: ${Math.round(thisResult['curPoints'])}
 
             </td>`);
         });
+      };
+
+
+      // SHOW FINAL RESULTS
+      $('#season-standings thead tr').append(`<th>FINAL</th>`);
+      for (driverId in driverResult) {
+        $(`#season-standings-driver-tr-${driverId}`).append(`
+          <td class="color-accent-bg">
+            # ${(driverResult[driverId]['finalPosition'])}<br>
+            ${(driverResult[driverId]['finalPoints'])}pts
+
+          </td>`);
       };
 
    },

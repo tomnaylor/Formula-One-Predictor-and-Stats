@@ -14,7 +14,7 @@ too ages to work out the weighting - trial and error
 when a driver didn't take part in a race the push() to add a td put it a race behind the table header. When doing the header, drew boxes for each race with an ID number
 https://stackoverflow.com/questions/14810506/map-function-for-objects-instead-of-arrays
 https://stackoverflow.com/questions/11832914/how-to-round-to-at-most-2-decimal-places-if-necessary
-
+https://blog.stevenlevithan.com/archives/date-time-format
 
 
 additions
