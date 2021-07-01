@@ -85,6 +85,12 @@
     #head2head h3 {
         font-size:30px;
     }
+    #head2head > #head2head-graph {
+      display:block;
+      width:900px;
+      height:auto;
+      border:1px solid red;
+    }
 
     #nav-arrows i {
       position:absolute;
@@ -116,12 +122,10 @@
 
     }
     .season-standings-moreinfo {
-      position:absolute;
-      top:0;
-      left:0;
-      right:0;
-      bottom:0;
+      white-space: nowrap;
       display:none;
+      margin-top:10px;
+      border-top:1px solid #333;
     }
 </style>
 
@@ -153,8 +157,9 @@
 
   <h2>Head to Head</h2>
   <div id="head2head">
-    <div id="head2head-1"><canvas id="head2head-laptimes-1" width="400" height="400"></canvas></div>
-    <div id="head2head-2"><canvas id="head2head-laptimes-2" width="400" height="400"></canvas></div>
+    <div id="head2head-1"></div>
+    <div id="head2head-2"></div>
+    <div id="head2head-graph"></div>
   </div>
 
 

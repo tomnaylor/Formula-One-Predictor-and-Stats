@@ -16,6 +16,8 @@ https://stackoverflow.com/questions/14810506/map-function-for-objects-instead-of
 https://stackoverflow.com/questions/11832914/how-to-round-to-at-most-2-decimal-places-if-necessary
 https://blog.stevenlevithan.com/archives/date-time-format
 
+problem updating chart js (https://www.chartjs.org/docs/latest/developers/api.html / https://stackoverflow.com/questions/40056555/destroy-chart-js-bar-graph-to-redraw-other-graph-in-same-canvas)
+
 
 additions
 adding cache = https://blog.logrocket.com/javascript-cache-api/
