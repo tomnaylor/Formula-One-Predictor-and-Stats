@@ -106,6 +106,7 @@ header > h1 {
     padding: 5px;
     margin: 10px;
     border-radius: 5px;
+    cursor: pointer;
 }
 
 #nav-round li {
@@ -123,6 +124,7 @@ header > h1 {
   z-index: 999;
   padding:5px;
   border:2px solid #1F1F1F;
+  border-radius: 3px;
 }
 .nav-round-num {
     font-size: 1.3em;
@@ -186,24 +188,36 @@ header > h1 {
     }
 
 
-    #season-standings thead tr th {
-      white-space: nowrap;
-    }
-    #season-standings thead tr th div {
-      /* transform: rotate(-90deg); */
-    }
-    #season-standings tbody tr td {
-      border:1px solid #999;
-      padding:10px;
-      margin:10px;
-      position:relative;
-    }
-    .season-standings-cumulative {
+#season-standings {
+  border-collapse: collapse;
+}
+#season-standings thead tr th {
+  border-bottom:2px solid rgb(225,6,0);
+}
 
-    }
-    .season-standings-moreinfo {
-      white-space: nowrap;
-      display:none;
-      margin-top:10px;
-      border-top:1px solid #333;
-    }
+#season-standings thead tr th {
+  text-align: center;
+  line-height: 1em;
+  font-weight: 400;
+  padding-bottom:10px;
+}
+#season-standings thead tr th img {
+  display: block;
+  margin:0 auto 10px auto;
+  width:38px;
+}
+
+#season-standings tbody tr td {
+  padding:7px;
+  position:relative;
+  border-bottom:1px solid #aaa;
+}
+.season-standings-cumulative {
+
+}
+.season-standings-moreinfo {
+  white-space: nowrap;
+  display:none;
+  margin-top:10px;
+  border-top:1px solid #333;
+}

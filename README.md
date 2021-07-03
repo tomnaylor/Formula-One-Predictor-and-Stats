@@ -18,6 +18,7 @@ https://blog.stevenlevithan.com/archives/date-time-format
 
 problem updating chart js (https://www.chartjs.org/docs/latest/developers/api.html / https://stackoverflow.com/questions/40056555/destroy-chart-js-bar-graph-to-redraw-other-graph-in-same-canvas)
 season results fails when a track isn't in the circuits object (flag lookup)
+year 2920 season results - final positions are 0.5 numbers and #1 is -0.5; - its when there are more than 20 drivers....
 
 additions
 adding cache = https://blog.logrocket.com/javascript-cache-api/

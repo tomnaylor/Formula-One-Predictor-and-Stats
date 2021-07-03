@@ -471,12 +471,14 @@ function seasonResults(season) {
       <tbody></tbody>`);
 
     // DRIVER NAMES BASED ON WHO WON FIRST RACE
+//            <img src="assets/img/constructors/${driver['Constructor']['constructorId']}.png" width="70">
+
     races[0]['Results'].forEach((driver,driverId) => {
       $('#season-standings tbody').append(`
         <tr id="season-standings-driver-tr-${driver['number']}">
           <th>
-            ${driver['Driver']['familyName']}<br>
-            <img src="assets/img/constructors/${driver['Constructor']['constructorId']}.png" width="70">
+            ${driver['number']}<br>
+            ${driver['Driver']['code']}
           </th>
         </tr>`);
     });
@@ -488,11 +490,10 @@ function seasonResults(season) {
       // RACE HEADERS
       // id="season-standings-tr-${race['round']}"
       $('#season-standings thead tr').append(`
-        <th>
-          ${race['round']}<br>
-          <img src="https://www.countryflags.io/${circuits[race['Circuit']['circuitId']]['countryCode']}/flat/48.png" alt="${race['raceName']}"><br>
-          ${dateFormat(race['date'], "dS mmm")}
-
+        <th class="text-upper">
+          ${(circuits[race['Circuit']['circuitId']]) ? `<img src="assets/img/circuits/${circuits[race['Circuit']['circuitId']]['track-outline']}">` : `<div class="color-white text-bold">${race['round']}</div>` }
+          ${dateFormat(race['date'], "d")}<br>
+          ${dateFormat(race['date'], "mmm")}
         </th>`);
 
       // DRAW INDIVIDUAL RACE RESULTS TD - FIX FOR WHEN THERE WERE MISSING RACES
@@ -567,15 +568,18 @@ function seasonResults(season) {
             let lastSeasonsTrackResult = lastSeason.find(key => key['Circuit']['circuitId'] === thisSeason_round['Circuit']['circuitId']);
             let twoSeasonsTrackResult = twoSeason.find(key => key['Circuit']['circuitId'] === thisSeason_round['Circuit']['circuitId']);
 
+                            // ${thisSeason_round['round']}<br>
+                            // <img src="https://www.countryflags.io/${circuits[thisSeason_round['Circuit']['circuitId']]['countryCode']}/flat/48.png" alt="${thisSeason_round['raceName']}"><br>
+                            // ${dateFormat(thisSeason_round['date'], "dS mmm")}
+                            // ${(lastSeasonsTrackResult) ? '<br>Last year: ' + dateFormat(lastSeasonsTrackResult['date'], "dS mmm") : ''}
+                            // ${(twoSeasonsTrackResult) ? '<br>2 Yrs ago: ' + dateFormat(twoSeasonsTrackResult['date'], "dS mmm") : ''}
 
             // ADD CIRCUIT NAME TO THEAD
             $('#season-standings thead tr').append(`
-              <th>
-                ${thisSeason_round['round']}<br>
-                <img src="https://www.countryflags.io/${circuits[thisSeason_round['Circuit']['circuitId']]['countryCode']}/flat/48.png" alt="${thisSeason_round['raceName']}"><br>
-                ${dateFormat(thisSeason_round['date'], "dS mmm")}
-                ${(lastSeasonsTrackResult) ? '<br>Last year: ' + dateFormat(lastSeasonsTrackResult['date'], "dS mmm") : ''}
-                ${(twoSeasonsTrackResult) ? '<br>2 Yrs ago: ' + dateFormat(twoSeasonsTrackResult['date'], "dS mmm") : ''}
+              <th class="text-upper">
+                ${(circuits[thisSeason_round['Circuit']['circuitId']]) ? `<img src="assets/img/circuits/${circuits[thisSeason_round['Circuit']['circuitId']]['track-outline']}">` : `<div class="color-white text-bold">${thisSeason_round['round']}</div>` }
+                ${dateFormat(thisSeason_round['date'], "d")}<br>
+                ${dateFormat(thisSeason_round['date'], "mmm")}
               </th>`);
 
 
@@ -795,7 +799,7 @@ function navRounds(season) {
     });
     $(`#nav-round-${F1_SEASON}-${F1_ROUND}`).addClass('color-red-bg');
 
-    $("#nav-round li").mouseenter(function() { $('.nav-round-hover',this).fadeIn(); }).mouseleave(function() { $('.nav-round-hover',this).fadeOut(); });
+    $("#nav-round li").mouseenter(function() { $('.nav-round-hover',this).fadeTo(300,0.9); }).mouseleave(function() { $('.nav-round-hover',this).fadeOut(100); });
   },
   'Error getting list of rounds',
   (e) => $(`#nav-round`).addClass('color-accent text-center text-upper text-bold').html(`<li>${e}</li>`));
