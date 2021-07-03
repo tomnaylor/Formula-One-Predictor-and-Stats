@@ -5,8 +5,7 @@
 * {
     margin:0;
     padding:0;
-    -webkit-box-sizing: border-box;
-            box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 a {
@@ -16,6 +15,7 @@ a {
 html {
     scroll-behavior: smooth;
 }
+
 body {
     font-family: 'Titillium Web', Times, serif;
     font-size:16px;
@@ -23,28 +23,24 @@ body {
 }
 
 
+/* ---------------------------------------- COLOURS */
 .color-red {
   color: rgba(225,6,0,1);
 }
 .color-white {
   color: #F7F4F1
 }
-/* ---------------------------------------- COLOURS #D96415 #F9440D */
-.color-accent-bg, .color-accent-bg-hover:hover {
-    background-color: rgb(252, 80, 27);
+.color-black {
+  color: #1F1F1F
 }
-.color-accent, .color-accent-hover:hover {
-    color: rgb(252, 80, 27);
+.color-red-bg {
+  background-color: rgba(225,6,0,1);
 }
-.color-accent-light, .color-accent-light-hover:hover {
-    color: #f75;
+.color-white-bg {
+  background-color: #F7F4F1
 }
-
-.color-light-bg, .color-light-bg-hover:hover {
-    background-color: #f7f6e7;
-}
-.color-light, .color-light-hover:hover {
-    color: #f7f6e7;
+.color-black-bg {
+  background-color: #1F1F1F
 }
 
 
@@ -82,25 +78,15 @@ body {
 .text-italic {
     font-style: italic;
 }
-.text-larger {
-    font-size:1.2em;
-}
-.text-smaller {
-    font-size:0.9em;
-}
-.text-pad {
-    padding:1px 4px;
-}
-/* ---------------------------------------- HEADER */
 
+
+/* ---------------------------------------- HEADER */
 header {
     position: relative;
     width:100%;
     background: rgba(225,6,0,1);
     margin-bottom:30px;
 }
-
-
 
 header > h1 {
     font-size:20px;
@@ -110,3 +96,114 @@ header > h1 {
     padding:5px 10px;
 
 }
+
+#nav-season, #nav-round {
+    list-style: none;
+}
+
+#nav-season li, #nav-round li {
+    display: inline-block;
+    padding: 5px;
+    margin: 10px;
+    border-radius: 5px;
+}
+
+#nav-round li {
+    text-align: center;
+    width:70px;
+    position:relative;
+}
+
+.nav-round-hover {
+  display:none;
+  position:absolute;
+  top:0;
+  left:-20px;
+  width:110px;
+  z-index: 999;
+  padding:5px;
+  border:2px solid #1F1F1F;
+}
+.nav-round-num {
+    font-size: 1.3em;
+    font-weight: 700;
+}
+
+
+
+/* ---------------------------------------- ERRORS */
+#errors {
+    display:none;
+    background-color: red;
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    padding:20px;
+}
+
+
+/* ---------------------------------------- XXXXXXXXXXXX */
+
+
+
+    #head2head > div {
+        text-align: center;
+        width:360px;
+        border:3px solid #333;
+        border-radius: 5px;
+        background-color: #EEE;
+        margin:5px;
+        padding: 5px;
+        position:relative;
+        display:inline-block;
+    }
+
+    .head2head-car {
+        width:400px;
+        display:block;
+        margin:10px auto;
+    }
+
+    .head2head-flag {
+        width:64px;
+        display:block;
+        margin:0 auto;
+    }
+    .head2head-position {
+        font-size:35px;
+        font-weight:700;
+    }
+
+    #head2head h3 {
+        font-size:30px;
+    }
+    #head2head > #head2head-graph {
+      display:block;
+      width:900px;
+      height:auto;
+      border:1px solid red;
+    }
+
+
+    #season-standings thead tr th {
+      white-space: nowrap;
+    }
+    #season-standings thead tr th div {
+      /* transform: rotate(-90deg); */
+    }
+    #season-standings tbody tr td {
+      border:1px solid #999;
+      padding:10px;
+      margin:10px;
+      position:relative;
+    }
+    .season-standings-cumulative {
+
+    }
+    .season-standings-moreinfo {
+      white-space: nowrap;
+      display:none;
+      margin-top:10px;
+      border-top:1px solid #333;
+    }

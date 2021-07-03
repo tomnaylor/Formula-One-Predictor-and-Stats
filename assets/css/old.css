@@ -1,0 +1,19 @@
+
+
+
+.color-accent-bg, .color-accent-bg-hover:hover {
+    background-color: rgb(252, 80, 27);
+}
+.color-accent, .color-accent-hover:hover {
+    color: rgb(252, 80, 27);
+}
+.color-accent-light, .color-accent-light-hover:hover {
+    color: #f75;
+}
+
+.color-light-bg, .color-light-bg-hover:hover {
+    background-color: #f7f6e7;
+}
+.color-light, .color-light-hover:hover {
+    color: #f7f6e7;
+}

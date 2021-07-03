@@ -1,91 +1,91 @@
 const circuits = {
     'bahrain' : {
-        'track-outline' : 'monaco.png',
-        'track-sectors' : 'monaco-sectors.png',
+        'track-outline' : 'bahrain.png',
+        'track-sectors' : 'bahrain-sectors.png',
         'countryCode' : 'BH' },
     'imola' : {
-        'track-outline' : 'monaco.png',
-        'track-sectors' : 'monaco-sectors.png',
+        'track-outline' : 'imola.png',
+        'track-sectors' : 'imola-sectors.png',
         'countryCode' : 'IT' },
     'portimao' : {
-        'track-outline' : 'monaco.png',
-        'track-sectors' : 'monaco-sectors.png',
+        'track-outline' : 'portimao.png',
+        'track-sectors' : 'portimao-sectors.png',
         'countryCode' : 'PT' },
     'catalunya' : {
-        'track-outline' : 'monaco.png',
-        'track-sectors' : 'monaco-sectors.png',
+        'track-outline' : 'catalunya.png',
+        'track-sectors' : 'catalunya-sectors.png',
         'countryCode' : 'ES' },
     'monaco' : {
         'track-outline' : 'monaco.png',
         'track-sectors' : 'monaco-sectors.png',
         'countryCode' : 'MC' },
     'BAK' : {
-        'track-outline' : 'azerbaijan.png',
-        'track-sectors' : 'azerbaijan-sectors.png',
+        'track-outline' : 'baku.png',
+        'track-sectors' : 'baku-sectors.png',
         'countryCode' : 'AZ' },
     'ricard' : {
-        'track-outline' : '',
-        'track-sectors' : '',
+        'track-outline' : 'ricard.png',
+        'track-sectors' : 'ricard-sectors.png',
         'countryCode' : 'FR' },
     'red_bull_ring' : {
-        'track-outline' : '',
-        'track-sectors' : '',
+        'track-outline' : 'red-bull-ring.png',
+        'track-sectors' : 'red-bull-ring-sectors.png',
         'countryCode' : 'AT' },
     'silverstone' : {
-        'track-outline' : '',
-        'track-sectors' : '',
+        'track-outline' : 'silverstone.png',
+        'track-sectors' : 'silverstone-sectors.png',
         'countryCode' : 'GB' },
     'hungaroring' : {
-        'track-outline' : '',
-        'track-sectors' : '',
+        'track-outline' : 'hungaroring.png',
+        'track-sectors' : 'hungaroring-sectors.png',
         'countryCode' : 'HU' },
     'spa' : {
-        'track-outline' : '',
-        'track-sectors' : '',
+        'track-outline' : 'spa.png',
+        'track-sectors' : 'spa-sectors.png',
         'countryCode' : 'BE' },
     'zandvoort' : {
-        'track-outline' : '',
-        'track-sectors' : '',
+        'track-outline' : 'zandvoort.png',
+        'track-sectors' : 'zandvoort-sectors.png',
         'countryCode' : 'NL' },
     'monza' : {
-        'track-outline' : '',
-        'track-sectors' : '',
+        'track-outline' : 'monza.png',
+        'track-sectors' : 'monza-sectors.png',
         'countryCode' : 'IT' },
     'sochi' : {
-        'track-outline' : '',
-        'track-sectors' : '',
+        'track-outline' : 'sochi.png',
+        'track-sectors' : 'sochi-sectors.png',
         'countryCode' : 'RU' },
     'marina_bay' : {
-        'track-outline' : '',
-        'track-sectors' : '',
+        'track-outline' : 'istanbul.png',
+        'track-sectors' : 'istanbul-sectors.png',
         'countryCode' : 'SG' },
     'suzuka' : {
-        'track-outline' : '',
-        'track-sectors' : '',
+        'track-outline' : 'suzuka.png',
+        'track-sectors' : 'suzuka-sectors.png',
         'countryCode' : 'JP' },
     'americas' : {
-        'track-outline' : '',
-        'track-sectors' : '',
+        'track-outline' : 'americas.png',
+        'track-sectors' : 'americas-sectors.png',
         'countryCode' : 'US' },
     'rodriguez' : {
-        'track-outline' : '',
-        'track-sectors' : '',
+        'track-outline' : 'rodriguez.png',
+        'track-sectors' : 'rodriguez-sectors.png',
         'countryCode' : 'MX' },
     'interlagos' : {
-        'track-outline' : '',
-        'track-sectors' : '',
+        'track-outline' : 'interlagos.png',
+        'track-sectors' : 'interlagos-sectors.png',
         'countryCode' : 'BR' },
     'albert_park' : {
-        'track-outline' : '',
-        'track-sectors' : '',
+        'track-outline' : 'albert-park.png',
+        'track-sectors' : 'albert-park-sectors.png',
         'countryCode' : 'AU' },
     'jeddah' : {
-        'track-outline' : '',
-        'track-sectors' : '',
+        'track-outline' : 'jeddah.png',
+        'track-sectors' : 'jeddah-sectors.png',
         'countryCode' : 'SA' },
     'yas_marina' : {
-        'track-outline' : '',
-        'track-sectors' : '',
+        'track-outline' : 'yas-marina.png',
+        'track-sectors' : 'yas-marina-sectors.png',
         'countryCode' : 'AE' },
 
 
@@ -213,8 +213,8 @@ function drawCircuit(c) {
     // $('#track').attr("src",`assets/img/${c['circuitId']}.png`);
     // $('#track-sectors').attr("src",`assets/img/${c['circuitId']}-sectors.png`);
     if (circuits[c['circuitId']]) {
-        $('#track').attr("src",`assets/img/${circuits[c['circuitId']]['track-outline']}`);
-        $('#track-sectors').attr("src",`assets/img/${circuits[c['circuitId']]['track-sectors']}`);
+        $('#track').attr("src",`assets/img/circuits/${circuits[c['circuitId']]['track-outline']}`);
+        $('#track-sectors').attr("src",`assets/img/circuits/${circuits[c['circuitId']]['track-sectors']}`);
     }
     else {
         $('#track').attr("src",``);
@@ -462,6 +462,14 @@ function seasonResults(season) {
     let races = response['MRData']['RaceTable']['Races'];
     let driverResult = {};
 
+    $('#season-standings').html(`
+      <thead>
+        <tr>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody></tbody>`);
+
     // DRIVER NAMES BASED ON WHO WON FIRST RACE
     races[0]['Results'].forEach((driver,driverId) => {
       $('#season-standings tbody').append(`
@@ -677,7 +685,7 @@ function seasonResults(season) {
           for (driverId in driverResult) {
             driverResult[driverId]['predictedRaces'].forEach(thisResult => {
               $(`#season-standings-driver-tr-${driverId}`).append(`
-                <td class="color-accent">
+                <td class="color-red">
                   # ${(thisResult['rankPosition'])}<br>
                   ${(thisResult['points'])}pts
 
@@ -729,11 +737,6 @@ function seasonResults(season) {
 
 function raceResults(season, round) {
 
-    // F1_SEASON = season;
-    // F1_ROUND = round;
-
-    $('nav ul').slideUp('slow');
-
     jsonCall(`https://ergast.com/api/f1/${season}/${round}/results.json`, function(response) {
 
         let race = response['MRData']['RaceTable']['Races'][0];
@@ -759,58 +762,55 @@ function raceResults(season, round) {
 // CHANGE ROUND LIST TO THE SEASON YEAR CLICKED ON
 function changeSeason(season) {
     F1_SEASON = season;
-    $(`#nav-season ul li`).removeClass('nav-selected');
-    $(`#nav-season-${season}`).addClass('nav-selected');
+    $(`#nav-season li`).removeClass('color-black-bg');
+    $(`#nav-season-${season}`).addClass('color-black-bg');
     navRounds(season);
+    seasonResults(season);
 }
 
 // PROBLEM - SELECTED ROUND DOES NOT WORK
 function changeRound(round) {
     F1_ROUND = round;
-    $(`#nav-round ul li`).removeClass('nav-selected');
-    $(`#nav-round-${F1_SEASON}-${F1_ROUND}`).addClass('nav-selected');
+    $(`#nav-round li`).removeClass('color-red-bg');
+    $(`#nav-round-${F1_SEASON}-${F1_ROUND}`).addClass('color-red-bg');
     raceResults(F1_SEASON, F1_ROUND);
 }
 
 // SHOW ALL ROUNDS FOR A GIVEN SEASON ON NAV BAR
 function navRounds(season) {
-    // SHOW ALL ROUNDS FOR THIS SEASON
-    jsonCall(`https://ergast.com/api/f1/${season}.json`, function(response) {
-        $('#nav-round ul').html('');
-        response['MRData']['RaceTable']['Races'].forEach(e => {
+  jsonCall(`https://ergast.com/api/f1/${season}.json`, function(response) {
+    $('#nav-round').html('');
+    response['MRData']['RaceTable']['Races'].forEach(e => {
+      $('#nav-round').append(`
+          <li id="nav-round-${season}-${e['round']}" onClick="changeRound(${e['round']})">
+              ${(circuits[e['Circuit']['circuitId']]) ? `<img src="assets/img/circuits/${circuits[e['Circuit']['circuitId']]['track-outline']}" style="width:50px;">` : `<div class="color-white text-bold">${e['round']}</div>` }
+              <div class="nav-round-hover color-white-bg">
+                <div class="nav-round-num">${e['round']}</div>
+                <div class="nav-round-name">${e['raceName']}</div>
+                <div class="nav-round-date">${dateFormat(e['date']+' '+e['time'], "dS mmm HH:MM")}</div>
+                ${(circuits[e['Circuit']['circuitId']]) ? `<div><img src="https://www.countryflags.io/${circuits[e['Circuit']['circuitId']]['countryCode']}/flat/64.png"></div>` : `` }
+                ${e['Circuit']['Location']['country']}
+              </div>
+          </li>`);
+    });
+    $(`#nav-round-${F1_SEASON}-${F1_ROUND}`).addClass('color-red-bg');
 
-          $('#nav-round ul').append(`
-              <li id="nav-round-${season}-${e['round']}" onClick="changeRound(${e['round']})">
-                  ${(circuits[e['Circuit']['circuitId']]) ? `<img src="https://www.countryflags.io/${circuits[e['Circuit']['circuitId']]['countryCode']}/flat/64.png">` : ''}
-                  <div class="nav-round-num">${e['round']}</div>
-                  <div class="nav-round-date">${e['date']} ${e['time']}</div>
-                  <div class="nav-round-name">${e['raceName']}</div>
-                  ${e['Circuit']['Location']['country']}
-
-
-
-              </li>`);
-            // GET FLAGS
-            // jsonCall(`https://restcountries.eu/rest/v2/name/${e['Circuit']['Location']['country']}?fullText=true`, function(response) {
-            //   console.log(response);
-            // });
-        });
-        $(`#nav-round-${F1_SEASON}-${F1_ROUND}`).addClass('nav-selected');
-
-    },
-    'Error getting list of rounds',
-    (e) => $(`#nav-round ul`).addClass('color-accent text-center text-upper text-bold').html(`<li>${e}</li>`));
+    $("#nav-round li").mouseenter(function() { $('.nav-round-hover',this).fadeIn(); }).mouseleave(function() { $('.nav-round-hover',this).fadeOut(); });
+  },
+  'Error getting list of rounds',
+  (e) => $(`#nav-round`).addClass('color-accent text-center text-upper text-bold').html(`<li>${e}</li>`));
 }
 
 
 
 // SETUP GLOBAL VARS
-var F1_ROUND, F1_SEASON, F1_HEAD2HEAD_1, F1_HEAD2HEAD_2, F1_HEAD2HEAD_3;
+var F1_ROUND, F1_SEASON, F1_HEAD2HEAD_1, F1_HEAD2HEAD_2;
 
 $(`#head2head-1,#head2head-2`).slideUp(0);
 
 $(document).ready(function() {
 
+  // $('nav ul').slideUp('slow');
 
     // GET FIRST JSON CALL FOR SEASON AND ROUND NUMBERS
     jsonCall('https://ergast.com/api/f1/current/last/results.json', function(response) {
@@ -818,29 +818,15 @@ $(document).ready(function() {
         F1_SEASON = response['MRData']['RaceTable']['season'];
         F1_ROUND = response['MRData']['RaceTable']['round'];
 
-
-        // // SHOW ALL SEASONS
-        // jsonCall(`https://ergast.com/api/f1/seasons.json?limit=999`, function(response) {
-        //
-        //
-        //     response['MRData']['SeasonTable']['Seasons'].forEach(e => {
-        //         $('#nav-season ul').prepend(`<li id="nav-season-${e['season']}" onClick="changeSeason(${e['season']})">${e['season']}</li>`);
-        //     });
-        //
-        //     $(`#nav-season-${F1_SEASON}`).addClass('nav-selected');
-        // },
-        // 'Error getting list of seasons',
-        // (e) => $(`#nav-season ul`).addClass('color-accent text-center text-upper text-bold').html(`<li>${e}</li>`));
-
-        for (i = 2020; i <= parseInt(new Date().getFullYear()); i++) {
-          $('#nav-season ul').prepend(`<li id="nav-season-${i}" onClick="changeSeason(${i})">${i}</li>`);
+        for (let i = parseInt(new Date().getFullYear()); i >= 2010; i--) {
+          $('#nav-season').append(`<li id="nav-season-${i}" onClick="changeSeason(${i})">${i}</li>`);
         }
 
-        $(`#nav-season-${F1_SEASON}`).addClass('nav-selected');
+        $(`#nav-season-${F1_SEASON}`).addClass('color-black-bg');
 
         navRounds(F1_SEASON);
         raceResults(F1_SEASON,F1_ROUND);
-        // seasonResults(F1_SEASON);
+        seasonResults(F1_SEASON);
 
     },
     'Error getting current season and round',

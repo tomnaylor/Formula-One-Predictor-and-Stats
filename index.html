@@ -3,143 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Formula 1 results</title>
+    <meta name="Description" content="Results, predictions, graphics for Formula 1">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/444581f9cb.js" crossorigin="anonymous"></script>
-    <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCrxniDYzXlLNFSfs0JDnvaJTvfhIG5CaE&libraries=&v=weekly" async></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.3.2/dist/chart.min.js" integrity="sha256-qoN08nWXsFH+S9CtIq99e5yzYHioRHtNB9t2qy1MSmc=" crossorigin="anonymous"></script>
-    <!-- <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> -->
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-<style>
-    #errors {
-        display:none;
-        background-color: red;
-        position:absolute;
-        top:0;
-        left:0;
-        right:0;
-        padding:20px;
-    }
-    #nav-season, #nav-round {
-        list-style: none;
-    }
 
-    #nav-season li, #nav-round li {
-        display: inline-block;
-        padding: 5px;
-        margin: 10px;
-    }
-
-    #nav-round li {
-        text-align: center;
-        width:240px;
-        background-size:120% 100%;
-    }
-    .nav-round-num {
-        font-size: 1.3em;
-        font-weight: 700;
-    }
-    .nav-round-name {
-        text-transform: uppercase;
-    }
-    nav a {
-        text-decoration: none;
-    }
-    nav li.nav-selected {
-        color: red;
-        border:1px solid red;
-    }
-
-
-    #head2head > div {
-        text-align: center;
-        width:360px;
-        border:3px solid #333;
-        border-radius: 5px;
-        background-color: #EEE;
-        margin:5px;
-        padding: 5px;
-        position:relative;
-        display:inline-block;
-    }
-
-    .head2head-car {
-        width:400px;
-        display:block;
-        margin:10px auto;
-    }
-
-    .head2head-flag {
-        width:64px;
-        display:block;
-        margin:0 auto;
-    }
-    .head2head-position {
-        font-size:35px;
-        font-weight:700;
-    }
-
-    #head2head h3 {
-        font-size:30px;
-    }
-    #head2head > #head2head-graph {
-      display:block;
-      width:900px;
-      height:auto;
-      border:1px solid red;
-    }
-
-    #nav-arrows i {
-      position:absolute;
-    }
-    #nav-arrows i:first-child {
-      bottom:-25px;
-      left:30px;
-      font-size:70px;
-    }
-    #nav-arrows i:last-child {
-      bottom:-16px;
-      left:46px;
-      font-size:19px;
-    }
-
-    #season-standings thead tr th {
-      white-space: nowrap;
-    }
-    #season-standings thead tr th div {
-      /* transform: rotate(-90deg); */
-    }
-    #season-standings tbody tr td {
-      border:1px solid #999;
-      padding:10px;
-      margin:10px;
-      position:relative;
-    }
-    .season-standings-cumulative {
-
-    }
-    .season-standings-moreinfo {
-      white-space: nowrap;
-      display:none;
-      margin-top:10px;
-      border-top:1px solid #333;
-    }
-</style>
-
-    <div id="errors"></div>
+  <div id="errors"></div>
 
 
   <header>
-    <h1 class="color-light text-upper"><span></span></h1>
     <nav>
-      <div id="nav-season"><ul></ul></div>
-      <div id="nav-round"><ul></ul></div>
-      <div id="nav-arrows"><i class="fas fa-sort-down color-red"></i><i class="fas fa-sort-down color-white"></i></div>
+      <ul id="nav-season" class="color-red-bg color-white"><li>Season</li></ul>
+      <ul id="nav-round" class="color-black-bg"></ul>
+      <!-- <div id="nav-arrows"><i class="fas fa-sort-down color-red"></i><i class="fas fa-sort-down color-white"></i></div> -->
     </nav>
   </header>
+
+
+  <main>
+    <h1 class="color-black text-upper"><span></span></h1>
+
+
+
+  </main>
 
 
       <h2>Season standings</h2>

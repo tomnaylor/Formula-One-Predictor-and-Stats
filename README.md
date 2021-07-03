@@ -17,12 +17,13 @@ https://stackoverflow.com/questions/11832914/how-to-round-to-at-most-2-decimal-p
 https://blog.stevenlevithan.com/archives/date-time-format
 
 problem updating chart js (https://www.chartjs.org/docs/latest/developers/api.html / https://stackoverflow.com/questions/40056555/destroy-chart-js-bar-graph-to-redraw-other-graph-in-same-canvas)
-
+season results fails when a track isn't in the circuits object (flag lookup)
 
 additions
 adding cache = https://blog.logrocket.com/javascript-cache-api/
 look at previous years compared to finihed races this year to see if there's an average improvement compared to last year.
 delete lowest result to help prediction
+add fastest lap point based on previous fastest laps
 
 Research
 
