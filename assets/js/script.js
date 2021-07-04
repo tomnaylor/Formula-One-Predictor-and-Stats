@@ -89,6 +89,32 @@ const circuits = {
         'countryCode' : 'AE' },
 
 
+        'hockenheimring' : {
+            'track-outline' : 'hockenheimring.png',
+            'track-sectors' : 'hockenheimring-sectors.png',
+            'countryCode' : 'DE' },
+        'istanbul' : {
+            'track-outline' : 'istanbul.png',
+            'track-sectors' : 'istanbul-sectors.png',
+            'countryCode' : 'TR' },
+        'mugello' : {
+            'track-outline' : 'mugello.png',
+            'track-sectors' : 'mugello-sectors.png',
+            'countryCode' : 'IT' },
+        'nurburgring' : {
+            'track-outline' : 'nurburgring.png',
+            'track-sectors' : 'nurburgring-sectors.png',
+            'countryCode' : 'DE' },
+        'shanghai' : {
+            'track-outline' : 'shanghai.png',
+            'track-sectors' : 'shanghai-sectors.png',
+            'countryCode' : 'CN' },
+        'villeneuve' : {
+            'track-outline' : 'villeneuve.png',
+            'track-sectors' : 'villeneuve-sectors.png',
+            'countryCode' : 'CA' },
+
+
 };
 
 const countryFlags = [
@@ -451,9 +477,6 @@ function getWikiInfo(url) {
 }
 
 
-// races[0]['Results'].forEach((driver,driverId) => {
-//   console.log('xxxx',race['Results'].find(i => i['number'] == driverId));
-// });
 function seasonResults(season) {
 
 
@@ -464,8 +487,8 @@ function seasonResults(season) {
 
     $('#season-standings').html(`
       <thead>
-        <tr>
-          <th></th>
+        <tr class="color-white">
+          <th class="color-black-bg"></th>
         </tr>
       </thead>
       <tbody></tbody>`);
@@ -490,7 +513,7 @@ function seasonResults(season) {
       // RACE HEADERS
       // id="season-standings-tr-${race['round']}"
       $('#season-standings thead tr').append(`
-        <th class="text-upper">
+        <th class="text-upper color-black-bg">
           ${(circuits[race['Circuit']['circuitId']]) ? `<img src="assets/img/circuits/${circuits[race['Circuit']['circuitId']]['track-outline']}">` : `<div class="color-white text-bold">${race['round']}</div>` }
           ${dateFormat(race['date'], "d")}<br>
           ${dateFormat(race['date'], "mmm")}
@@ -524,8 +547,8 @@ function seasonResults(season) {
           };
 
         $(`#season-standings-driver-tr-${x}-round-${race['round']}`).append(`
-          #${result['position']}<br>
-          ${result['points']}pts<br>
+           ${result['position']}<br>
+          <div class="text-smaller">${result['points']}<span class="text-smaller">pts</span></div>
           <div class="season-standings-moreinfo">
             Q3: ${result['grid']}<br>
             Cumulative: ${driverResult[x]['finalPoints']}pts
@@ -576,7 +599,7 @@ function seasonResults(season) {
 
             // ADD CIRCUIT NAME TO THEAD
             $('#season-standings thead tr').append(`
-              <th class="text-upper">
+              <th class="text-upper color-red-bg">
                 ${(circuits[thisSeason_round['Circuit']['circuitId']]) ? `<img src="assets/img/circuits/${circuits[thisSeason_round['Circuit']['circuitId']]['track-outline']}">` : `<div class="color-white text-bold">${thisSeason_round['round']}</div>` }
                 ${dateFormat(thisSeason_round['date'], "d")}<br>
                 ${dateFormat(thisSeason_round['date'], "mmm")}
@@ -599,8 +622,8 @@ function seasonResults(season) {
               if (lastSeasonsTrackResult) {
                 for (i=0; i < lastSeasonsTrackResult['Results'].length; i++) {
                   if (lastSeasonsTrackResult['Results'][i]['number'] === result['number']) {
-                      lastSeasonDriverResult = lastSeasonsTrackResult['Results'][i]['position'];
-                      lastSeasonDriverGrid = lastSeasonsTrackResult['Results'][i]['grid'];
+                      lastSeasonDriverResult = parseFloat(lastSeasonsTrackResult['Results'][i]['position']);
+                      lastSeasonDriverGrid = parseFloat(lastSeasonsTrackResult['Results'][i]['grid']);
                       break;
                     }
                 }
@@ -609,8 +632,8 @@ function seasonResults(season) {
               if (twoSeasonsTrackResult) {
                 for (i=0; i < twoSeasonsTrackResult['Results'].length; i++) {
                   if (twoSeasonsTrackResult['Results'][i]['number'] === result['number']) {
-                      twoSeasonDriverResult = twoSeasonsTrackResult['Results'][i]['position'];
-                      twoSeasonDriverGrid = twoSeasonsTrackResult['Results'][i]['grid'];
+                      twoSeasonDriverResult = parseFloat(twoSeasonsTrackResult['Results'][i]['position']);
+                      twoSeasonDriverGrid = parseFloat(twoSeasonsTrackResult['Results'][i]['grid']);
                       break;
                     }
                 }
@@ -690,18 +713,18 @@ function seasonResults(season) {
             driverResult[driverId]['predictedRaces'].forEach(thisResult => {
               $(`#season-standings-driver-tr-${driverId}`).append(`
                 <td class="color-red">
-                  # ${(thisResult['rankPosition'])}<br>
-                  ${(thisResult['points'])}pts
+                  ${(thisResult['rankPosition'])}<br>
+                  <div class="text-smaller">${(thisResult['points'])}<span class="text-smaller">pts</span></div>
 
                   <div class="season-standings-moreinfo">
-                    Average # ${driverResult[driverId]['avPosition']}<br>
-                    Average Q3: ${driverResult[driverId]['avGrid']}<br>
-                    Previous # ${(thisResult['previous'])}<br>
-                    Previous Q3: ${(thisResult['previousGrid'])}<br>
-                    Two Previous # ${(thisResult['twoPrevious'])}<br>
-                    Two Previous Q3: ${(thisResult['twoPreviousGrid'])}<br>
-                    Score: ${(thisResult['total'])}<br>
-                    Cumulative: ${thisResult['curPoints']}pts
+                    <span class="text-smaller">Average #:</span> ${driverResult[driverId]['avPosition'].toFixed(2)}<br>
+                    <span class="text-smaller">Average Q3:</span> ${driverResult[driverId]['avGrid'].toFixed(2)}<br>
+                    <span class="text-smaller">Previous #:</span> ${thisResult['previous'].toFixed(0)}<br>
+                    <span class="text-smaller">Previous Q3:</span> ${thisResult['previousGrid'].toFixed(0)}<br>
+                    <span class="text-smaller">Two Previous #:</span> ${thisResult['twoPrevious'].toFixed(0)}<br>
+                    <span class="text-smaller">Two Previous Q3:</span> ${thisResult['twoPreviousGrid'].toFixed(0)}<br>
+                    <span class="text-smaller">Score:</span> ${thisResult['total'].toFixed(3)}<br>
+                    <span class="text-smaller">Cumulative:</span> ${thisResult['curPoints']}pts
                   </div>
                 </td>`);
             });
@@ -709,12 +732,12 @@ function seasonResults(season) {
 
 
           // SHOW FINAL RESULTS
-          $('#season-standings thead tr').append(`<th>FINAL</th>`);
+          $('#season-standings thead tr').append(`<th class="color-red-bg">FINAL</th>`);
           for (driverId in driverResult) {
             $(`#season-standings-driver-tr-${driverId}`).append(`
               <td class="color-accent-bg">
-                # ${(driverResult[driverId]['finalPosition'])}<br>
-                ${(driverResult[driverId]['finalPoints'])}pts
+                ${(driverResult[driverId]['finalPosition'])}<br>
+                ${(driverResult[driverId]['finalPoints'])}<span class="text-smaller">pts</span>
 
               </td>`);
           };

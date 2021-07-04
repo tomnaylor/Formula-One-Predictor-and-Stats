@@ -78,6 +78,9 @@ body {
 .text-italic {
     font-style: italic;
 }
+.text-smaller {
+  font-size:0.8em;
+}
 
 
 /* ---------------------------------------- HEADER */
@@ -145,79 +148,110 @@ header > h1 {
 }
 
 
-/* ---------------------------------------- XXXXXXXXXXXX */
+/* ---------------------------------------- MAIN */
+
+main {
+  margin:20px;
+}
+
+
+/* ---------------------------------------- HEAD 2 HEAD */
+
+#head2head {
+    position:relative;
+}
+
+#head2head-1, #head2head-2 {
+  text-align: center;
+  margin:0 10px;
+  position:relative;
+  display:inline-block;
+}
+
+#head2head-2 img {
+  transform: scaleX(-1);
+}
+
+.head2head-car {
+    width:400px;
+    display:block;
+    margin:10px auto;
+}
+
+.head2head-flag {
+    width:64px;
+    display:block;
+    margin:0 auto;
+}
+.head2head-position {
+    font-size:35px;
+    font-weight:700;
+}
+
+#head2head h3 {
+    font-size:30px;
+}
+#head2head-graph {
+  margin-top:10px;
+  display:block;
+  width:900px;
+  height:auto;
+}
 
 
 
-    #head2head > div {
-        text-align: center;
-        width:360px;
-        border:3px solid #333;
-        border-radius: 5px;
-        background-color: #EEE;
-        margin:5px;
-        padding: 5px;
-        position:relative;
-        display:inline-block;
-    }
-
-    .head2head-car {
-        width:400px;
-        display:block;
-        margin:10px auto;
-    }
-
-    .head2head-flag {
-        width:64px;
-        display:block;
-        margin:0 auto;
-    }
-    .head2head-position {
-        font-size:35px;
-        font-weight:700;
-    }
-
-    #head2head h3 {
-        font-size:30px;
-    }
-    #head2head > #head2head-graph {
-      display:block;
-      width:900px;
-      height:auto;
-      border:1px solid red;
-    }
 
 
 #season-standings {
   border-collapse: collapse;
-}
-#season-standings thead tr th {
-  border-bottom:2px solid rgb(225,6,0);
+  /* border:2px solid #1F1F1F; */
+  border-radius: 5px;
 }
 
 #season-standings thead tr th {
   text-align: center;
-  line-height: 1em;
+  line-height: 1.2em;
   font-weight: 400;
-  padding-bottom:10px;
+  padding:10px 5px;
 }
 #season-standings thead tr th img {
   display: block;
   margin:0 auto 10px auto;
-  width:38px;
+  width:35px;
+}
+
+#season-standings tbody tr th {
+  font-weight: 600;
+  padding:5px 8px;
 }
 
 #season-standings tbody tr td {
-  padding:7px;
+  padding:7px 9px;
   position:relative;
-  border-bottom:1px solid #aaa;
+  /* border-bottom:1px solid #aaa; */
+  cursor: pointer;
+  text-align: center;
 }
-.season-standings-cumulative {
 
+#season-standings tbody tr td:last-child {
+  font-weight: 700;
 }
+
+#season-standings tbody tr:nth-child(odd) th, #season-standings tbody tr:nth-child(odd) td {
+  background-color:#E9E9E9;
+}
+
+#season-standings tbody tr:hover th, #season-standings tbody tr:hover td {
+  background-color:#D9D9D9;
+}
+
+
+
 .season-standings-moreinfo {
+  text-align: left;
   white-space: nowrap;
   display:none;
   margin-top:10px;
-  border-top:1px solid #333;
+  padding-top:10px;
+  border-top:1px solid #AAA;
 }
