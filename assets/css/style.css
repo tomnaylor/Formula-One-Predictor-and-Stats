@@ -25,7 +25,7 @@ body {
 
 /* ---------------------------------------- COLOURS */
 .color-red {
-  color: rgba(225,6,0,1);
+  color: #E10600;
 }
 .color-white {
   color: #F7F4F1
@@ -34,7 +34,7 @@ body {
   color: #1F1F1F
 }
 .color-red-bg {
-  background-color: rgba(225,6,0,1);
+  background-color: #E10600;
 }
 .color-white-bg {
   background-color: #F7F4F1
@@ -88,16 +88,15 @@ header {
     position: relative;
     width:100%;
     background: rgba(225,6,0,1);
-    margin-bottom:30px;
 }
 
-header > h1 {
+h1 {
+    margin-bottom:30px;
     font-size:20px;
     font-weight:700;
     letter-spacing: 0px;
     word-spacing: 10px;
-    padding:5px 10px;
-
+    padding:10px 10px;
 }
 
 #nav-season, #nav-round {
@@ -146,6 +145,21 @@ header > h1 {
     right:0;
     padding:20px;
 }
+
+
+/* ---------------------------------------- BUTTONS */
+.button {
+    text-transform: uppercase;
+    border-radius: 3px;
+    padding:5px 20px;
+    border:0;
+    letter-spacing: 1px;
+    word-spacing: 4px;
+    box-shadow: 0px 0px 20px -10px #000;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
 
 
 /* ---------------------------------------- MAIN */
@@ -245,8 +259,6 @@ main {
   background-color:#D9D9D9;
 }
 
-
-
 .season-standings-moreinfo {
   text-align: left;
   white-space: nowrap;
@@ -254,4 +266,47 @@ main {
   margin-top:10px;
   padding-top:10px;
   border-top:1px solid #AAA;
+}
+
+
+
+#race-standings table{
+  border-collapse: collapse;
+}
+
+#race-standings table thead tr th {
+  text-align: left;
+  line-height: 1.2em;
+  font-weight: 400;
+  padding:10px 9px;
+}
+
+#race-standings table tbody tr td {
+  padding:7px 9px;
+  position:relative;
+  text-align: left;
+}
+
+#race-standings .head2head-select1, #race-standings .head2head-select2 {
+    border:1px solid #1F1F1F;
+    cursor: pointer;
+    text-transform: uppercase;
+    border-radius: 3px;
+    padding:5px 15px;
+    letter-spacing: 1px;
+    word-spacing: 4px;
+    box-shadow: 0px 0px 20px -10px #000;
+    transition: all 0.3s ease-in-out;
+}
+
+.race-standings-car img {
+  width:80px;
+}
+
+#race-standings table tbody tr:nth-child(odd) td {
+  background-color:#E9E9E9;
+}
+
+#race-standings table tbody tr:hover td {
+  background-color:#D9D9D9;
 }

@@ -87,32 +87,30 @@ const circuits = {
         'track-outline' : 'yas-marina.png',
         'track-sectors' : 'yas-marina-sectors.png',
         'countryCode' : 'AE' },
-
-
-        'hockenheimring' : {
-            'track-outline' : 'hockenheimring.png',
-            'track-sectors' : 'hockenheimring-sectors.png',
-            'countryCode' : 'DE' },
-        'istanbul' : {
-            'track-outline' : 'istanbul.png',
-            'track-sectors' : 'istanbul-sectors.png',
-            'countryCode' : 'TR' },
-        'mugello' : {
-            'track-outline' : 'mugello.png',
-            'track-sectors' : 'mugello-sectors.png',
-            'countryCode' : 'IT' },
-        'nurburgring' : {
-            'track-outline' : 'nurburgring.png',
-            'track-sectors' : 'nurburgring-sectors.png',
-            'countryCode' : 'DE' },
-        'shanghai' : {
-            'track-outline' : 'shanghai.png',
-            'track-sectors' : 'shanghai-sectors.png',
-            'countryCode' : 'CN' },
-        'villeneuve' : {
-            'track-outline' : 'villeneuve.png',
-            'track-sectors' : 'villeneuve-sectors.png',
-            'countryCode' : 'CA' },
+    'hockenheimring' : {
+        'track-outline' : 'hockenheimring.png',
+        'track-sectors' : 'hockenheimring-sectors.png',
+        'countryCode' : 'DE' },
+    'istanbul' : {
+        'track-outline' : 'istanbul.png',
+        'track-sectors' : 'istanbul-sectors.png',
+        'countryCode' : 'TR' },
+    'mugello' : {
+        'track-outline' : 'mugello.png',
+        'track-sectors' : 'mugello-sectors.png',
+        'countryCode' : 'IT' },
+    'nurburgring' : {
+        'track-outline' : 'nurburgring.png',
+        'track-sectors' : 'nurburgring-sectors.png',
+        'countryCode' : 'DE' },
+    'shanghai' : {
+        'track-outline' : 'shanghai.png',
+        'track-sectors' : 'shanghai-sectors.png',
+        'countryCode' : 'CN' },
+    'villeneuve' : {
+        'track-outline' : 'villeneuve.png',
+        'track-sectors' : 'villeneuve-sectors.png',
+        'countryCode' : 'CA' },
 
 
 };
@@ -234,19 +232,23 @@ function googleMap(lat,long,container) {
 
 // SHOW CIRCUIT INFO`
 function drawCircuit(c) {
+  $('#track-details').html(`
+    <h2>${c['circuitName']}</h2>
+    <img src="https://chrisdermody.com/content/images/2017/12/engine8.svg" id="track" width="300">
+    <img src="https://chrisdermody.com/content/images/2017/12/engine8.svg" id="track-sectors" width="300">
+    <div id="map" style="height:600px; width:600px;"></div>
+    `);
 
-    $('#body h1').html(c['circuitName']);
-    // $('#track').attr("src",`assets/img/${c['circuitId']}.png`);
-    // $('#track-sectors').attr("src",`assets/img/${c['circuitId']}-sectors.png`);
-    if (circuits[c['circuitId']]) {
-        $('#track').attr("src",`assets/img/circuits/${circuits[c['circuitId']]['track-outline']}`);
-        $('#track-sectors').attr("src",`assets/img/circuits/${circuits[c['circuitId']]['track-sectors']}`);
-    }
-    else {
-        $('#track').attr("src",``);
-        $('#track-sectors').attr("src",``);
-    }
-    googleMap(c['Location']['lat'],c['Location']['long'],'map');
+
+  if (circuits[c['circuitId']]) {
+      $('#track').attr("src",`assets/img/circuits/${circuits[c['circuitId']]['track-outline']}`);
+      $('#track-sectors').attr("src",`assets/img/circuits/${circuits[c['circuitId']]['track-sectors']}`);
+  }
+  else {
+      $('#track').attr("src",``);
+      $('#track-sectors').attr("src",``);
+  }
+  googleMap(c['Location']['lat'],c['Location']['long'],'map');
 }
 
 // ERROR WHEN THERE ARE NO LAPS DRIVEN
@@ -301,30 +303,38 @@ function drawDriversLapTimes(driverOneId, driverTwoId, containerId) {
                 labels: labelsArray,
                 datasets: [
                     {
-                        label: `Lap time (s) ${driverOneId}`,
+                        label: `Lap time (s)`,
                         data: driverOneTimes,
-                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderColor: '#E10600',
+                        backgroundColor: '#E10600',
+                        color: '#E10600',
                         borderWidth: 1,
                         yAxisID: 'y',
                     },
                     {
                         label: 'Track position',
                         data: driverOnePosition,
-                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderColor: '#E10600',
+                        backgroundColor: '#E10600',
+                        color: '#E10600',
                         borderWidth: 2,
                         yAxisID: 'y1',
                     },
                     {
-                      label: `Lap time (s) ${driverTwoId}`,
+                      label: `Lap time (s)`,
                         data: driverTwoTimes,
-                        borderColor: 'rgba(0, 0, 132, 0.3)',
+                        borderColor: '#1F1F1F',
+                        backgroundColor: '#1F1F1F',
+                        color: '#1F1F1F',
                         borderWidth: 1,
                         yAxisID: 'y',
                     },
                     {
                         label: 'Track position',
                         data: driverTwoPosition,
-                        borderColor: 'rgba(0, 0, 132, 0.3)',
+                        borderColor: '#1F1F1F',
+                        backgroundColor: '#1F1F1F',
+                        color: '#1F1F1F',
                         borderWidth: 2,
                         yAxisID: 'y1',
                     }
@@ -363,32 +373,51 @@ function drawDriversLapTimes(driverOneId, driverTwoId, containerId) {
 }
 
 // DRAW RACE RESULT TABLE
+//                <td>${(e['status'] === 'Finished') ? '<i class="fas fa-flag-checkered"></i>' : e['status'] }</td>
+
 function drawRaceStandings(r) {
-        $('#race-standings tbody').empty();
+        $('#race-standings').html(`
+          <h2 class="text-upper">Race standings</h2>
+          <table>
+              <thead>
+                  <tr class="color-black-bg color-white text-upper">
+                      <th>Pos</th>
+                      <th colspan="3">Driver</th>
+                      <th colspan="2">Car</th>
+                      <th>Head 2 Head</th>
+                      <th>Grid</th>
+                      <th colspan="2">Gain</th>
+                      <th>Time</th>
+                      <th>Points</th>
+                  </tr>
+              </thead>
+              <tbody></tbody>
+          </table>`);
+
         r.forEach((e, key) => {
 
             let flag = countryFlags.find(i => i['nationality'] === e['Driver']['nationality']);
             let flagImg = (flag) ? `<img src="https://www.countryflags.io/${flag['code']}/flat/24.png" alt="${e['Driver']['nationality']}">` : '';
             let gain = parseInt(e['grid'])-parseInt(e['position']);
 
-            $('#race-standings tbody').append(`<tr>
-                <td>${e['position']}</td>
-                <td>${e['number']}</td>
-                <td>${e['Driver']['nationality']}</td>
-                <td>${flagImg}</td>
+            $('#race-standings table tbody').append(`<tr>
+                <td class="text-bold">${e['position']}</td>
+                <td title="${e['Driver']['nationality']}">${flagImg}</td>
+                <td><span class="text-smaller">#</span>${e['number']}</td>
                 <td>${e['Driver']['givenName']} ${e['Driver']['familyName']}</td>
-                <td><img src="assets/img/constructors/${e['Constructor']['constructorId']}.png" width="50"></td>
+
+                <td class="race-standings-car"><img src="assets/img/constructors/${e['Constructor']['constructorId']}.png"></td>
                 <td>${e['Constructor']['name']}</td>
-                <td>${e['points']}</td>
+
                 <td>
-                    <button class="button head2head-select1" data-key="${key}">a</button>
-                    <button class="button head2head-select2" data-key="${key}">b</button>
+                    <button class="head2head-select1 color-red-bg color-white" data-key="${key}">a</button>
+                    <button class="head2head-select2 color-black-bg color-white" data-key="${key}">b</button>
                 </td>
                 <td>${e['grid']}</td>
-                <td>${gain}</td>
                 <td>${(gain >= 1) ? '<i class="fas fa-angle-double-up"></i>' : (gain < 0) ? '<i class="fas fa-angle-double-down"></i>' : '' }</td>
+                <td>${gain}</td>
                 <td>${('Time' in e) ? e['Time']['time'] : ''}</td>
-                <td>${(e['status'] === 'Finished') ? '<i class="fas fa-flag-checkered"></i>' : e['status'] }</td>
+                <td>${e['points']}</td>
             </tr>`);
         });
 
@@ -410,6 +439,12 @@ function headToHead(one,two) {
 
         let drivers = [one,two]; // old way was to have a for loop and i be either 1 or 2 to match the input one or two
 
+        $('#head2head').html(`
+            <h2 class="text-upper">Head to Head</h2>
+            <div id="head2head-1"></div>
+            <div id="head2head-2"></div>
+            <div id="head2head-graph"></div>`);
+
         drawDriversLapTimes(one['Driver']['driverId'],two['Driver']['driverId'],`head2head-graph`);
 
         drivers.forEach((driver,key) => {
@@ -421,7 +456,7 @@ function headToHead(one,two) {
 
             $(`#head2head-${idNum}`).html(`
                 <img class="head2head-car" src="assets/img/constructors/${driver['Constructor']['constructorId']}.png">
-                <h3>${driver['Driver']['familyName']} [${driver['Driver']['permanentNumber']}]</h3>
+                <h3 class="color-${(key == 0) ? 'red' : 'black'}">${driver['Driver']['familyName']} #${driver['Driver']['permanentNumber']}</h3>
                 <img class="head2head-flag" src="https://www.countryflags.io/${flag['code']}/flat/64.png" alt="${driver['Driver']['nationality']}">
 
                 <div class="head2head-position">#${driver['position']}</div>
@@ -758,7 +793,7 @@ function seasonResults(season) {
 
   },
   'Error getting season results',
-  (e) => $(`#race-standings tbody`).html(`<tr><td colspan="14" class="color-accent text-upper text-bold">${e}</td></tr>`));
+  (e) => $(`#race-standings`).html(`<div class="color-red text-upper text-bold">${e}</div>`));
 }
 
 
@@ -773,7 +808,7 @@ function raceResults(season, round) {
             return;
         }
 
-        $('h1 > span').html(`${season} Season | Round ${round} | ${ race['raceName'] }`);
+        $('h1').html(`${season} Season | Round ${round} | ${ race['raceName'] }`);
 
         drawCircuit(race['Circuit']);
 
@@ -783,7 +818,7 @@ function raceResults(season, round) {
         headToHead(race['Results'][0], race['Results'][1]);
     },
     'Error getting race results',
-    (e) => $(`#race-standings tbody`).html(`<tr><td colspan="14" class="color-accent text-upper text-bold">${e}</td></tr>`));
+    (e) => $(`#race-standings`).html(`<div class="color-red text-upper text-bold">${e}</div>`));
 }
 
 // CHANGE ROUND LIST TO THE SEASON YEAR CLICKED ON
@@ -850,6 +885,9 @@ $(document).ready(function() {
         }
 
         $(`#nav-season-${F1_SEASON}`).addClass('color-black-bg');
+
+
+        $('h1').html(`${F1_SEASON} Season roundup`);
 
         navRounds(F1_SEASON);
         raceResults(F1_SEASON,F1_ROUND);
