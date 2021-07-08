@@ -233,19 +233,17 @@ function googleMap(lat,long,container) {
 // SHOW CIRCUIT INFO`
 function drawCircuit(c) {
   $('#track-details').html(`
-    <h2>${c['circuitName']}</h2>
-    <img src="https://chrisdermody.com/content/images/2017/12/engine8.svg" id="track" width="300">
-    <img src="https://chrisdermody.com/content/images/2017/12/engine8.svg" id="track-sectors" width="300">
-    <div id="map" style="height:600px; width:600px;"></div>
+    <h2 class="text-upper">${c['circuitName']}</h2>
+    <img src="https://chrisdermody.com/content/images/2017/12/engine8.svg" id="track-sectors" width="900">
+    <h3 class="text-upper">Map</h3>
+    <div id="map" style="height:600px; width:900px;"></div>
     `);
 
 
   if (circuits[c['circuitId']]) {
-      $('#track').attr("src",`assets/img/circuits/${circuits[c['circuitId']]['track-outline']}`);
       $('#track-sectors').attr("src",`assets/img/circuits/${circuits[c['circuitId']]['track-sectors']}`);
   }
   else {
-      $('#track').attr("src",``);
       $('#track-sectors').attr("src",``);
   }
   googleMap(c['Location']['lat'],c['Location']['long'],'map');
@@ -515,11 +513,18 @@ function getWikiInfo(url) {
 function seasonResults(season) {
 
   //$('#season-standings').show();
+  $('main').html(`
+    <section id="season-standings">
+      <h2 class="text-upper">Season standings</h2>
+      <table></table>
+    </section>`);
 
   jsonCall(`https://ergast.com/api/f1/${season}/results.json?limit=5000`, function(response) {
 
     let races = response['MRData']['RaceTable']['Races'];
     let driverResult = {};
+
+    $('#season-standings').fadeIn();
 
     $('#season-standings table').html(`
       <thead>
@@ -800,23 +805,28 @@ function seasonResults(season) {
 
 function raceResults(season, round) {
 
+
     jsonCall(`https://ergast.com/api/f1/${season}/${round}/results.json`, function(response) {
 
-        let race = response['MRData']['RaceTable']['Races'][0];
 
-        if (!race) {
-            showErrors('Array Empty');
-            return;
-        }
+      let race = response['MRData']['RaceTable']['Races'][0];
 
-        $('h1').html(`${season} Season | Round ${round} | ${ race['raceName'] }`);
+      if (!race) {
+          showErrors('Array Empty');
+          $('main').html(`<h2>Please pick a previous race</h2>`);
+          return;
+      }
 
-        drawCircuit(race['Circuit']);
+      $('main').html(`
+        <section id="race-standings"></section>
+        <section id="head2head"></section>
+        <section id="track-details"></section>`);
 
+      $('h1').html(`${season} Season | Round ${round} | ${ race['raceName'] }`);
 
-        drawRaceStandings(race['Results']);
-        // drawDriversLapTimes(race['Results'][0]['Driver']['driverId']);// DO THIS AS A MODAL POPUP FOR EACH DRIVER
-        headToHead(race['Results'][0], race['Results'][1]);
+      drawCircuit(race['Circuit']);
+      drawRaceStandings(race['Results']);
+      headToHead(race['Results'][0], race['Results'][1]);
     },
     'Error getting race results',
     (e) => $(`#race-standings`).html(`<div class="color-red text-upper text-bold">${e}</div>`));
@@ -827,6 +837,8 @@ function changeSeason(season) {
     F1_SEASON = season;
     $(`#nav-season li`).removeClass('color-black-bg');
     $(`#nav-season-${season}`).addClass('color-black-bg');
+    $('h1').html(`${F1_SEASON} Season roundup`);
+
     navRounds(season);
     seasonResults(season);
 }
@@ -836,6 +848,7 @@ function changeRound(round) {
     F1_ROUND = round;
     $(`#nav-round li`).removeClass('color-red-bg');
     $(`#nav-round-${F1_SEASON}-${F1_ROUND}`).addClass('color-red-bg');
+
     raceResults(F1_SEASON, F1_ROUND);
 }
 
@@ -843,9 +856,11 @@ function changeRound(round) {
 function navRounds(season) {
   jsonCall(`https://ergast.com/api/f1/${season}.json`, function(response) {
     $('#nav-round').html('');
+    let dateNowcheck = new Date();
     response['MRData']['RaceTable']['Races'].forEach(e => {
+
       $('#nav-round').append(`
-          <li id="nav-round-${season}-${e['round']}" onClick="changeRound(${e['round']})">
+          <li id="nav-round-${season}-${e['round']}" ${(Date.parse(e['date']+' '+e['time']) < dateNowcheck) ? `onClick="changeRound(${e['round']})"` : ''}>
               ${(circuits[e['Circuit']['circuitId']]) ? `<img src="assets/img/circuits/${circuits[e['Circuit']['circuitId']]['track-outline']}" style="width:50px;">` : `<div class="color-white text-bold">${e['round']}</div>` }
               <div class="nav-round-hover color-white-bg">
                 <div class="nav-round-num">${e['round']}</div>
@@ -873,6 +888,7 @@ $(`#head2head-1,#head2head-2`).slideUp(0);
 
 $(document).ready(function() {
 
+  $('#season-standings').fadeOut(0);
   // $('nav ul').slideUp('slow');
 
     // GET FIRST JSON CALL FOR SEASON AND ROUND NUMBERS
@@ -881,7 +897,6 @@ $(document).ready(function() {
         F1_SEASON = response['MRData']['RaceTable']['season'];
         F1_ROUND = response['MRData']['RaceTable']['round'];
 
-        $('#season-standings').prepend(`<button class="button color-red-bg color-white" onClick="seasonResults(${F1_SEASON}); $(this).hide();">Load results</button>`);
 
         for (let i = parseInt(new Date().getFullYear()); i >= 2010; i--) {
           $('#nav-season').append(`<li id="nav-season-${i}" onClick="changeSeason(${i})">${i}</li>`);
@@ -890,11 +905,10 @@ $(document).ready(function() {
         $(`#nav-season-${F1_SEASON}`).addClass('color-black-bg');
 
 
-        $('h1').html(`${F1_SEASON} Season roundup`);
 
         navRounds(F1_SEASON);
-        raceResults(F1_SEASON,F1_ROUND);
-        // seasonResults(F1_SEASON);
+        //raceResults(F1_SEASON,F1_ROUND);
+        //seasonResults(F1_SEASON);
 
     },
     'Error getting current season and round',

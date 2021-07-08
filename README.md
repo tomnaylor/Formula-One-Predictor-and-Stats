@@ -20,6 +20,7 @@ problem updating chart js (https://www.chartjs.org/docs/latest/developers/api.ht
 season results fails when a track isn't in the circuits object (flag lookup)
 year 2920 season results - final positions are 0.5 numbers and #1 is -0.5; - its when there are more than 20 drivers....
 
+stop making future races in nav menu clikable: https://stackoverflow.com/questions/18712899/check-whether-the-date-entered-by-the-user-is-current-date-or-the-future-date
 additions
 adding cache = https://blog.logrocket.com/javascript-cache-api/
 look at previous years compared to finihed races this year to see if there's an average improvement compared to last year.
