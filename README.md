@@ -22,17 +22,14 @@ season results fails when a track isn't in the circuits object (flag lookup)
 year 2920 season results - final positions are 0.5 numbers and #1 is -0.5; - its when there are more than 20 drivers....
 
 stop making future races in nav menu clikable: https://stackoverflow.com/questions/18712899/check-whether-the-date-entered-by-the-user-is-current-date-or-the-future-date
-additions
-adding cache = https://blog.logrocket.com/javascript-cache-api/
-look at previous years compared to finihed races this year to see if there's an average improvement compared to last year.
-delete lowest result to help prediction
-add fastest lap point based on previous fastest laps
 
 
 Lightroom original performance 81% - new 87%. accessibility 87% - new 100% (img alt tags)
 Research
 
-* Give users a gateway to more info
+
+* TODO
+* JS validator
 
 
 
@@ -164,13 +161,36 @@ Points (and their weighting):
 * Finish position on this track two years ago (x0.3)
 * Qualifying position on this track two years ago (x0.1)
 
-
 #### Previous seasons
+xxx
+
+#### Race standings
+xxx
+
+#### Head to HEAD
+xxx
+
+#### Circuit info
 xxx
 
 
 ### Features left to implement
-* xxx
+
+#### Using cached
+adding cache = https://blog.logrocket.com/javascript-cache-api/
+
+#### More prediction inputs
+look at previous years compared to finihed races this year to see if there's an average improvement compared to last year.
+
+#### Prediction techniques
+https://betterexplained.com/articles/how-to-analyze-data-using-the-average/
+delete lowest result to help prediction
+
+#### Fastest lap
+add fastest lap point based on previous fastest laps
+
+#### WIKI
+Give users a gateway to more info
 
 
 ## Technologies used
@@ -187,3 +207,121 @@ xxx
     * const.js holds objects created to add to the external API data that isn't provided by the source.
 * jQuery
   * jQuery is used as the framework to make programming quicker. It's imported via a CDM and sits ontop of the native JavaScript language.
+
+
+### Libraries + APIs
+* Google Fonts
+* FontAwesome (for icons and brand logos)
+* Google maps
+* wikipedia
+* Ergast F1 data API
+
+### Tools
+* Git and Git desktop
+* GitHub
+* GitPod
+* ATOM editor
+* Auto Prefixer
+* JS HINT
+* W3C HTML and CSS validators
+* Google Lighthouse
+* Concepts (Initial drawing)
+* Coolors
+
+
+
+## Testing
+
+As well as the manual testing below I have also used the W3C HTML and CSS validator tools, Chrome Dev Tools and JS HINT. I found them very helpful to notify me of any potential problems and code that violates the standard. I also used the googles lighthouse to test the site load times and user experience.
+
+### Automatic testers / validators
+
+#### W3C HTML validator
+The index.html page was tested using the w3c validator and passed without error.
+
+#### Jigsaw CSS Validator
+The CSS was tested via direct input and no errors were found.
+
+#### JS HINT
+All 3 JavaScript files have been thru the JS hint app as direct input and show no errors.
+
+
+### Manual Testing
+I have preformed manual tests on a number of browsers and devices to cover most scenarios and feel assured the website works as intended for all visitors. This included using google dev tools to simulate different screen sizes and using a real android and apple phone.
+
+#### Testing the app functions and UX
+Testing for the function of the website can be found here:
+
+#### Testing against the user stories
+xxxx
+
+
+
+### Discovered Bugs
+
+#### Resolved
+* **Sign up button**
+  * Sign-up button would move below hero image and disappear behind the main section in mobile devices.
+  * To fix the issue I changed the position to use bottom and not top to ensure that whatever the height of the hero image, the CTA stayed 100px from the bottom.
+
+
+#### Un-Resolved
+xxxx
+
+
+
+
+## Deployment
+The final website has been deployed to GitHub via their pages option. Written in ATOM, after each commit and push, the master branch on GitHub was updated with the local commit. To work with the code on GitHub, I followed the steps below:
+
+* Log into GitHub
+* Create the repository
+* Clone the GitHub repo into Atom identify
+* Fetch and pull latest data before each session
+* Git commit at an appropriate stage and add a useful comment
+* Git push to sync with GitHub
+
+In order to deploy the site I needed to setup GitHub pages; To do this I did the following:
+
+* Log into GitHub
+* Go to the repository
+* Click "settings" and navigate to the "pages" section
+* Select the master branch in the source dropdown
+* Click "save"
+* GitHub will provide a URL to the published site.
+
+The URL for the GitHub page is https://tomnaylor.github.io/codeinstitute-ms2/
+
+### Forking the app
+To work on the code without changing the master branch, you can fork the repo to use in your chosen IDE. You simply need to log into GitHub, navigate to the repo, use the "fork" button in the top right and it will be added (as a copy) to your GitHub repos.
+
+### Running a local copy
+If you would like to run a local copy of this website, you would simply need to clone the master git repo. Follow the steps in deployment to clone the repo. There are no servers to configure, the website uses only HTML, CSS and JavaScript. You will need internet access to get the CDN files and the live API data.
+
+
+## Credits
+
+### Content
+
+* JavaScript help with looping thru elements from [stackoverflow](https://stackoverflow.com/questions/50793136/javascript-click-function-only-works-on-first-element)
+..............................................................
+.......................................................................
+........................................................................
+.........................................................................
+..........................................................................
+.........................................................................
+.........................................................................
+.............................................................................................
+
+### Media
+
+* Circuit and car images were taken from [formula1.com](https://www.formula1.com/)
+* Flags from [Country Flags](https://www.countryflags.io)
+
+### Acknowledgements
+
+The inspiration behind this website was based on watching the live prediction data during F1 races. I wanted to create an app that used know data to try and determine the outcome of a race.
+
+I'd like to thank my mentor [Caleb Mbakwe](https://github.com/caleboau2012), who really helped define the project goals and helped put myself in both the user and the owners shoes. After each session I would have a list of topics to look at or suggestions for changes.
+
+I would also like to thank the Slack community and CyC group for helping the course feel less "remote" and my partner that has needed to do ever more work around me.

@@ -261,8 +261,8 @@ function drawDriversLapTimes(driverOneId, driverTwoId, containerId) {
 
       if ((!driverOne[0]['MRData']['RaceTable']['Races'][0]) || (!driverTwo[0]['MRData']['RaceTable']['Races'][0])) {
         $('#head2head-graph').html('No data to display');
-        return
-      };
+        return;
+      }
 
         $('#head2head-graph').html('<canvas id="head2head-canvas"></canvas>');
         let ctx = document.getElementById('head2head-canvas').getContext('2d'); // HAS ERROR ON CONSOLE
