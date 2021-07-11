@@ -32,62 +32,158 @@ add fastest lap point based on previous fastest laps
 Lightroom original performance 81% - new 87%. accessibility 87% - new 100% (img alt tags)
 Research
 
-![CI logo](https://codeinstitute.s3.amazonaws.com/fullstack/ci_logo_small.png)
+* Give users a gateway to more info
 
-Welcome tomnaylor,
 
-This is the Code Institute student template for Gitpod. We have preinstalled all of the tools you need to get started. You can safely delete this README.md file, or change it for your own project. Please do read it at least once, though! It contains some important information about Gitpod and the extensions we use.
 
-## Gitpod Reminders
 
-To run a frontend (HTML, CSS, Javascript only) application in Gitpod, in the terminal, type:
+# **F1 Stats**
+## By Tom Naylor
 
-`python3 -m http.server`
+![Capture](assets/readme/readme-screen-demo.jpg)
 
-A blue button should appear to click: _Make Public_,
+**View live site:** https://tomnaylor.github.io/codeinstitute-ms2/
 
-Another blue button should appear to click: _Open Browser_.
+**View GitHub repo:** https://github.com/tomnaylor/codeinstitute-ms2
 
-To run a backend Python file, type `python3 app.py`, if your Python file is named `app.py` of course.
 
-A blue button should appear to click: _Make Public_,
+Welcome to my F1 statistics web app. The app is made up of a number of sections. A season summary, which includes a prediction of the final results for the remaining races; a race standings table for each race, a comparison tool between two drivers and information and google maps for each circuit.
 
-Another blue button should appear to click: _Open Browser_.
+## Table of contents
+* [UX](#ux)
+    * [User Stories](#user-stories)
+    * [Site Owners Goals](#site-owners-goals)
+    * [Design](#design)
+        * [Original sketch](#original-sketch)
+        * [Wireframes](#wireframes)
+        * [Fonts](#font-family)
+        * [Icons](#icons)
+        * [Colours](#colours)
+        * [Hero image](#hero-image)
+* [Features](#features)
+    * [Existing Features](#existing-features)
+        * [Navigation](#navigation)
+        * [Hero Image](#hero-image)
+        * [Sign up buttons](#sign-up-buttons)
+        * [Sign up modal](#sign-up-modal)
+        * [Features Section](#features-section)
+        * [Success stories](#success-stories)
+        * [Pricing](#pricing)
+        * [Guides](#guides)
+        * [Contact Us](#contact-us)
+        * [Footer](#footer)
+        * [Features left to implement](#features-left-to-implement)
+* [Technologies used](#technologies-used)
+    * [Languages](#languages)
+    * [Libraries](#libraries)
+    * [Tools](#tools)
+* [Testing](#testing)
+    * [Manual Testing](#manual-testing)
+        * [Navigation menu](#navigation-menu)
+        * [Current user testimonials](#current-user-testimonials)
+        * [Sign up and contact forms](#sign-up-and-contact-forms)
+    * [Discovered Bugs](#discovered-bugs)
+* [Deployment](#deployment)
+    * [Running a local copy](#running-a-local-copy)
+* [Credits](#credits)
+    * [Content](#content)
+    * [Media](#media)
+    * [Acknowledgements](#acknowledgements)
 
-In Gitpod you have superuser security privileges by default. Therefore you do not need to use the `sudo` (superuser do) command in the bash terminal in any of the lessons.
 
-To log into the Heroku toolbelt CLI:
+## UX
 
-1. Log in to your Heroku account and go to *Account Settings* in the menu under your avatar.
-2. Scroll down to the *API Key* and click *Reveal*
-3. Copy the key
-4. In Gitpod, from the terminal, run `heroku_config`
-5. Paste in your API key when asked
+### Target Audience
+* Formula one fans
+* statistics consumers
+* Betting fans
 
-You can now use the `heroku` CLI program - try running `heroku apps` to confirm it works. This API key is unique and private to you so do not share it. If you accidently make it public then you can create a new one with _Regenerate API Key_.
+### User Stories
+As a user…
+* I want to see quickly who has won each race
+* I want to see current points haul for each driver
+* I want to see a prediction for final positions after all rounds are complete
+* I want to see images used to make looking at the data more user friendly
+* I want to know what races are left this season and where / when they are
+* I want the website to load quickly and only what I want to see
 
-## Updates Since The Instructional Video
+### Site Owners Goals
+* I want to make the website interactive
+* I want to make the website easy to navigate
+* I want the website to evolve as the season progresses
+* I want the prediction for season result to be as accurate as possible
 
-We continually tweak and adjust this template to help give you the best experience. Here is the version history:
+## Strategy
+Create a useful, accurate and interactive statistics website that shows available data in multiple ways to make useful comparisons, predictions and quickly referenced tabled data. The page should work across mobile, tablet and desktop but take a mobile-first approach.
 
-**May 10 2021:** Added `heroku_config` script to allow Heroku API key to be stored as an environment variable.
+### Goals
+* Provide a useful way to view F1 data
+* Predict an accurate end of season result
+* Include images to make it easier to view the dataset
+* Include interactive charts to view side-by-side racing data comparisons
 
-**April 7 2021:** Upgraded the template for VS Code instead of Theia.
 
-**October 21 2020:** Versions of the HTMLHint, Prettier, Bootstrap4 CDN and Auto Close extensions updated. The Python extension needs to stay the same version for now.
+### Design
 
-**October 08 2020:** Additional large Gitpod files (`core.mongo*` and `core.python*`) are now hidden in the Explorer, and have been added to the `.gitignore` by default.
 
-**September 22 2020:** Gitpod occasionally creates large `core.Microsoft` files. These are now hidden in the Explorer. A `.gitignore` file has been created to make sure these files will not be committed, along with other common files.
+#### Wireframes
+I used a drawing tool to create a wireframe for the two responsive sizes (desktop and mobile). You can [view the PDF wireframe here](assets/readme/wireframe.jpg)
 
-**April 16 2020:** The template now automatically installs MySQL instead of relying on the Gitpod MySQL image. The message about a Python linter not being installed has been dealt with, and the set-up files are now hidden in the Gitpod file explorer.
+#### Font family
+To provide a reliable and fast font library, I have used [Google Fonts](https://fonts.google.com/ "Google Fonts"), picking a font that worked with the racing theme and was easy to read when faced with lots of table data. For all text I chose the [Titillium Web](https://fonts.google.com/specimen/Titillium+Web?preview.text=FormulaOne&preview.text_type=custom "Google fonts: Raleway") font.
 
-**April 13 2020:** Added the _Prettier_ code beautifier extension instead of the code formatter built-in to Gitpod.
+#### Icons
+To add a more familiar feel to the website, I have added icons to sit alongside (and sometimes instead of) text links and buttons. I choose the [Font Awesome library](https://fontawesome.com/ "Font Awesome").
 
-**February 2020:** The initialisation files now _do not_ auto-delete. They will remain in your project. You can safely ignore them. They just make sure that your workspace is configured correctly each time you open it. It will also prevent the Gitpod configuration popup from appearing.
+#### Colours
+I used [Coolors](https://coolors.co) to find three colors that worked well together and helped define the racing theme. [The colour pallett is here](https://coolors.co/03071e-370617-6a040f-9d0208-d00000-dc2f02-e85d04-f48c06-faa307-ffba08)
 
-**December 2019:** Added Eventyret's Bootstrap 4 extension. Type `!bscdn` in a HTML file to add the Bootstrap boilerplate. Check out the <a href="https://github.com/Eventyret/vscode-bcdn" target="_blank">README.md file at the official repo</a> for more options.
+![Colours](assets/readme/readme-colour-palette.jpg)
 
----
 
-Happy coding!
+## Features
+
+### Existing Features
+
+#### Navigation
+I have tried to make a intuitive, accessible and reactive navigation bar that stays useful across different screen sizes and devices. For desktop the navigation has every season and track with a useful hover for all the circuits showing a flag, data, time and race name in a popup modal. On mobile the entire menu is shrunk into two lines and an arrow icon provides a button to expand the height and show the entire menu. Future races are highlighted in red with a no-access cursor icon. The current season and round is underlined to help quickly identify the most relevant race.
+
+#### Help and how to use section
+The initial section shows a handy how-to guide. This is replaced when any of the seasons or rounds are clicked.
+
+#### Current season prediction
+For the current season, the app will try and predict who will win each race, how the points will be assigned and where each driver will finish at the end of the season. Formula one currently gives points to the top 10 places. P1 gets 25, P2 18, P3 gets 16 all the way to P10, who gets the remaining point.
+
+To calculate each race result the app uses 6 pieces of data and assigns a weight to each one. After the weighting is applied all the points are added together to provide a final score. The lowest 10 scores get the respective points.
+
+Points (and their weighting):
+* Average finish position this season (x1)
+* Average qualifying position this season (x0.6)
+* Finish position on this track last year (x0.3)
+* Qualifying position on this track last year (x0.1)
+* Finish position on this track two years ago (x0.3)
+* Qualifying position on this track two years ago (x0.1)
+
+
+#### Previous seasons
+xxx
+
+
+### Features left to implement
+* xxx
+
+
+## Technologies used
+
+### Languages
+* HTML
+  * HTML is used as the mark-up language in a single index.html file
+* CSS
+  * A single CSS file style.css is used for all screen sizes which also imports the font and icon Libraries
+* JavaScript
+  * JavaScript is used for all the interactive elements of the app. It is made up of a few .js files
+    * script.js is the main JS file which includes the initial calls and all custom functions.
+    * date-format.js is an external function by Steven Levithan, which makes working with dates easier.
+    * const.js holds objects created to add to the external API data that isn't provided by the source.
+* jQuery
+  * jQuery is used as the framework to make programming quicker. It's imported via a CDM and sits ontop of the native JavaScript language.
