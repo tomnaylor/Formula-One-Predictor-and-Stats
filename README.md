@@ -189,9 +189,11 @@ Give users a gateway to more info
 * [Font Awesome](https://fontawesome.com/) was used to add icons for aesthetic and UX purposes.
 * [Google maps](https://developers.google.com/maps) was used to add a map for the circuit
 * [Ergast F1 data API](https://ergast.com/mrd/) was used as the main source of F1 data
+* [Chart.JS](https://www.chartjs.org/) was used to provide interactive charts on the head to head section
+* [Country Flags](https://www.countryflags.io/) was used to provide flag images for circuits and drivers
 
 ### Tools
-* [Git](https://git-scm.com/) and Git desktop was used for version control by utilizing the Gitpod program and ATOM intergration to commit to Git and Push to GitHub.
+* [Git](https://git-scm.com/) and Git desktop was used for version control by utilizing the GitPod program and ATOM integration to commit to Git and Push to GitHub.
 * [GitHub:](https://github.com/) is used to store the projects code after being pushed from Git.
 * [GitPod](https://gitpod.io/) was used early in the project  
 * [ATOM](https://atom.io/) was used as my IDE
@@ -237,51 +239,42 @@ All 3 JavaScript files have been thru the JS hint app as direct input and show n
 
 #### Returning visitor
 * I want to see new data as soon as possible
+  * While the app is slave to the API supplying the data, in testing new data has been available very quickly after the races are finished.
 * I want to see updated predictions for the current season
+  * After each race, the prediction is updated to include the data from the previous race. As a result the predictions for each race get updated in accordance with the method detailed in the features section.
 * I want to know what races are left this season and where / when they are
+  * all future races for the season have identical design. In the navigation you can hover over each track to display its name, race date and start time.
 * I want the website to load quickly and only what I want to see
+  * more libraries are imported from CDNs that should ensure they load fast, or could even be available on the clients device.
 
 
 ### Manual Testing
-I have preformed manual tests on a number of browsers and devices to cover most scenarios and feel assured the website works as intended for all visitors. This included using google dev tools to simulate different screen sizes and using a real android and apple phone.
+I have preformed manual tests on a number of browsers and devices to cover most scenarios and feel assured the website works as intended for all visitors. This included using google dev tools to simulate different screen sizes and using a real android and apple phone and family to act as first time visitors.
 
 Results can be seen here:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx___________________
 
-### Discovered Bugs
-Bugs
-Round number is highlighted in different years
-lap timings - splitting up the numbers - see research
-google chart not scaling with page size - see Research
-charts array is pain!
-flags could only find api for 2 digit code so had to store nationality in an array
-head to head original was for i=1;i<=2;i++ loop - silly.
-h2h - ++ was the wrong side of key
-driver current standings rank = how...
-driver current points rank sort without copying array: https://stackoverflow.com/questions/9592740/how-can-you-sort-an-array-without-mutating-the-original-array
-array map for objects : https://stackoverflow.com/questions/14810506/map-function-for-objects-instead-of-arrays
-number rounding to 2 places: https://stackoverflow.com/questions/11832914/how-to-round-to-at-most-2-decimal-places-if-necessary
-too ages to work out the weighting - trial and error
-when a driver didn't take part in a race the push() to add a td put it a race behind the table header. When doing the header, drew boxes for each race with an ID number
-https://stackoverflow.com/questions/14810506/map-function-for-objects-instead-of-arrays
-https://stackoverflow.com/questions/11832914/how-to-round-to-at-most-2-decimal-places-if-necessary
-https://blog.stevenlevithan.com/archives/date-time-format
-
-driver head to head // old way was to have a for loop and i be either 1 or 2 to match the input one or two - new way to create an array and loop thru
-problem updating chart js (https://www.chartjs.org/docs/latest/developers/api.html / https://stackoverflow.com/questions/40056555/destroy-chart-js-bar-graph-to-redraw-other-graph-in-same-canvas)
-season results fails when a track isn't in the circuits object (flag lookup)
-year 2920 season results - final positions are 0.5 numbers and #1 is -0.5; - its when there are more than 20 drivers....
-
-stop making future races in nav menu clikable: https://stackoverflow.com/questions/18712899/check-whether-the-date-entered-by-the-user-is-current-date-or-the-future-date
-
+### Known Bugs
 
 #### Resolved
-* **Sign up button**
-  * Sign-up button would move below hero image and disappear behind the main section in mobile devices.
-  * To fix the issue I changed the position to use bottom and not top to ensure that whatever the height of the hero image, the CTA stayed 100px from the bottom.
+* **Navigation current round** When changing seasons, the round number that matched the current round also got highlighted. Fixed by also adding the season to the id of the container and only matching current race if season and round number match.
+
+* **Lap timings** were not in seconds, as a result the charts would fail to load. Sai Gowtham had the answer in [this blog post](https://reactgo.com/javascript-convert-hhmmss-seconds/#:~:text=To%20convert%20a%20hh%3Amm,everything%20to%20get%20the%20seconds).
+
+* **Google chart** did not scale with the website, and also failed to load when I added the second driver to the chart. For this reason I changed to chart.JS which worked much better with multiple datasets.
+
+* **Missing lap data** On the season results table, when a driver didn't take part in a race (i.e. crashed on first lap or in qualifying), the following race push() to add the table cell put it a race behind the table header. To fix the problem, each box is pre-drawn with an ID set so the missing race appears in the right place on the season.
+
+* **Updating chart** There was a problem updating the head to head chart when a new driver was selected for comparison. Despite the [Chart.js documents](https://www.chartjs.org/docs/latest/developers/api.html) and [this helpful stack overflow guide](https://stackoverflow.com/questions/40056555/destroy-chart-js-bar-graph-to-redraw-other-graph-in-same-canvas), my solution was to remove the canvas and add it to the DOM each time an update was needed.
+
+* **Season results fails**  when a track isn't in the circuits object. The issue was looking up the country code. If the code isn't in the object there would be a fatal error. Solution was to check if it exists first.
+
+* **Future races in navigation** were clickable and throwing an error as there was no data. The solution was to remove the click handler for any races in the future. I also changed the look at cursor icon to help distinguish future races.
 
 
 #### Un-Resolved
-xxxx
+
+* **year 2920 season results** final positions are 0.5 numbers and the actual winner is on -0.5; There is an error in the way I sort the finish order if one or more racers finish with the same points total.
+
 
 
 
@@ -318,15 +311,11 @@ If you would like to run a local copy of this website, you would simply need to 
 
 ### Content
 
-* JavaScript help with looping thru elements from [stackoverflow](https://stackoverflow.com/questions/50793136/javascript-click-function-only-works-on-first-element)
-..............................................................
-.......................................................................
-........................................................................
-.........................................................................
-..........................................................................
-.........................................................................
-.........................................................................
-.............................................................................................
+* JavaScript help with looping thru elements from [stack overflow](https://stackoverflow.com/questions/50793136/javascript-click-function-only-works-on-first-element)
+* Driver current points rank sorting from [stack overflow](https://stackoverflow.com/questions/9592740/how-can-you-sort-an-array-without-mutating-the-original-array)
+* Array map for objects from [stack overflow](https://stackoverflow.com/questions/14810506/map-function-for-objects-instead-of-arrays)
+* Data and time function from [Steven Levithan](https://blog.stevenlevithan.com/archives/date-time-format)
+
 
 ### Media
 
