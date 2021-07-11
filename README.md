@@ -1,9 +1,8 @@
-Lightroom original performance 81% - new 87%. accessibility 87% - new 100% (img alt tags)
-Research
-
 
 * TODO
 * JS validator
+* lightroom etc
+* fix TOC
 
 
 
@@ -219,7 +218,11 @@ The index.html page was tested using the w3c validator and passed without error.
 The CSS was tested via direct input and no errors were found. [view live result here](https://jigsaw.w3.org/css-validator/validator?uri=https%3A%2F%2Ftomnaylor.github.io%2Fcodeinstitute-ms2%2Fassets%2Fcss%2Fstyle.css&profile=css3svg&usermedium=all&warning=1&vextwarning=&lang=en)
 
 #### JS HINT
-All 3 JavaScript files have been thru the JS hint app as direct input and show no errors.
+Both JavaScript files have been thru the JS hint app as direct input and show no errors.
+
+#### Lighthouse
+Lightroom original performance 81% - new 87%. accessibility 87% - new 100% (img alt tags)
+
 
 ### Testing against the user Stories
 #### First time visitor
@@ -272,7 +275,7 @@ I have preformed manual tests on a number of browsers and devices to cover most 
 
 #### Un-Resolved
 
-* **year 2020 season results** final positions are 0.5 numbers and the actual winner is on -0.5; There is an error in the way I sort the finish order if one or more racers finish with the same points total.
+* **year 2020 (and previous) season results** final positions are 0.5 numbers and the actual winner is on -0.5; There is an error in the way I sort the finish order if one or more racers finish with the same points total.
 
 
 

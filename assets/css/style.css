@@ -462,14 +462,11 @@ section p:last-child {
     display:block;
     width:100%;
     margin:0 0 20px 0;
-  }
-
-  #season-standings {
     overflow: scroll;
   }
 
   #head2head-car td > img {
-    width:150px;
+    width:100%;
   }
 
   #head2head-driver td {
