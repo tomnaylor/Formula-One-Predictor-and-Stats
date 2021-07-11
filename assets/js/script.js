@@ -236,7 +236,7 @@ function drawCircuit(c) {
     <h2 class="text-upper">${c['circuitName']}</h2>
     <img src="https://chrisdermody.com/content/images/2017/12/engine8.svg" id="track-sectors" alt="${c['circuitName']} track sectors" width="900">
     <h3 class="text-upper">Map</h3>
-    <div id="map" style="height:600px; width:900px;"></div>
+    <div id="map"></div>
     `);
 
 
@@ -383,7 +383,8 @@ function drawRaceStandings(r) {
               <thead>
                   <tr class="color-black-bg color-white text-upper">
                       <th>Pos</th>
-                      <th colspan="2">Driver</th>
+                      <th class="hide-on-mobile"></th>
+                      <th>Driver</th>
                       <th>Car</th>
                       <th>H2H</th>
                       <th>Pts.</th>
@@ -403,7 +404,7 @@ function drawRaceStandings(r) {
                   <span class="text-bold">${e['position']}</span>
                   ${(gain >= 1) ? '<i class="fas fa-angle-up text-smaller"></i>' : (gain < 0) ? '<i class="fas fa-angle-down text-smaller color-red"></i>' : '' }
                 </td>
-                <td title="${e['Driver']['nationality']}">${flagImg}</td>
+                <td class="hide-on-mobile" title="${e['Driver']['nationality']}">${flagImg}</td>
                 <td><span class="text-smaller text-bold">#${e['number']}</span> ${e['Driver']['givenName']} ${e['Driver']['familyName']}</td>
 
                 <td class="race-standings-car"><img src="assets/img/constructors/thumb/${e['Constructor']['constructorId']}.png" alt="${e['Constructor']['name']}" title="${e['Constructor']['name']}"></td>
@@ -963,8 +964,7 @@ $(document).ready(function() {
 
 
         navRounds(F1_SEASON);
-        raceResults(F1_SEASON,F1_ROUND);
-        //seasonResults(F1_SEASON);
+        //raceResults(F1_SEASON,F1_ROUND);
 
     },
     'Error getting current season and round',

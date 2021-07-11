@@ -28,6 +28,8 @@ look at previous years compared to finihed races this year to see if there's an 
 delete lowest result to help prediction
 add fastest lap point based on previous fastest laps
 
+
+Lightroom original performance 81% - new 87%. accessibility 87% - new 100% (img alt tags)
 Research
 
 ![CI logo](https://codeinstitute.s3.amazonaws.com/fullstack/ci_logo_small.png)

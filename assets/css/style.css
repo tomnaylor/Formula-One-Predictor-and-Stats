@@ -170,11 +170,11 @@ header {
 }
 
 #nav-round li.nav-round-future img.nav-round-circuit {
-  filter: blur(0.8px) drop-shadow(0px 0px 0px #D00000) drop-shadow(0px 0px 2px #D00000);
+  filter: brightness(10%) blur(0.8px) drop-shadow(0px 0px 0px #F00000) drop-shadow(0px 0px 0px #F00000);
 }
 
 #nav-season li.nav-season-current, #nav-round li.nav-round-current {
-  border-bottom:1px solid #FFF;
+  border-bottom:1px solid rgba(255,255,255,0.6);
   border-radius: 5px 5px 0 0;
 }
 
@@ -237,6 +237,7 @@ h1,h2,h3 {
 
 main {
   margin:0px;
+  padding-right:20px;
 }
 
 section {
@@ -432,4 +433,54 @@ section p:last-child {
 
 #race-standings table tbody tr:hover td {
   background-color:#D9D9D9;
+}
+
+#map {
+  height:600px;
+  width:900px;
+}
+
+
+/* ---------------------------------------- MOBILE ONLY */
+
+@media only screen and (max-width: 600px) {
+
+  main {
+    padding:0 20px;
+    margin:0;
+  }
+
+  section {
+    display:block;
+    width:100%;
+    margin:0 0 20px 0;
+  }
+
+  .hide-on-mobile {
+      display: none;
+  }
+
+  #season-standings {
+    overflow: scroll;
+  }
+
+  #head2head-car td > img {
+    width:150px;
+  }
+
+  #head2head-driver td {
+    font-size:20px;
+  }
+
+  #head2head-graph {
+    width:100%;
+  }
+
+  #track-sectors {
+    width:100%;
+  }
+
+  #map {
+    width:100%;
+  }
 }
