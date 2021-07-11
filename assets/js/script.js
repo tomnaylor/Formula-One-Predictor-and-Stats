@@ -437,7 +437,7 @@ function headToHeadTable() {
           <td></td>
         </tr>
         <tr id="head2head-driver">
-          <td></td>
+          <td class="color-red"></td>
           <td>Vs</td>
           <td></td>
         </tr>
@@ -593,7 +593,7 @@ function seasonResults(season) {
           <th>
             ${flagImg}
             <div class="text-upper">
-              <span class="text-bold">#${driver['number']}</span>
+              <div class="text-bold">#${driver['number']}</div>
               ${driver['Driver']['familyName']}
             </div>
           </th>
@@ -609,8 +609,8 @@ function seasonResults(season) {
       $('#season-standings table thead tr').append(`
         <th class="text-upper color-black-bg">
           ${(circuits[race['Circuit']['circuitId']]) ? `<img src="assets/img/circuits/${circuits[race['Circuit']['circuitId']]['track-outline']}">` : `<div class="color-white text-bold">${race['round']}</div>` }
-          ${dateFormat(race['date'], "d")}<br>
-          ${dateFormat(race['date'], "mmm")}
+          ${dateFormat(race['date'], "d")}
+          <div class="text-smaller">${dateFormat(race['date'], "mmm")}</div>
         </th>`);
 
       // DRAW INDIVIDUAL RACE RESULTS TD - FIX FOR WHEN THERE WERE MISSING RACES
@@ -644,8 +644,8 @@ function seasonResults(season) {
            ${result['position']}<br>
           <div class="text-smaller">${result['points']}<span class="text-smaller">pts</span></div>
           <div class="season-standings-moreinfo">
-            Q3: ${result['grid']}<br>
-            Cumulative: ${driverResult[x]['finalPoints']}pts
+            <span class="text-smaller">Q3:</span> ${result['grid']}<br>
+            <span class="text-smaller">Cumulative:</span> ${driverResult[x]['finalPoints']}pts
           </div>
           `);
       });
@@ -693,10 +693,10 @@ function seasonResults(season) {
 
             // ADD CIRCUIT NAME TO THEAD
             $('#season-standings table thead tr').append(`
-              <th class="text-upper color-red-bg">
-                ${(circuits[thisSeason_round['Circuit']['circuitId']]) ? `<img src="assets/img/circuits/${circuits[thisSeason_round['Circuit']['circuitId']]['track-outline']}">` : `<div class="color-white text-bold">${thisSeason_round['round']}</div>` }
-                ${dateFormat(thisSeason_round['date'], "d")}<br>
-                ${dateFormat(thisSeason_round['date'], "mmm")}
+              <th class="text-upper color-black-bg">
+                ${(circuits[thisSeason_round['Circuit']['circuitId']]) ? `<img src="assets/img/circuits/${circuits[thisSeason_round['Circuit']['circuitId']]['track-outline']}" class="season-stangings-circuit-future">` : `<div class="color-white text-bold">${thisSeason_round['round']}</div>` }
+                ${dateFormat(thisSeason_round['date'], "d")}
+                <div class="text-smaller">${dateFormat(thisSeason_round['date'], "mmm")}</div>
               </th>`);
 
 

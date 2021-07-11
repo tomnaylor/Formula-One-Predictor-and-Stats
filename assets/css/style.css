@@ -182,7 +182,7 @@ header {
   cursor: not-allowed;
 }
 
-#nav-round li.nav-round-future img.nav-round-circuit {
+#nav-round li.nav-round-future img.nav-round-circuit, #season-standings .season-stangings-circuit-future {
   filter: brightness(10%) blur(0.8px) drop-shadow(0px 0px 0px #FF0000) drop-shadow(0px 0px 0px #FF0000);
 }
 
@@ -258,7 +258,7 @@ section {
   display:inline-block;
   width:fit-content;
   border-radius: 10px;
-  padding:20px 30px 30px 30px;
+  padding:0px 10px 10px 10px;
   box-shadow: 0px 0px 40px -10px #000;
   margin:0 0 20px 20px;
   vertical-align: top;
@@ -273,7 +273,7 @@ section h2, section h3 {
 }
 
 section h3 {
-  margin-top:40px;
+  margin-top:0px;
   font-size:20px;
   letter-spacing: 1px;
   word-spacing: 3px;
