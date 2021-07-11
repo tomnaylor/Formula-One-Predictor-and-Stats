@@ -268,10 +268,13 @@ I have preformed manual tests on a number of browsers and devices to cover most 
 
 * **Future races in navigation** were clickable and throwing an error as there was no data. The solution was to remove the click handler for any races in the future. I also changed the look at cursor icon to help distinguish future races.
 
+* **Google maps failed to load** because the data for long and lat were not numbers. To solution was to pass the data via parseFloat() to change the string into a float number.
 
 #### Un-Resolved
 
-* **year 2920 season results** final positions are 0.5 numbers and the actual winner is on -0.5; There is an error in the way I sort the finish order if one or more racers finish with the same points total.
+* **year 2020 season results** final positions are 0.5 numbers and the actual winner is on -0.5; There is an error in the way I sort the finish order if one or more racers finish with the same points total.
+
+
 
 
 
