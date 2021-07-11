@@ -259,6 +259,11 @@ function drawDriversLapTimes(driverOneId, driverTwoId, containerId) {
   ).then(
     function(driverOne, driverTwo) {
 
+      if ((!driverOne[0]['MRData']['RaceTable']['Races'][0]) || (!driverTwo[0]['MRData']['RaceTable']['Races'][0])) {
+        $('#head2head-graph').html('No data to display');
+        return
+      };
+
         $('#head2head-graph').html('<canvas id="head2head-canvas"></canvas>');
         let ctx = document.getElementById('head2head-canvas').getContext('2d'); // HAS ERROR ON CONSOLE
         //ctx.destroy();
@@ -371,8 +376,6 @@ function drawDriversLapTimes(driverOneId, driverTwoId, containerId) {
 }
 
 // DRAW RACE RESULT TABLE
-//                <td>${(e['status'] === 'Finished') ? '<i class="fas fa-flag-checkered"></i>' : e['status'] }</td>
-
 function drawRaceStandings(r) {
         $('#race-standings').html(`
           <h2 class="text-upper">Race standings</h2>
@@ -380,13 +383,10 @@ function drawRaceStandings(r) {
               <thead>
                   <tr class="color-black-bg color-white text-upper">
                       <th>Pos</th>
-                      <th colspan="3">Driver</th>
-                      <th colspan="2">Car</th>
-                      <th>Head 2 Head</th>
-                      <th>Grid</th>
-                      <th colspan="2">Gain</th>
-                      <th>Time</th>
-                      <th>Points</th>
+                      <th colspan="2">Driver</th>
+                      <th>Car</th>
+                      <th>H2H</th>
+                      <th>Pts.</th>
                   </tr>
               </thead>
               <tbody></tbody>
@@ -399,23 +399,20 @@ function drawRaceStandings(r) {
             let gain = parseInt(e['grid'])-parseInt(e['position']);
 
             $('#race-standings table tbody').append(`<tr>
-                <td class="text-bold">${e['position']}</td>
+                <td title="Started P${e['grid']}. Places gained/lossed: ${gain}">
+                  <span class="text-bold">${e['position']}</span>
+                  ${(gain >= 1) ? '<i class="fas fa-angle-up text-smaller"></i>' : (gain < 0) ? '<i class="fas fa-angle-down text-smaller color-red"></i>' : '' }
+                </td>
                 <td title="${e['Driver']['nationality']}">${flagImg}</td>
-                <td><span class="text-smaller">#</span>${e['number']}</td>
-                <td>${e['Driver']['givenName']} ${e['Driver']['familyName']}</td>
+                <td><span class="text-smaller text-bold">#${e['number']}</span> ${e['Driver']['givenName']} ${e['Driver']['familyName']}</td>
 
-                <td class="race-standings-car"><img src="assets/img/constructors/${e['Constructor']['constructorId']}.png"></td>
-                <td>${e['Constructor']['name']}</td>
+                <td class="race-standings-car"><img src="assets/img/constructors/${e['Constructor']['constructorId']}.png" alt="${e['Constructor']['name']}" title="${e['Constructor']['name']}"></td>
 
                 <td>
                     <button class="head2head-select1 color-red-bg color-white" data-key="${key}">a</button>
                     <button class="head2head-select2 color-black-bg color-white" data-key="${key}">b</button>
                 </td>
-                <td>${e['grid']}</td>
-                <td>${(gain >= 1) ? '<i class="fas fa-angle-double-up"></i>' : (gain < 0) ? '<i class="fas fa-angle-double-down"></i>' : '' }</td>
-                <td>${gain}</td>
-                <td>${('Time' in e) ? e['Time']['time'] : ''}</td>
-                <td>${e['points']}</td>
+                <td>${(e['points'] > 0) ? e['points'] : ''}</td>
             </tr>`);
         });
 
@@ -429,48 +426,97 @@ function drawRaceStandings(r) {
     }
 
 // DRAW HEAD TO HEAD BOXES
+function headToHeadTable() {
+  $('#head2head').html(`
+      <h2 class="text-upper">Head to Head</h2>
+      <table>
+        <tr id="head2head-car">
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr id="head2head-driver">
+          <td></td>
+          <td>Vs</td>
+          <td></td>
+        </tr>
+        <tr id="head2head-flag">
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr id="head2head-position">
+          <td></td>
+          <td>Finished</td>
+          <td></td>
+        </tr>
+        <tr id="head2head-points">
+          <td></td>
+          <td>Points</td>
+          <td></td>
+        </tr>
+        <tr id="head2head-grid">
+          <td></td>
+          <td>Grid</td>
+          <td></td>
+        </tr>
+        <tr id="head2head-gain">
+          <td></td>
+          <td>Gain</td>
+          <td></td>
+        </tr>
+        <tr id="head2head-time">
+          <td></td>
+          <td>Total time</td>
+          <td></td>
+        </tr>
+        <tr id="head2head-fastestlap">
+          <td></td>
+          <td>Fastest lap</td>
+          <td></td>
+        </tr>
+        <tr id="head2head-averagespeed">
+          <td></td>
+          <td>Average speed</td>
+          <td></td>
+        </tr>
+      </table>
+      <h2 class="text-upper">Lap times</h2>
+      <div id="head2head-graph"></div>`);
+}
+
+
 function headToHead(one,two) {
 
+  headToHeadTable();
 
-        F1_HEAD2HEAD_1 = one;
-        F1_HEAD2HEAD_2 = two;
+  F1_HEAD2HEAD_1 = one;
+  F1_HEAD2HEAD_2 = two;
 
-        let drivers = [one,two]; // old way was to have a for loop and i be either 1 or 2 to match the input one or two
+  let drivers = [one,two];
+  let key = 1;
 
-        $('#head2head').html(`
-            <h2 class="text-upper">Head to Head</h2>
-            <div id="head2head-1"></div>
-            <div id="head2head-2"></div>
-            <div id="head2head-graph"></div>`);
+  drawDriversLapTimes(one['Driver']['driverId'],two['Driver']['driverId'],`head2head-graph`);
 
-        drawDriversLapTimes(one['Driver']['driverId'],two['Driver']['driverId'],`head2head-graph`);
+  drivers.forEach(driver => {
+      let flag = countryFlags.find(key => key['nationality'] === driver['Driver']['nationality']);
+      let gain = parseInt(driver['grid'])-parseInt(driver['position']);
 
-        drivers.forEach((driver,key) => {
-            let idNum = key + 1; // ++ was the wrong side of key
-            let flag = countryFlags.find(key => key['nationality'] === driver['Driver']['nationality']);
-            let gain = parseInt(driver['grid'])-parseInt(driver['position']);
-            let otherDriver = (key == 0) ? drivers[1] : drivers[0];
-            //<span class="text-smaller">${(driver['position'] < otherDriver['position']) ? '+' : 'red'}</span>
+      $(`#head2head-car td:nth-child(${key})`).html(`<img  src="assets/img/constructors/${driver['Constructor']['constructorId']}.png">`);
+      $(`#head2head-driver td:nth-child(${key})`).html(driver['Driver']['givenName']+' '+driver['Driver']['familyName']);
+      $(`#head2head-flag td:nth-child(${key})`).html(`<img class="head2head-flag" src="https://www.countryflags.io/${flag['code']}/flat/64.png" alt="${driver['Driver']['nationality']}">`);
+      $(`#head2head-position td:nth-child(${key})`).html(driver['position']);
+      $(`#head2head-points td:nth-child(${key})`).html(driver['points']);
+      $(`#head2head-grid td:nth-child(${key})`).html(driver['grid']);
+      $(`#head2head-gain td:nth-child(${key})`).html(`${gain} ${(gain >= 1) ? '<i class="fas fa-angle-up"></i>' : (gain < 0) ? '<i class="fas fa-angle-down"></i>' : '' }`);
+      $(`#head2head-time td:nth-child(${key})`).html(('Time' in driver) ? driver['Time']['time'] : '-');
+      $(`#head2head-fastestlap td:nth-child(${key})`).html(('FastestLap' in driver) ? `${driver['FastestLap']['Time']['time']} (#${driver['FastestLap']['rank']})` : '-');
+      $(`#head2head-averagespeed td:nth-child(${key})`).html(('FastestLap' in driver) ? `${driver['FastestLap']['AverageSpeed']['speed']}${driver['FastestLap']['AverageSpeed']['units']}` : '-');
 
-            $(`#head2head-${idNum}`).html(`
-                <img class="head2head-car" src="assets/img/constructors/${driver['Constructor']['constructorId']}.png">
-                <h3 class="color-${(key == 0) ? 'red' : 'black'}">${driver['Driver']['familyName']} #${driver['Driver']['permanentNumber']}</h3>
-                <img class="head2head-flag" src="https://www.countryflags.io/${flag['code']}/flat/64.png" alt="${driver['Driver']['nationality']}">
+      key = 3;
+  });
 
-                <div class="head2head-position">#${driver['position']}</div>
-                <div class="head2head-points">${driver['points']} pts</div>
-                <div class="head2head-grid">${gain} ${(gain >= 1) ? '<i class="fas fa-angle-double-up"></i>' : (gain < 0) ? '<i class="fas fa-angle-double-down"></i>' : '' }</div>
-
-                ${ (driver['FastestLap']) ? `
-                    <div class="head2head-fastestLap">Fastest Lap ${driver['FastestLap']['Time']['time']} (#${driver['FastestLap']['rank']})</div>
-                    <div class="head2head-averageSpeek">${driver['FastestLap']['AverageSpeed']['speed']}${driver['FastestLap']['AverageSpeed']['units']}</div>` : `` }
-                `);
-
-            $(`#head2head-${idNum}`).slideDown('slow');
-            // drawDriversLapTimes(driver['Driver']['driverId'],`head2head-laptimes-${idNum}`);
-        });
-
-    }
+}
 
 // GET RACE WIKI
 function getWikiInfo(url) {
@@ -535,14 +581,20 @@ function seasonResults(season) {
       <tbody></tbody>`);
 
     // DRIVER NAMES BASED ON WHO WON FIRST RACE
-//            <img src="assets/img/constructors/${driver['Constructor']['constructorId']}.png" width="70">
+    //<img src="assets/img/constructors/${driver['Constructor']['constructorId']}.png" width="70">
 
     races[0]['Results'].forEach((driver,driverId) => {
+      let flag = countryFlags.find(i => i['nationality'] === driver['Driver']['nationality']);
+      let flagImg = (flag) ? `<img src="https://www.countryflags.io/${flag['code']}/flat/24.png" alt="${driver['Driver']['nationality']}">` : '';
+
       $('#season-standings table tbody').append(`
         <tr id="season-standings-driver-tr-${driver['number']}">
           <th>
-            ${driver['number']}<br>
-            ${driver['Driver']['code']}
+            ${flagImg}
+            <div class="text-upper">
+              <span class="text-bold">#${driver['number']}</span>
+              ${driver['Driver']['familyName']}
+            </div>
           </th>
         </tr>`);
     });
@@ -776,10 +828,9 @@ function seasonResults(season) {
           $('#season-standings table thead tr').append(`<th class="color-red-bg">FINAL</th>`);
           for (driverId in driverResult) {
             $(`#season-standings-driver-tr-${driverId}`).append(`
-              <td class="color-accent-bg">
-                ${(driverResult[driverId]['finalPosition'])}<br>
+              <td>
+                <div class="${((driverResult[driverId]['finalPosition']) <= 3) ? `color-red-bg color-white` : ``}">${(driverResult[driverId]['finalPosition'])}</div>
                 ${(driverResult[driverId]['finalPoints'])}<span class="text-smaller">pts</span>
-
               </td>`);
           };
 
@@ -859,9 +910,12 @@ function navRounds(season) {
     let dateNowcheck = new Date();
     response['MRData']['RaceTable']['Races'].forEach(e => {
 
+      let pastRace = (Date.parse(e['date']+' '+e['time']) < dateNowcheck);
+      console.log(pastRace)
+
       $('#nav-round').append(`
-          <li id="nav-round-${season}-${e['round']}" ${(Date.parse(e['date']+' '+e['time']) < dateNowcheck) ? `onClick="changeRound(${e['round']})"` : ''}>
-              ${(circuits[e['Circuit']['circuitId']]) ? `<img src="assets/img/circuits/${circuits[e['Circuit']['circuitId']]['track-outline']}" style="width:50px;">` : `<div class="color-white text-bold">${e['round']}</div>` }
+          <li id="nav-round-${season}-${e['round']}" ${(pastRace) ? `class="nav-round-past" onClick="changeRound(${e['round']})"` : 'class="nav-round-future"'}>
+              ${(circuits[e['Circuit']['circuitId']]) ? `<img src="assets/img/circuits/${circuits[e['Circuit']['circuitId']]['track-outline']}" class="nav-round-circuit">` : `<div class="color-white text-bold">${e['round']}</div>` }
               <div class="nav-round-hover color-white-bg">
                 <div class="nav-round-num">${e['round']}</div>
                 <div class="nav-round-name">${e['raceName']}</div>
@@ -871,8 +925,10 @@ function navRounds(season) {
               </div>
           </li>`);
     });
-    $(`#nav-round-${F1_SEASON}-${F1_ROUND}`).addClass('color-red-bg');
 
+    $(`#nav-round-${F1_CURRENT_SEASON}-${F1_ROUND}`).addClass('nav-round-current');
+
+    // SHOW EXTRA ROUND INFO ON HOVER
     $("#nav-round li").mouseenter(function() { $('.nav-round-hover',this).fadeTo(300,0.9); }).mouseleave(function() { $('.nav-round-hover',this).fadeOut(100); });
   },
   'Error getting list of rounds',
@@ -882,7 +938,7 @@ function navRounds(season) {
 
 
 // SETUP GLOBAL VARS
-var F1_ROUND, F1_SEASON, F1_HEAD2HEAD_1, F1_HEAD2HEAD_2;
+var F1_ROUND, F1_SEASON, F1_HEAD2HEAD_1, F1_HEAD2HEAD_2, F1_CURRENT_SEASON, F1_CURRENT_ROUND;
 
 $(`#head2head-1,#head2head-2`).slideUp(0);
 
@@ -894,20 +950,20 @@ $(document).ready(function() {
     // GET FIRST JSON CALL FOR SEASON AND ROUND NUMBERS
     jsonCall('https://ergast.com/api/f1/current/last/results.json', function(response) {
 
-        F1_SEASON = response['MRData']['RaceTable']['season'];
-        F1_ROUND = response['MRData']['RaceTable']['round'];
+        F1_CURRENT_SEASON = F1_SEASON = response['MRData']['RaceTable']['season'];
+        F1_CURRENT_ROUND = F1_ROUND = response['MRData']['RaceTable']['round'];
 
 
         for (let i = parseInt(new Date().getFullYear()); i >= 2010; i--) {
           $('#nav-season').append(`<li id="nav-season-${i}" onClick="changeSeason(${i})">${i}</li>`);
         }
 
-        $(`#nav-season-${F1_SEASON}`).addClass('color-black-bg');
+        $(`#nav-season-${F1_SEASON}`).addClass('nav-season-current');
 
 
 
         navRounds(F1_SEASON);
-        //raceResults(F1_SEASON,F1_ROUND);
+        raceResults(F1_SEASON,F1_ROUND);
         //seasonResults(F1_SEASON);
 
     },

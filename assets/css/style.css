@@ -25,22 +25,25 @@ body {
 
 /* ---------------------------------------- COLOURS */
 .color-red {
-  color: #E10600;
+  color: #D00000;
 }
 .color-white {
   color: #F7F4F1
 }
 .color-black {
-  color: #1F1F1F
+  color: #03071E
 }
 .color-red-bg {
-  background-color: #E10600;
+  background-color: #D00000;
 }
 .color-white-bg {
   background-color: #F7F4F1
 }
 .color-black-bg {
-  background-color: #1F1F1F
+  background-color: #03071E
+}
+.color-orange-bg {
+  background-color: #E85D04
 }
 
 
@@ -80,6 +83,9 @@ body {
 }
 .text-smaller {
   font-size:0.8em;
+}
+.text-larger {
+  font-size:1.3em;
 }
 .text-pad {
   padding:0px 10px 2px 10px;
@@ -142,23 +148,42 @@ header {
 
 #nav-season li, #nav-round li {
     display: inline-block;
-    padding: 5px;
-    margin: 10px;
+    padding: 2px 5px;
+    margin: 10px 0 10px 20px;
     border-radius: 5px;
     cursor: pointer;
 }
 
 #nav-round li {
     text-align: center;
-    width:70px;
+    width:60px;
     position:relative;
+    padding: 5px 6px 0px 5px;
 }
+
+#nav-round li img {
+  width:100%;
+}
+
+#nav-round li.nav-round-future {
+  cursor: not-allowed;
+}
+
+#nav-round li.nav-round-future img.nav-round-circuit {
+  filter: blur(0.8px) drop-shadow(0px 0px 0px #D00000) drop-shadow(0px 0px 2px #D00000);
+}
+
+#nav-season li.nav-season-current, #nav-round li.nav-round-current {
+  border-bottom:1px solid #FFF;
+  border-radius: 5px 5px 0 0;
+}
+
 
 .nav-round-hover {
   display:none;
   position:absolute;
   top:0;
-  left:-20px;
+  left:-30px;
   width:110px;
   z-index: 999;
   padding:5px;
@@ -216,13 +241,13 @@ main {
 
 section {
   background-color: rgba(255,255,255,1);
-  display:block;
+  display:inline-block;
   width:fit-content;
-  clear:both;
   border-radius: 10px;
   padding:20px 30px 30px 30px;
   box-shadow: 0px 0px 40px -10px #000;
-  margin:20px;
+  margin:0 0 20px 20px;
+  vertical-align: top;
 }
 
 section h2, section h3 {
@@ -254,40 +279,50 @@ section p:last-child {
     position:relative;
 }
 
-#head2head-1, #head2head-2 {
+#head2head table {
+  border-collapse: collapse;
+}
+
+#head2head table tr td:first-child {
+  text-align: right;
+}
+
+#head2head table tr td:nth-child(2) {
   text-align: center;
-  margin:0 10px;
-  position:relative;
-  display:inline-block;
+  padding:5px 30px;
+  text-transform: uppercase;
+  font-size:0.8em;
 }
 
-#head2head-2 img {
-  transform: scaleX(-1);
-}
 
-.head2head-car {
-    width:400px;
+#head2head-car td > img {
+    width:220px;
     display:block;
     margin:10px auto;
 }
 
-.head2head-flag {
-    width:64px;
-    display:block;
-    margin:0 auto;
+#head2head-car td:last-child > img {
+  transform: scaleX(-1);
 }
-.head2head-position {
-    font-size:35px;
+
+#head2head-flag td > img {
+    width:64px;
+}
+
+#head2head-position td {
+    font-size:30px;
     font-weight:700;
 }
 
-#head2head h3 {
+#head2head-driver td {
     font-size:30px;
+    font-weight:700;
 }
+
 #head2head-graph {
   margin-top:10px;
   display:block;
-  width:900px;
+  width:590px;
   height:auto;
 }
 
@@ -314,8 +349,16 @@ section p:last-child {
 }
 
 #season-standings table tbody tr th {
-  font-weight: 600;
+  font-weight: 400;
   padding:5px 8px;
+  font-size: 0.9em;
+  line-height: 1em;
+}
+
+#season-standings table tbody tr th > img {
+  width:24px;
+  margin:0;
+  padding:0;
 }
 
 #season-standings table tbody tr td {
@@ -327,7 +370,8 @@ section p:last-child {
 }
 
 #season-standings table tbody tr td:last-child {
-  font-weight: 700;
+  font-size: 0.9em;
+  font-weight: 400;
 }
 
 #season-standings table tbody tr:nth-child(odd) th, #season-standings table tbody tr:nth-child(odd) td {
@@ -367,15 +411,15 @@ section p:last-child {
 }
 
 #race-standings .head2head-select1, #race-standings .head2head-select2 {
-    border:1px solid #1F1F1F;
-    cursor: pointer;
-    text-transform: uppercase;
-    border-radius: 3px;
-    padding:5px 15px;
-    letter-spacing: 1px;
-    word-spacing: 4px;
-    box-shadow: 0px 0px 20px -10px #000;
-    transition: all 0.3s ease-in-out;
+  border:0;
+  cursor: pointer;
+  text-transform: uppercase;
+  border-radius: 3px;
+  padding:5px 10px;
+  letter-spacing: 1px;
+  word-spacing: 4px;
+  box-shadow: 0px 0px 20px -10px #000;
+  transition: all 0.3s ease-in-out;
 }
 
 .race-standings-car img {

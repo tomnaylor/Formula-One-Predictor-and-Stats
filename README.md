@@ -16,6 +16,7 @@ https://stackoverflow.com/questions/14810506/map-function-for-objects-instead-of
 https://stackoverflow.com/questions/11832914/how-to-round-to-at-most-2-decimal-places-if-necessary
 https://blog.stevenlevithan.com/archives/date-time-format
 
+driver head to head // old way was to have a for loop and i be either 1 or 2 to match the input one or two - new way to create an array and loop thru
 problem updating chart js (https://www.chartjs.org/docs/latest/developers/api.html / https://stackoverflow.com/questions/40056555/destroy-chart-js-bar-graph-to-redraw-other-graph-in-same-canvas)
 season results fails when a track isn't in the circuits object (flag lookup)
 year 2920 season results - final positions are 0.5 numbers and #1 is -0.5; - its when there are more than 20 drivers....
