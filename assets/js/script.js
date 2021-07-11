@@ -234,7 +234,7 @@ function googleMap(lat,long,container) {
 function drawCircuit(c) {
   $('#track-details').html(`
     <h2 class="text-upper">${c['circuitName']}</h2>
-    <img src="https://chrisdermody.com/content/images/2017/12/engine8.svg" id="track-sectors" width="900">
+    <img src="https://chrisdermody.com/content/images/2017/12/engine8.svg" id="track-sectors" alt="${c['circuitName']} track sectors" width="900">
     <h3 class="text-upper">Map</h3>
     <div id="map" style="height:600px; width:900px;"></div>
     `);
@@ -406,7 +406,7 @@ function drawRaceStandings(r) {
                 <td title="${e['Driver']['nationality']}">${flagImg}</td>
                 <td><span class="text-smaller text-bold">#${e['number']}</span> ${e['Driver']['givenName']} ${e['Driver']['familyName']}</td>
 
-                <td class="race-standings-car"><img src="assets/img/constructors/${e['Constructor']['constructorId']}.png" alt="${e['Constructor']['name']}" title="${e['Constructor']['name']}"></td>
+                <td class="race-standings-car"><img src="assets/img/constructors/thumb/${e['Constructor']['constructorId']}.png" alt="${e['Constructor']['name']}" title="${e['Constructor']['name']}"></td>
 
                 <td>
                     <button class="head2head-select1 color-red-bg color-white" data-key="${key}">a</button>
@@ -502,7 +502,7 @@ function headToHead(one,two) {
       let flag = countryFlags.find(key => key['nationality'] === driver['Driver']['nationality']);
       let gain = parseInt(driver['grid'])-parseInt(driver['position']);
 
-      $(`#head2head-car td:nth-child(${key})`).html(`<img  src="assets/img/constructors/${driver['Constructor']['constructorId']}.png">`);
+      $(`#head2head-car td:nth-child(${key})`).html(`<img  src="assets/img/constructors/medium/${driver['Constructor']['constructorId']}.png" alt="${driver['Constructor']['name']}">`);
       $(`#head2head-driver td:nth-child(${key})`).html(driver['Driver']['givenName']+' '+driver['Driver']['familyName']);
       $(`#head2head-flag td:nth-child(${key})`).html(`<img class="head2head-flag" src="https://www.countryflags.io/${flag['code']}/flat/64.png" alt="${driver['Driver']['nationality']}">`);
       $(`#head2head-position td:nth-child(${key})`).html(driver['position']);
@@ -915,7 +915,7 @@ function navRounds(season) {
 
       $('#nav-round').append(`
           <li id="nav-round-${season}-${e['round']}" ${(pastRace) ? `class="nav-round-past" onClick="changeRound(${e['round']})"` : 'class="nav-round-future"'}>
-              ${(circuits[e['Circuit']['circuitId']]) ? `<img src="assets/img/circuits/${circuits[e['Circuit']['circuitId']]['track-outline']}" class="nav-round-circuit">` : `<div class="color-white text-bold">${e['round']}</div>` }
+              ${(circuits[e['Circuit']['circuitId']]) ? `<img src="assets/img/circuits/nav/${circuits[e['Circuit']['circuitId']]['track-outline']}" alt="${e['raceName']}" class="nav-round-circuit">` : `<div class="color-white text-bold">${e['round']}</div>` }
               <div class="nav-round-hover color-white-bg">
                 <div class="nav-round-num">${e['round']}</div>
                 <div class="nav-round-name">${e['raceName']}</div>
