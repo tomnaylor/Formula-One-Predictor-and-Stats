@@ -524,40 +524,44 @@ function seasonResults(season) {
             });
 
 
+            // GET LIST OF ALL KEYS FROM DRIVERRESULTS OBJECTS
+            let driverIds = Object.keys(driverResult);
+
+
             // AFTER ALL DRIVERS FOR THIS ROUND ARE COMPLETE WORK OUT THE RANK FOR EACH ONE
-            Object.keys(driverResult).map(driverId => {
-              for (let driverIdCompare in driverResult) {
+            driverIds.forEach(driverId => {
+              driverIds.forEach(driverIdCompare => {
 
                 let driverForCompare = driverResult[driverId]['predictedRaces'][thisSeason_roundId];
                 let driverBenchmark = driverResult[driverIdCompare]['predictedRaces'][thisSeason_roundId];
 
                 driverResult[driverId]['predictedRaces'][thisSeason_roundId]['rankPosition'] += (driverForCompare['total'] < driverBenchmark['total']) ? -0.5 : 0.5;
-              }
+              });
 
               // CALCULATE POINTS FOR TOP 10
               calculatedPoints = calculateRacePoints(driverResult[driverId]['predictedRaces'][thisSeason_roundId]['rankPosition']);
 
-
               driverResult[driverId]['predictedRaces'][thisSeason_roundId]['points'] = calculatedPoints;
-
               driverResult[driverId]['predictedRaces'][thisSeason_roundId]['curPoints'] = driverResult[driverId]['finalPoints'] + calculatedPoints;
+
               // ADD UP CUMULATIVE POINTS
               driverResult[driverId]['finalPoints'] = driverResult[driverId]['finalPoints'] + calculatedPoints;
 
             });
-
           });
+
+          // GET LIST OF ALL KEYS FROM DRIVERRESULTS OBJECTS
+          let driverIds = Object.keys(driverResult);
 
           // CALCULATE FINAL SEASON POSITION
-          Object.keys(driverResult).map(driverId => {
-            for (let driverIdCompare in driverResult) {
+          driverIds.forEach(driverId => {
+            driverIds.forEach(driverIdCompare => {
               driverResult[driverId]['finalPosition'] += (driverResult[driverId]['finalPoints'] > driverResult[driverIdCompare]['finalPoints']) ? -0.5 : 0.5;
-            }
+            });
           });
 
 
-          for (let driverId in driverResult) {
-
+          driverIds.forEach(driverId => {
             driverResult[driverId]['predictedRaces'].forEach(thisResult => {
               $(`#season-standings-driver-tr-${driverId}`).append(`
                 <td class="color-red">
@@ -576,18 +580,29 @@ function seasonResults(season) {
                   </div>
                 </td>`);
             });
-          }
+          });
 
 
           // SHOW FINAL RESULTS
           $('#season-standings table thead tr').append(`<th class="color-red-bg">FINAL</th>`);
-          for (let driverId in driverResult) {
+
+          driverIds.forEach(driverId => {
             $(`#season-standings-driver-tr-${driverId}`).append(`
               <td>
                 <div class="${((driverResult[driverId]['finalPosition']) <= 3) ? `color-red-bg color-white` : ``}">${(driverResult[driverId]['finalPosition'])}</div>
                 ${(driverResult[driverId]['finalPoints'])}<span class="text-smaller">pts</span>
               </td>`);
-          };
+          });
+
+          // for (let driverId in driverResult) {
+          //   $(`#season-standings-driver-tr-${driverId}`).append(`
+          //     <td>
+          //       <div class="${((driverResult[driverId]['finalPosition']) <= 3) ? `color-red-bg color-white` : ``}">${(driverResult[driverId]['finalPosition'])}</div>
+          //       ${(driverResult[driverId]['finalPoints'])}<span class="text-smaller">pts</span>
+          //     </td>`);
+          // }
+
+
 
           $('#season-standings table tbody td').click(function() {
             $('.season-standings-moreinfo',this).slideToggle();
