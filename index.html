@@ -19,8 +19,10 @@
   <header>
     <nav>
       <ul id="nav-season" class="color-red-bg color-white text-upper">
+        <li id="nav-season-mobile-more" onClick="$('#nav-season').css({'height':'100%'})"><i class="fas fa-angle-double-down"></i></li>
       </ul>
-      <ul id="nav-round" class="color-black-bg"></ul>
+      <ul id="nav-round" class="color-black-bg">
+      </ul>
     </nav>
   </header>
 
@@ -33,6 +35,11 @@
       <h2 class="text-upper">How to use</h2>
       <p>To use this page, please select a <span class="text-pad color-red-bg color-white">season</span> from the list to show season details,
         or select a <span class="text-pad color-black-bg color-white">circuit</span> to see more info about that round. The current year and round are underlined in white. Future races are blurred and highlighted in red.</p>
+
+      <div class="hide-on-desktop">
+        <h3 class="text-upper">Mobile</h3>
+        <p>Use the down arrows on the top of the navigation to expand the seasons and round selections</p>
+      </div>
 
       <h3 class="text-upper">Season results</h3>
       <p>To see a whole season, click on a year above. If it's the current year, you'll see the predicted reults.</p>

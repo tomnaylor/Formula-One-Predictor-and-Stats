@@ -907,7 +907,7 @@ function changeRound(round) {
 // SHOW ALL ROUNDS FOR A GIVEN SEASON ON NAV BAR
 function navRounds(season) {
   jsonCall(`https://ergast.com/api/f1/${season}.json`, function(response) {
-    $('#nav-round').html('');
+    $('#nav-round').html(`<li id="nav-round-mobile-more" class="color-white" onClick="$('#nav-round').css({'height':'100%'})"><i class="fas fa-angle-double-down"></i></li>`);
     let dateNowcheck = new Date();
     response['MRData']['RaceTable']['Races'].forEach(e => {
 

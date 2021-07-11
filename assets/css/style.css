@@ -22,6 +22,9 @@ body {
     background: #F7F4F1;
 }
 
+.hide-on-desktop {
+  display:none;
+}
 
 /* ---------------------------------------- COLOURS */
 .color-red {
@@ -154,11 +157,21 @@ header {
     cursor: pointer;
 }
 
+#nav-season li#nav-season-mobile-more, #nav-round li#nav-round-mobile-more {
+  display:none;
+  padding:0;
+  margin-left:20px;
+  margin-right:0px;
+  text-align: left;
+  width:10px;
+}
+
 #nav-round li {
     text-align: center;
     width:60px;
     position:relative;
     padding: 5px 6px 0px 5px;
+    vertical-align: middle;
 }
 
 #nav-round li img {
@@ -170,7 +183,7 @@ header {
 }
 
 #nav-round li.nav-round-future img.nav-round-circuit {
-  filter: brightness(10%) blur(0.8px) drop-shadow(0px 0px 0px #F00000) drop-shadow(0px 0px 0px #F00000);
+  filter: brightness(10%) blur(0.8px) drop-shadow(0px 0px 0px #FF0000) drop-shadow(0px 0px 0px #FF0000);
 }
 
 #nav-season li.nav-season-current, #nav-round li.nav-round-current {
@@ -441,9 +454,30 @@ section p:last-child {
 }
 
 
+
 /* ---------------------------------------- MOBILE ONLY */
 
 @media only screen and (max-width: 600px) {
+
+  .hide-on-mobile {
+    display: none;
+  }
+  .hide-on-desktop {
+    display:block;
+  }
+
+  #nav-season, #nav-round {
+    overflow: hidden;
+    height:50px;
+  }
+  #nav-round {
+    height:60px;
+  }
+
+  #nav-season li#nav-season-mobile-more, #nav-round li#nav-round-mobile-more {
+    display:inline-block;
+  }
+
 
   main {
     padding:0 20px;
@@ -454,10 +488,6 @@ section p:last-child {
     display:block;
     width:100%;
     margin:0 0 20px 0;
-  }
-
-  .hide-on-mobile {
-      display: none;
   }
 
   #season-standings {
