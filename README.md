@@ -141,35 +141,34 @@ Points (and their weighting):
 * Qualifying position on this track two years ago (x0.1)
 
 #### Previous seasons
-xxx
+Previous seasons uses the same table as the current season but there are no predictions since all races are complete.
 
 #### Race standings
-xxx
+Race standings is a table that lists the drivers in order of finish position. It gives the points haul, driver details, car image, Q3 result and positions gained. It also has the head to head comparison buttons. You can click on either A or B to load that driver into the comparison table to the side of the race results.
 
 #### Head to HEAD
-xxx
+The head to head section shows two drivers side by side as a comparison. It also shows the lap times and position graph for every lap of the race. The chart is powered by Chart.JS
 
 #### Circuit info
-xxx
+Circuit info shows the sector image and the google maps API with the coordinates of the circuit as the centre point.
 
 
 ### Features left to implement
 
-#### Using cached
-adding cache = https://blog.logrocket.com/javascript-cache-api/
+#### Using cache for the API data
+The F1 app uses a few calls to the API for various data. It would be quicker to use a JS cache to store the data, and only update if the next race dataset has become available. [Jordan Irabor explains it more in this blog post](https://blog.logrocket.com/javascript-cache-api/)
 
 #### More prediction inputs
-look at previous years compared to finihed races this year to see if there's an average improvement compared to last year.
+I'd like to add more data for the prediction. One example is to look at previous years compared to finished races this year to see if there's an average improvement compared to last year. This can then me used as a multiplier for the average and previous weighted results.
 
 #### Prediction techniques
-https://betterexplained.com/articles/how-to-analyze-data-using-the-average/
-delete lowest result to help prediction
+Possibly using different techniqies to form the prediction. One option is to remove the highest and lowest result to try and remove un-usual events from the score and provide a median average. [More information on this blog post](https://betterexplained.com/articles/how-to-analyze-data-using-the-average/)
 
 #### Fastest lap
-add fastest lap point based on previous fastest laps
+Add the extra point for the fastest lap to the prediction table. This could be based on previous fastest laps and how well the driver did on the same circuit in previous years.
 
-#### WIKI
-Give users a gateway to more info
+#### WIKI API
+Give users a gateway to more info by adding the wiki API to the app. The current F1 data API returns a Wikipedia URL for every driver, season, circuit and race.
 
 
 ## Technologies used
@@ -251,7 +250,6 @@ All 3 JavaScript files have been thru the JS hint app as direct input and show n
 ### Manual Testing
 I have preformed manual tests on a number of browsers and devices to cover most scenarios and feel assured the website works as intended for all visitors. This included using google dev tools to simulate different screen sizes and using a real android and apple phone and family to act as first time visitors.
 
-Results can be seen here:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx___________________
 
 ### Known Bugs
 
