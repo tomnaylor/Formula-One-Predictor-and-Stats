@@ -74,16 +74,14 @@ I wanted to create a useful, accurate and interactive statistics website that sh
 
 ### User Stories
 #### First time visitor
-As a first time user…
-* I want to quickly get stats I want to see
+As a first time user:
 * I want to be guided to the most current race
 * I want the features explained with clear and concise languages
-* I want to see quickly who has won each race
-* I want to see current points haul for each driver
+* I want to see current points haul for each driver as the season progresses
 * I want to see a prediction for final positions after all rounds are complete
-* I want to see images used to make looking at the data more user friendly
 
 #### Returning visitor
+As a returning visitor:
 * I want to see new data as soon as possible
 * I want to see updated predictions for the current season
 * I want to know what races are left this season and where / when they are
@@ -214,25 +212,40 @@ As well as the manual testing below I have also used the W3C HTML and CSS valida
 ### Automatic testers / validators
 
 #### W3C HTML validator
-The index.html page was tested using the w3c validator and passed without error. [view live result here]()
+The index.html page was tested using the w3c validator and passed without error. [view live result here](https://validator.w3.org/nu/?doc=https%3A%2F%2Ftomnaylor.github.io%2Fcodeinstitute-ms2%2F)
 
 #### Jigsaw CSS Validator
-The CSS was tested via direct input and no errors were found.
+The CSS was tested via direct input and no errors were found. [view live result here](https://jigsaw.w3.org/css-validator/validator?uri=https%3A%2F%2Ftomnaylor.github.io%2Fcodeinstitute-ms2%2Fassets%2Fcss%2Fstyle.css&profile=css3svg&usermedium=all&warning=1&vextwarning=&lang=en)
 
 #### JS HINT
 All 3 JavaScript files have been thru the JS hint app as direct input and show no errors.
+
+### Testing against the user Stories
+#### First time visitor
+* I want to be guided to the most current race
+  * The current season and race navigation is automatically loaded and the current season and round is underlined as to be quickly identifiable.
+  * Once selected, the season or round has a clear contrasting background colour to show it's the current selection. The most recent season and race maintains the white underline.
+* I want the features explained with clear and concise languages
+  * As soon as the page loads a helpful guide is shown with clear headings and concise language.
+  * Matching colours are used so you can quickly see what to expect
+  * Different info is displayed across devices if there is a difference in the UI
+* I want to see current points haul for each driver as the season progresses
+  * in the season roundup you can click on each race for any driver and it will show the cumulative points haul
+* I want to see a prediction for final positions after all rounds are complete
+  * Clicking on the current season will load all the previous races and then predict each and every race of the season.
+  * The season result will then add up the points and rank the drivers. The top three are then highlighted to further highlight them.
+
+#### Returning visitor
+* I want to see new data as soon as possible
+* I want to see updated predictions for the current season
+* I want to know what races are left this season and where / when they are
+* I want the website to load quickly and only what I want to see
 
 
 ### Manual Testing
 I have preformed manual tests on a number of browsers and devices to cover most scenarios and feel assured the website works as intended for all visitors. This included using google dev tools to simulate different screen sizes and using a real android and apple phone.
 
-#### Testing the app functions and UX
-Testing for the function of the website can be found here:
-
-#### Testing against the user stories
-xxxx
-
-
+Results can be seen here:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx___________________
 
 ### Discovered Bugs
 Bugs
