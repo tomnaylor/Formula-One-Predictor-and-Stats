@@ -1,14 +1,4 @@
 
-* TODO
-* JS validator
-* lightroom etc
-* more comments
-* screen shots
-* tidy up unused code
-
-
-
-
 # **F1 Stats**
 ## By Tom Naylor
 
