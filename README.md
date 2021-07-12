@@ -55,7 +55,7 @@ I wanted to create a useful, accurate and interactive statistics website that sh
     * [WIKI API](#wiki-api)
 * [Technologies used](#technologies-used)
   * [Languages](#languages)
-  * [Libraries + APIs](#libraries-+-apis)
+  * [Libraries and APIs](#libraries-and-apis)
   * [Tools](#tools)
 * [Testing](#testing)
   * [Automatic testers / validators](#automatic-testers-and-validators)
@@ -203,7 +203,7 @@ Give users a gateway to more info by adding the wiki API to the app. The current
 * [jQuery](https://jquery.com/) is used as the framework to make programming quicker. It's imported via a CDM and sits ontop of the native JavaScript language.
 
 
-### Libraries + APIs
+### Libraries and APIs
 * [Google Fonts](https://fonts.google.com/) was used as the main font throughout the project.
 * [Font Awesome](https://fontawesome.com/) was used to add icons for aesthetic and UX purposes.
 * [Google maps](https://developers.google.com/maps) was used to add a map for the circuit
@@ -273,7 +273,11 @@ I used lighthouse on both the desktop and mobile versions of the site. The origi
 
 
 ### Manual Testing
-I have preformed manual tests on a number of browsers and devices to cover most scenarios and feel assured the website works as intended for all visitors. This included using google dev tools to simulate different screen sizes and using a real android and apple phone and family to act as first time visitors.
+I have preformed manual tests on a number of browsers and devices to cover most scenarios and feel assured the website works as intended for all visitors. This included using google dev tools to simulate different screen sizes and using a real android and apple phone and family to act as first time visitors. In total:
+
+* The app was tested using Chrome, Edge and Safari browsers.
+* The app was tested on a number of devices such as Desktop, Laptop, iPhone and android.
+* The app was tested extensively to ensure all links, styles and events worked as expected
 
 
 ### Known Bugs
@@ -310,7 +314,7 @@ The final website has been deployed to GitHub via their pages option. Written in
 
 * Log into GitHub
 * Create the repository
-* Clone the GitHub repo into Atom identify
+* Clone the GitHub repo into Atom IDE
 * Fetch and pull latest data before each session
 * Git commit at an appropriate stage and add a useful comment
 * Git push to sync with GitHub
@@ -330,7 +334,7 @@ The URL for the GitHub page is https://tomnaylor.github.io/codeinstitute-ms2/
 To work on the code without changing the master branch, you can fork the repo to use in your chosen IDE. You simply need to log into GitHub, navigate to the repo, use the "fork" button in the top right and it will be added (as a copy) to your GitHub repos.
 
 ### Running a local copy
-If you would like to run a local copy of this website, you would simply need to clone the master git repo. Follow the steps in deployment to clone the repo. There are no servers to configure, the website uses only HTML, CSS and JavaScript. You will need internet access to get the CDN files and the live API data.
+If you would like to run a local copy of this website, you would simply need to clone the master git repo. Navigate to the repo and click "clone". Copy the HTTPS (or SSH) URL into your git application There are no servers to configure, the website uses only HTML, CSS and JavaScript. You will need internet access to get the CDN files and the live API data.
 
 
 ## Credits
@@ -341,6 +345,7 @@ If you would like to run a local copy of this website, you would simply need to 
 * Driver current points rank sorting from [stack overflow](https://stackoverflow.com/questions/9592740/how-can-you-sort-an-array-without-mutating-the-original-array)
 * Array map for objects from [stack overflow](https://stackoverflow.com/questions/14810506/map-function-for-objects-instead-of-arrays)
 * Data and time function from [Steven Levithan](https://blog.stevenlevithan.com/archives/date-time-format)
+* How to loop through objects using Object.keys() from [flexiple](https://flexiple.com/loop-through-object-javascript)
 
 
 ### Media
