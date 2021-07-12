@@ -1,5 +1,3 @@
-/*jshint sub:true*/
-
 // SHOW NON-FATAL ERRORS
 function showErrors(e) {
     $('#errors').html(e);
@@ -191,7 +189,11 @@ function drawRaceStandings(r) {
           ${(gain >= 1) ? '<i class="fas fa-angle-up text-smaller"></i>' : (gain < 0) ? '<i class="fas fa-angle-down text-smaller color-red"></i>' : '' }
         </td>
         <td class="hide-on-mobile" title="${e['Driver']['nationality']}">${flagImg}</td>
-        <td><span class="text-smaller text-bold">#${e['number']}</span> ${e['Driver']['givenName']} ${e['Driver']['familyName']}</td>
+        <td>
+          <span class="text-smaller text-bold">#${e['number']}</span>
+          <div class="hide-on-desktop"></div>
+          ${e['Driver']['givenName']} ${e['Driver']['familyName']}
+        </td>
 
         <td class="race-standings-car"><img src="assets/img/constructors/thumb/${e['Constructor']['constructorId']}.png" alt="${e['Constructor']['name']}" title="${e['Constructor']['name']}"></td>
 
@@ -723,7 +725,7 @@ $(document).ready(function() {
     F1_CURRENT_SEASON = F1_SEASON = response['MRData']['RaceTable']['season'];
     F1_CURRENT_ROUND = F1_ROUND = response['MRData']['RaceTable']['round'];
 
-    for (let i = parseInt(new Date().getFullYear()); i >= 2010; i--) {
+    for (let i = parseInt(new Date().getFullYear()); i >= 2018; i--) {
       $('#nav-season').append(`<li id="nav-season-${i}" onClick="changeSeason(${i})">${i}</li>`);
     }
 

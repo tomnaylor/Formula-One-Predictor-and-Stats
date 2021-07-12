@@ -445,7 +445,11 @@ section p:last-child {
     height:50px;
   }
   #nav-round {
-    height:60px;
+    height:52px;
+  }
+
+  #nav-round li {
+    width:40px;
   }
 
   #nav-season li#nav-season-mobile-more, #nav-round li#nav-round-mobile-more {
