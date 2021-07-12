@@ -7,40 +7,37 @@ function showErrors(e) {
 
 // GOOGLE MAP API CALL
 function googleMap(lat,long,container) {
-  let map;
-  map = new google.maps.Map(document.getElementById(container), {     // removed callback function as only gets written when circuit api is done.
-      center: { lat: parseFloat(lat), lng: parseFloat(long) },        // HAD PROBLEM THAT IT WASNT A NUMBER
+  let map = new google.maps.Map(document.getElementById(container), {
+      center: { lat: parseFloat(lat), lng: parseFloat(long) },
       zoom: 18,
       mapTypeId:google.maps.MapTypeId.HYBRID
   });
 }
 
+
 // SHOW CIRCUIT INFO`
 function drawCircuit(c) {
+
+  // SHOW IMAGE OF SECTORS IF AVALIABLE
+  let circuitImg = (CIRCUITS[c['circuitId']]) ? `<img src="assets/img/circuits/${CIRCUITS[c['circuitId']]['track-sectors']}" id="track-sectors" alt="${c['circuitName']} track sectors">` : ``;
+
   $('#track-details').html(`
     <h2 class="text-upper">${c['circuitName']}</h2>
-    <img src="https://chrisdermody.com/content/images/2017/12/engine8.svg" id="track-sectors" alt="${c['circuitName']} track sectors" width="900">
+    ${circuitImg}
     <h3 class="text-upper">Map</h3>
-    <div id="map"></div>
-    `);
+    <div id="map"></div>`);
 
-
-  if (CIRCUITS[c['circuitId']]) {
-      $('#track-sectors').attr("src",`assets/img/circuits/${CIRCUITS[c['circuitId']]['track-sectors']}`);
-  }
-  else {
-      $('#track-sectors').attr("src",``);
-  }
+  // LOAD GOOGLE MAP
   googleMap(c['Location']['lat'],c['Location']['long'],'map');
 }
 
-// ERROR WHEN THERE ARE NO LAPS DRIVEN
+
+// DRAW CHART OF LAP TIMES
 function drawDriversLapTimes(driverOneId, driverTwoId, containerId) {
 
   $.when(
     $.getJSON(`https://ergast.com/api/f1/${F1_SEASON}/${F1_ROUND}/drivers/${driverOneId}/laps.json?limit=200`),
-    $.getJSON(`https://ergast.com/api/f1/${F1_SEASON}/${F1_ROUND}/drivers/${driverTwoId}/laps.json?limit=200`)
-  ).then(
+    $.getJSON(`https://ergast.com/api/f1/${F1_SEASON}/${F1_ROUND}/drivers/${driverTwoId}/laps.json?limit=200`)).then(
     function(driverOne, driverTwo) {
 
       if ((!driverOne[0]['MRData']['RaceTable']['Races'][0]) || (!driverTwo[0]['MRData']['RaceTable']['Races'][0])) {
@@ -48,109 +45,102 @@ function drawDriversLapTimes(driverOneId, driverTwoId, containerId) {
         return;
       }
 
-        $('#head2head-graph').html('<canvas id="head2head-canvas"></canvas>');
-        let ctx = document.getElementById('head2head-canvas').getContext('2d'); // HAS ERROR ON CONSOLE
-        //ctx.destroy();
-        // error with redrawing - have to clear grap first.
-        //ctx.clearRect(0, 0, ctx.width, ctx.height);
+      $('#head2head-graph').html('<canvas id="head2head-canvas"></canvas>');
+      let ctx = document.getElementById('head2head-canvas').getContext('2d');
 
-        let labelsArray = [];
-        let driverOneTimes = [];
-        let driverOnePosition = [];
-        let driverTwoTimes = [];
-        let driverTwoPosition = [];
+      let labelsArray = [];
+      let driverOneTimes = [];
+      let driverOnePosition = [];
+      let driverTwoTimes = [];
+      let driverTwoPosition = [];
 
+      // GATHER LAP TIMES AND POSITIONS FOR DRIVER ONE
+      driverOne[0]['MRData']['RaceTable']['Races'][0]['Laps'].forEach(lap => {
+        labelsArray.push(lap['number']);
 
-        driverOne[0]['MRData']['RaceTable']['Races'][0]['Laps'].forEach(lap => {
-            labelsArray.push(lap['number']);
+        let tempTimeSplit = lap['Timings'][0]['time'].split(":");
+        let tempTime = (parseFloat(tempTimeSplit[0])*60)+parseFloat(tempTimeSplit[1]);
+        if (tempTime > 300) tempTime = 300;
 
-            let tempTimeSplit = lap['Timings'][0]['time'].split(":"); // FIX IN THE MS2 BOOKMARKS
-            let tempTime = (parseFloat(tempTimeSplit[0])*60)+parseFloat(tempTimeSplit[1]);
-            if (tempTime > 300) tempTime = 300;
+        driverOneTimes.push(tempTime);
+        driverOnePosition.push(lap['Timings'][0]['position']);
+      });
 
-            driverOneTimes.push(tempTime);
-            driverOnePosition.push(lap['Timings'][0]['position']);
-        });
+      // GATHER LAP TIMES AND POSITIONS FOR DRIVER TWO
+      driverTwo[0]['MRData']['RaceTable']['Races'][0]['Laps'].forEach(lap => {
+        let tempTimeSplit = lap['Timings'][0]['time'].split(":");
+        let tempTime = (parseFloat(tempTimeSplit[0])*60)+parseFloat(tempTimeSplit[1]);
+        if (tempTime > 300) tempTime = 300;
 
-
-        driverTwo[0]['MRData']['RaceTable']['Races'][0]['Laps'].forEach(lap => {
-
-            let tempTimeSplit = lap['Timings'][0]['time'].split(":"); // FIX IN THE MS2 BOOKMARKS
-            let tempTime = (parseFloat(tempTimeSplit[0])*60)+parseFloat(tempTimeSplit[1]);
-            if (tempTime > 300) tempTime = 300;
-
-            driverTwoTimes.push(tempTime);
-            driverTwoPosition.push(lap['Timings'][0]['position']);
-        });
+        driverTwoTimes.push(tempTime);
+        driverTwoPosition.push(lap['Timings'][0]['position']);
+      });
 
 
-        let myChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labelsArray,
-                datasets: [
-                    {
-                        label: `Lap time (s)`,
-                        data: driverOneTimes,
-                        borderColor: '#E10600',
-                        backgroundColor: '#E10600',
-                        color: '#E10600',
-                        borderWidth: 1,
-                        yAxisID: 'y',
-                    },
-                    {
-                        label: 'Track position',
-                        data: driverOnePosition,
-                        borderColor: '#E10600',
-                        backgroundColor: '#E10600',
-                        color: '#E10600',
-                        borderWidth: 2,
-                        yAxisID: 'y1',
-                    },
-                    {
-                      label: `Lap time (s)`,
-                        data: driverTwoTimes,
-                        borderColor: '#1F1F1F',
-                        backgroundColor: '#1F1F1F',
-                        color: '#1F1F1F',
-                        borderWidth: 1,
-                        yAxisID: 'y',
-                    },
-                    {
-                        label: 'Track position',
-                        data: driverTwoPosition,
-                        borderColor: '#1F1F1F',
-                        backgroundColor: '#1F1F1F',
-                        color: '#1F1F1F',
-                        borderWidth: 2,
-                        yAxisID: 'y1',
-                    }
-
-                ]
+      let myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labelsArray,
+          datasets: [
+            {
+              label: `Lap time (s)`,
+              data: driverOneTimes,
+              borderColor: '#E10600',
+              backgroundColor: '#E10600',
+              color: '#E10600',
+              borderWidth: 1,
+              yAxisID: 'y',
+          },
+          {
+              label: 'Track position',
+              data: driverOnePosition,
+              borderColor: '#E10600',
+              backgroundColor: '#E10600',
+              color: '#E10600',
+              borderWidth: 2,
+              yAxisID: 'y1',
+          },
+          {
+            label: `Lap time (s)`,
+              data: driverTwoTimes,
+              borderColor: '#1F1F1F',
+              backgroundColor: '#1F1F1F',
+              color: '#1F1F1F',
+              borderWidth: 1,
+              yAxisID: 'y',
+          },
+          {
+              label: 'Track position',
+              data: driverTwoPosition,
+              borderColor: '#1F1F1F',
+              backgroundColor: '#1F1F1F',
+              color: '#1F1F1F',
+              borderWidth: 2,
+              yAxisID: 'y1',
+          }]
+        },
+        options: {
+          pointRadius: 0,
+          scales: {
+            y: {
+              type: 'linear',
+              display: true,
+              position: 'left',
+              beginAtZero: false
             },
-            options: {
-                pointRadius: 0,
-                scales: {
-                    y: {
-                        type: 'linear',
-                        display: true,
-                        position: 'left',
-                        beginAtZero: false
-                    },
-                    y1: {
-                        type: 'linear',
-                        display: true,
-                        position: 'right',
-                        min:0,
-                        max:20,
-                        reverse:true,
-                        grid: {
-                            drawOnChartArea: false,
-                        },
-                    },
-                }
-            }
-        });
+            y1: {
+              type: 'linear',
+              display: true,
+              position: 'right',
+              min:0,
+              max:20,
+              reverse:true,
+              grid: { drawOnChartArea: false, },
+            },
+          }
+        }
+      });
+
       },
       function(e) {
         showErrors(`Sorry there was a problem getting the driver lap times. Please try again (${e['statusText']})`);
@@ -205,6 +195,7 @@ function drawRaceStandings(r) {
     </tr>`);
   });
 
+  // ON CLICK HANDLERS FOR HEAD TO HEAD
   $(".head2head-select1").click(function() {
       headToHead(r[this.dataset.key],F1_HEAD2HEAD_2);
   });
@@ -290,6 +281,7 @@ function headToHead(one,two) {
 
   drawDriversLapTimes(one['Driver']['driverId'],two['Driver']['driverId'],`head2head-graph`);
 
+  // COMPLETE TABLE FOR EACH DRIVER
   drivers.forEach(driver => {
       let flag = COUNTRIES.find(key => key['nationality'] === driver['Driver']['nationality']);
       let gain = parseInt(driver['grid'])-parseInt(driver['position']);
@@ -327,7 +319,6 @@ function calculateRacePoints(position) {
     case 10: points = 1; break;
     default : points = 0;
   }
-
   return points;
 }
 
@@ -346,8 +337,6 @@ function seasonResults(season) {
     let races = response['MRData']['RaceTable']['Races'];
     let driverResult = {};
 
-    $('#season-standings').fadeIn();
-
     $('#season-standings table').html(`
       <thead>
         <tr class="color-white">
@@ -358,6 +347,8 @@ function seasonResults(season) {
 
     // DRIVER NAMES BASED ON WHO WON FIRST RACE
     races[0]['Results'].forEach((driver,driverId) => {
+
+      // GET FLAG FROM NATIONALITY
       let flag = COUNTRIES.find(i => i['nationality'] === driver['Driver']['nationality']);
       let flagImg = (flag) ? `<img src="https://www.countryflags.io/${flag['code']}/flat/24.png" alt="${driver['Driver']['nationality']}">` : '';
 
@@ -378,7 +369,6 @@ function seasonResults(season) {
     races.forEach(race => {
 
       // RACE HEADERS
-      // id="season-standings-tr-${race['round']}"
       $('#season-standings table thead tr').append(`
         <th class="text-upper color-black-bg">
           ${(CIRCUITS[race['Circuit']['circuitId']]) ? `<img src="assets/img/circuits/${CIRCUITS[race['Circuit']['circuitId']]['track-outline']}">` : `<div class="color-white text-bold">${race['round']}</div>` }
@@ -390,8 +380,6 @@ function seasonResults(season) {
       races[0]['Results'].forEach(driver => {
         $(`#season-standings-driver-tr-${driver['number']}`).append(`<td id="season-standings-driver-tr-${driver['number']}-round-${race['round']}"></td>`);
       });
-
-
 
       // RACE RESULTS
       race['Results'].forEach(result => {
@@ -426,7 +414,7 @@ function seasonResults(season) {
     });
 
 
-    // GET FUTURE RACES AVERAGES (MAP FUNCTION FROM https://stackoverflow.com/questions/14810506/map-function-for-objects-instead-of-arrays)
+    // GET FUTURE RACES AVERAGES
     Object.keys(driverResult).map(key => {
       driverResult[key] = {
         ...driverResult[key],
@@ -474,11 +462,11 @@ function seasonResults(season) {
 
               // SEE IF DRIVER TOOK PART IN LAST YEARS RACE
               // WORK OUT AVERAGE FINISH THIS YEAR IF NO VALUE
-              let lastSeasonDriverResult = driverResult[result['number']]['avPosition']; // MAKE MIDDLE OF THE ROAD IF NO PREVIOUS RACE
-              let lastSeasonDriverGrid = driverResult[result['number']]['avGrid']; // MAKE MIDDLE OF THE ROAD IF NO PREVIOUS RACE
+              let lastSeasonDriverResult = driverResult[result['number']]['avPosition'];
+              let lastSeasonDriverGrid = driverResult[result['number']]['avGrid'];
 
-              let twoSeasonDriverResult = driverResult[result['number']]['avPosition']; // MAKE MIDDLE OF THE ROAD IF NO PREVIOUS RACE
-              let twoSeasonDriverGrid = driverResult[result['number']]['avGrid']; // MAKE MIDDLE OF THE ROAD IF NO PREVIOUS RACE
+              let twoSeasonDriverResult = driverResult[result['number']]['avPosition'];
+              let twoSeasonDriverGrid = driverResult[result['number']]['avGrid'];
 
 
               if (lastSeasonsTrackResult) {
@@ -529,7 +517,6 @@ function seasonResults(season) {
             // GET LIST OF ALL KEYS FROM DRIVERRESULTS OBJECTS
             let driverIds = Object.keys(driverResult);
 
-
             // AFTER ALL DRIVERS FOR THIS ROUND ARE COMPLETE WORK OUT THE RANK FOR EACH ONE
             driverIds.forEach(driverId => {
               driverIds.forEach(driverIdCompare => {
@@ -562,7 +549,7 @@ function seasonResults(season) {
             });
           });
 
-
+          // FOR EACH RESULT FILL IN THE TABLE CELL
           driverIds.forEach(driverId => {
             driverResult[driverId]['predictedRaces'].forEach(thisResult => {
               $(`#season-standings-driver-tr-${driverId}`).append(`
@@ -595,16 +582,6 @@ function seasonResults(season) {
                 ${(driverResult[driverId]['finalPoints'])}<span class="text-smaller">pts</span>
               </td>`);
           });
-
-          // for (let driverId in driverResult) {
-          //   $(`#season-standings-driver-tr-${driverId}`).append(`
-          //     <td>
-          //       <div class="${((driverResult[driverId]['finalPosition']) <= 3) ? `color-red-bg color-white` : ``}">${(driverResult[driverId]['finalPosition'])}</div>
-          //       ${(driverResult[driverId]['finalPoints'])}<span class="text-smaller">pts</span>
-          //     </td>`);
-          // }
-
-
 
           $('#season-standings table tbody td').click(function() {
             $('.season-standings-moreinfo',this).slideToggle();
