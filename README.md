@@ -2,7 +2,9 @@
 * TODO
 * JS validator
 * lightroom etc
-* fix TOC
+* more comments
+* screen shots
+* tidy up unused code
 
 
 
@@ -21,47 +23,63 @@ Welcome to my F1 statistics web app. The app is made up of a number of sections.
 
 I wanted to create a useful, accurate and interactive statistics website that shows available data in multiple ways to make useful comparisons, predictions and quickly referenced tabled data. The page should work across mobile, tablet and desktop but take a mobile-first approach.
 
+* [User](#user)
 
 ## Table of contents
 * [UX](#ux)
-    * [User Stories](#user-stories)
-    * [Site Owners Goals](#site-owners-goals)
-    * [Design](#design)
-        * [Original sketch](#original-sketch)
-        * [Wireframes](#wireframes)
-        * [Fonts](#font-family)
-        * [Icons](#icons)
-        * [Colours](#colours)
-        * [Hero image](#hero-image)
+  * [Target Audience](#target-audience)
+  * [User Stories](#user-stories)
+    * [First time visitor](#first-time-visitor)
+    * [Returning visitor](#returning-visitor)
+  * [Site Owners Goals](#site-owners-goals)
+  * [Design](#design)
+    * [Wireframes](#wireframes)
+    * [Fonts](#font-family)
+    * [Icons](#icons)
+    * [Colours](#colours)
 * [Features](#features)
-    * [Existing Features](#existing-features)
-        * [Navigation](#navigation)
-        * [Hero Image](#hero-image)
-        * [Sign up buttons](#sign-up-buttons)
-        * [Sign up modal](#sign-up-modal)
-        * [Features Section](#features-section)
-        * [Success stories](#success-stories)
-        * [Pricing](#pricing)
-        * [Guides](#guides)
-        * [Contact Us](#contact-us)
-        * [Footer](#footer)
-        * [Features left to implement](#features-left-to-implement)
+  * [Existing Features](#existing-features)
+    * [Navigation](#navigation)
+    * [Help and how to use section](#help-and-how-to-use-section)
+    * [Current season prediction](#current-season-prediction)
+    * [Previous seasons](#previous-seasons)
+    * [Race standings](#race-standings)
+    * [Head to head](#head-to-head)
+    * [Circuit info](#circuit-info)
+  * [Features left to implement](#features-left-to-implement)
+    * [Using cache for the API data](#using-cache-for-the-api-data)
+    * [More prediction inputs](#more-prediction-inputs)
+    * [Prediction techniques](#prediction-techniques)
+    * [Fastest lap](#fastest-lap)
+    * [Add more seasons](#add-more-seasons)
+    * [WIKI API](#wiki-api)
 * [Technologies used](#technologies-used)
-    * [Languages](#languages)
-    * [Libraries](#libraries)
-    * [Tools](#tools)
+  * [Languages](#languages)
+  * [Libraries + APIs](#libraries-+-apis)
+  * [Tools](#tools)
 * [Testing](#testing)
-    * [Manual Testing](#manual-testing)
-        * [Navigation menu](#navigation-menu)
-        * [Current user testimonials](#current-user-testimonials)
-        * [Sign up and contact forms](#sign-up-and-contact-forms)
-    * [Discovered Bugs](#discovered-bugs)
+  * [Automatic testers / validators](#automatic-testers-and-validators)
+    * [W3C HTML validator](#w3c-html-validator)
+    * [Jigsaw CSS Validator](#jigsaw-css-validator)
+    * [JS HINT](#js-hint)
+    * [Lighthouse](#lighthouse)
+  * [Testing against the user Stories](#Testing against the user Stories)
+    * [First time visitor](#first-time-visitor)
+    * [Returning visitor](#returning-visitor)
+  * [Manual Testing](#manual-testing)
+    * [Navigation menu](#navigation-menu)
+    * [Current user testimonials](#current-user-testimonials)
+    * [Sign up and contact forms](#sign-up-and-contact-forms)
+  * [Known Bugs](#known-bugs)
+    * [Resolved](#resolved)
+    * [Un-Resolved](#un-Resolved)
 * [Deployment](#deployment)
-    * [Running a local copy](#running-a-local-copy)
+  * [Forking the app](#forking-the-app)
+  * [Running a local copy](#running-a-local-copy)
 * [Credits](#credits)
-    * [Content](#content)
-    * [Media](#media)
-    * [Acknowledgements](#acknowledgements)
+  * [Content](#content)
+  * [Media](#media)
+  * [Acknowledgements](#acknowledgements)
 
 
 ## UX
@@ -145,7 +163,7 @@ Previous seasons uses the same table as the current season but there are no pred
 #### Race standings
 Race standings is a table that lists the drivers in order of finish position. It gives the points haul, driver details, car image, Q3 result and positions gained. It also has the head to head comparison buttons. You can click on either A or B to load that driver into the comparison table to the side of the race results.
 
-#### Head to HEAD
+#### Head to head
 The head to head section shows two drivers side by side as a comparison. It also shows the lap times and position graph for every lap of the race. The chart is powered by Chart.JS
 
 #### Circuit info
@@ -161,10 +179,13 @@ The F1 app uses a few calls to the API for various data. It would be quicker to 
 I'd like to add more data for the prediction. One example is to look at previous years compared to finished races this year to see if there's an average improvement compared to last year. This can then me used as a multiplier for the average and previous weighted results.
 
 #### Prediction techniques
-Possibly using different techniqies to form the prediction. One option is to remove the highest and lowest result to try and remove un-usual events from the score and provide a median average. [More information on this blog post](https://betterexplained.com/articles/how-to-analyze-data-using-the-average/)
+Possibly using different techniques to form the prediction. One option is to remove the highest and lowest result to try and remove un-usual events from the score and provide a median average. [More information on this blog post](https://betterexplained.com/articles/how-to-analyze-data-using-the-average/)
 
 #### Fastest lap
 Add the extra point for the fastest lap to the prediction table. This could be based on previous fastest laps and how well the driver did on the same circuit in previous years.
+
+#### Add more seasons
+Add extra seasons. API data goes back to 1950 but circuit, driver and country objects will need to be expanded to cater for the extra teams and drivers
 
 #### WIKI API
 Give users a gateway to more info by adding the wiki API to the app. The current F1 data API returns a Wikipedia URL for every driver, season, circuit and race.
@@ -189,6 +210,7 @@ Give users a gateway to more info by adding the wiki API to the app. The current
 * [Ergast F1 data API](https://ergast.com/mrd/) was used as the main source of F1 data
 * [Chart.JS](https://www.chartjs.org/) was used to provide interactive charts on the head to head section
 * [Country Flags](https://www.countryflags.io/) was used to provide flag images for circuits and drivers
+* [Date Time function](https://blog.stevenlevithan.com/archives/date-time-format) was used to format date objects
 
 ### Tools
 * [Git](https://git-scm.com/) and Git desktop was used for version control by utilizing the GitPod program and ATOM integration to commit to Git and Push to GitHub.
@@ -209,7 +231,7 @@ Give users a gateway to more info by adding the wiki API to the app. The current
 
 As well as the manual testing below I have also used the W3C HTML and CSS validator tools, Chrome Dev Tools and JS HINT. I found them very helpful to notify me of any potential problems and code that violates the standard. I also used the googles lighthouse to test the site load times and user experience.
 
-### Automatic testers / validators
+### Automatic testers and validators
 
 #### W3C HTML validator
 The index.html page was tested using the w3c validator and passed without error. [view live result here](https://validator.w3.org/nu/?doc=https%3A%2F%2Ftomnaylor.github.io%2Fcodeinstitute-ms2%2F)
@@ -221,7 +243,7 @@ The CSS was tested via direct input and no errors were found. [view live result 
 Both JavaScript files have been thru the JS hint app as direct input and show no errors.
 
 #### Lighthouse
-Lightroom original performance 81% - new 87%. accessibility 87% - new 100% (img alt tags)
+I used lighthouse on both the desktop and mobile versions of the site. The original performance score was 81% - new 96% (80 for mobile). You can view the [desktop report](assets/readme/lighthouse-desktop-report-final.pdf) and the [mobile report](assets/readme/lighthouse-mobile-report-final.pdf) or run a local copy using Chromes dev tools.
 
 
 ### Testing against the user Stories
