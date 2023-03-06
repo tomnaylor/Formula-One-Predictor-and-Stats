@@ -1,7 +1,7 @@
 const CIRCUITS = { 
     'losail' : {
-        'track-outline' : 'losail.png',
-        'track-sectors' : 'losail-sectors.png',
+        'track-outline' : 'lusail.png',
+        'track-sectors' : 'lusail-sectors.png',
         'countryCode' : 'QA' },
     'vegas' : {
         'track-outline' : 'vegas.png',
