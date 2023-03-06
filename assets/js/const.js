@@ -1,4 +1,16 @@
-const CIRCUITS = {
+const CIRCUITS = { 
+    'losail' : {
+        'track-outline' : 'losail.png',
+        'track-sectors' : 'losail-sectors.png',
+        'countryCode' : 'QA' },
+    'vegas' : {
+        'track-outline' : 'vegas.png',
+        'track-sectors' : 'vegas-sectors.png',
+        'countryCode' : 'US' },
+    'miami' : {
+        'track-outline' : 'miami.png',
+        'track-sectors' : 'miami-sectors.png',
+        'countryCode' : 'US' },
     'bahrain' : {
         'track-outline' : 'bahrain.png',
         'track-sectors' : 'bahrain-sectors.png',
