@@ -23,6 +23,10 @@ const CIRCUITS = {
         'track-outline' : 'baku.png',
         'track-sectors' : 'baku-sectors.png',
         'countryCode' : 'AZ' },
+    'baku' : {
+        'track-outline' : 'baku.png',
+        'track-sectors' : 'baku-sectors.png',
+        'countryCode' : 'AZ' },    
     'ricard' : {
         'track-outline' : 'ricard.png',
         'track-sectors' : 'ricard-sectors.png',
